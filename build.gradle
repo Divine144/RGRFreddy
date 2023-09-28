@@ -60,16 +60,17 @@ minecraft {
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', mod_id
 
-            if (project.hasProperty('mc_uuid')) {
-                // Your UUID, trimmed / without the dashes
-                args '--uuid', project.getProperty('mc_uuid')
-            }
-            if (project.hasProperty('mc_username')) {
-                args '--username', project.getProperty('mc_username')
-            }
-            if (project.hasProperty('mc_accessToken')) {
-                args '--accessToken', project.getProperty('mc_accessToken')
-            }
+            args '--username', 'Dev######'
+            // if (project.hasProperty('mc_uuid')) {
+            //     // Your UUID, trimmed / without the dashes
+            //     args '--uuid', project.getProperty('mc_uuid')
+            // }
+            // if (project.hasProperty('mc_username')) {
+            //     args '--username', project.getProperty('mc_username')
+            // }
+            // if (project.hasProperty('mc_accessToken')) {
+            //     args '--accessToken', project.getProperty('mc_accessToken')
+            // }
         }
 
         server {
@@ -145,22 +146,52 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     datagenImplementation sourceSets.main.output
-    annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
+    annotationProcessor "net.fabricmc:sponge-mixin:${mixin_version}"
 
     // Capability Syncer
     hundredMedia.addJarJarDep('dev._100media.capabilitysyncer:capabilitysyncer', capabilitysyncer_version, capabilitysyncer_version_range)
 
+    // 100 Media Morphs
+    hundredMedia.addJarJarDep('dev._100media.hundredmediamorphs:hundredmediamorphs', hundredmediamorphs_version, hundredmediamorphs_version_range, 'fat')
+
+    // Geckolib
+    hundredMedia.addJarJarDep("software.bernie.geckolib:geckolib-forge-${minecraft_version}", geckolib_version, geckolib_version_range, null, null)
+
+    // 100 Media Geckolib
+    hundredMedia.addJarJarDep('dev._100media.hundredmediageckolib:hundredmediageckolib', hundredmediageckolib_version, hundredmediageckolib_version_range)
+
+    // 100 Media Abilities
+    hundredMedia.addJarJarDep('dev._100media.hundredmediaabilities:hundredmediaabilities', hundredmediaabilities_version, hundredmediaabilities_version_range, 'fat')
+
+    // 100 Media Quests
+    hundredMedia.addJarJarDep('dev._100media.hundredmediaquests:hundredmediaquests', hundredmediaquests_version, hundredmediaquests_version_range)
+
+    // 100 Media Utility
+    hundredMedia.addJarJarDep('com.nyfaria.hmutility:hmutility', hmutility_version, hmutility_version_range, null)
+
+    // Mixin Extras
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:${mixinextras_version}")) {
+        jarJar.ranged(it, mixinextras_version_range)
+    }
+
     // Suggestion Provider Fix
     runtimeOnly fg.deobf("com.harleyoconnor.suggestionproviderfix:SuggestionProviderFix-${minecraft_version}:${suggestion_provider_fix_version}")
+
+    // Spark
+    runtimeOnly fg.deobf('curse.maven:spark-361579:4587309')
+
+    // Rubidium
+    runtimeOnly fg.deobf('curse.maven:rubidium-574856:4684247')
 }
 
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
-        minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-        forge_version: forge_version, forge_version_range: forge_version_range,
-        loader_version_range: loader_version_range,
-        mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-        mod_authors: mod_authors, mod_description: mod_description
+            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version: forge_version, forge_version_range: forge_version_range,
+            loader_version_range: loader_version_range,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors: mod_authors, mod_description: mod_description
     ]
     inputs.properties replaceProperties
 
