@@ -96,7 +96,7 @@ public class MorphInit {
                 }
             })
     ));
-    public static final RegistryObject<Morph> NIGHTMARE_FREDDY_FAZBEAR = MORPHS.register("mecha_sculk", () -> new Morph(new Morph.Properties<>()
+    public static final RegistryObject<Morph> NIGHTMARE_FREDDY_FAZBEAR = MORPHS.register("nightmare_freddy_fazbear", () -> new Morph(new Morph.Properties<>()
             .maxHealth(120)
             .dimensions(2f, 4f)
             .morphedTo(entity -> {

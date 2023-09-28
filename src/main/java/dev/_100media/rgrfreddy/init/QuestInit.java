@@ -1,7 +1,7 @@
 package dev._100media.rgrfreddy.init;
 
 import dev._100media.rgrfreddy.RGRFreddy;
-import dev._100media.rgrfreddy.quest.ExampleQuest;
+import dev._100media.rgrfreddy.quest.*;
 import dev._100media.hundredmediaquests.init.HMQQuestInit;
 import dev._100media.hundredmediaquests.quest.QuestType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -11,9 +11,9 @@ public class QuestInit {
 
     public static final DeferredRegister<QuestType<?>> QUESTS = DeferredRegister.create(HMQQuestInit.QUESTS.getRegistryKey(), RGRFreddy.MODID);
 
-    public static final RegistryObject<QuestType<?>> MOUNTED_WRIST_ROCKETS = QUESTS.register("mounted_wrist_rockets", () -> QuestType.Builder.of(ExampleQuest::new).repeatable(false).instantTurnIn(false).build());
-    public static final RegistryObject<QuestType<?>> MECHA_WARDEN_LASER = QUESTS.register("mecha_warden_laser", () -> QuestType.Builder.of(ExampleQuest::new).repeatable(false).instantTurnIn(false).build());
-    public static final RegistryObject<QuestType<?>> SCULKY_MECHA_MINES = QUESTS.register("sculky_mecha_mines", () -> QuestType.Builder.of(ExampleQuest::new).repeatable(false).instantTurnIn(false).build());
-    public static final RegistryObject<QuestType<?>> MECHA_MORPH = QUESTS.register("mecha_morph", () -> QuestType.Builder.of(ExampleQuest::new).repeatable(false).instantTurnIn(false).build());
-    public static final RegistryObject<QuestType<?>> PORTABLE_TESLA_COIL = QUESTS.register("portable_tesla_coil", () -> QuestType.Builder.of(ExampleQuest::new).repeatable(false).instantTurnIn(false).build());
+    public static final RegistryObject<QuestType<?>> FREDDY_MICROPHONE = QUESTS.register("freddy_microphone", () -> QuestType.Builder.of(FreddyMicrophoneQuest::new).repeatable(false).instantTurnIn(false).build());
+    public static final RegistryObject<QuestType<?>> FREDDY_HAT = QUESTS.register("freddy_hat", () -> QuestType.Builder.of(FreddyHatQuest::new).repeatable(false).instantTurnIn(false).build());
+    public static final RegistryObject<QuestType<?>> TOY_BOX_TRAP = QUESTS.register("toy_box_trap", () -> QuestType.Builder.of(ToyBoxTrapQuest::new).repeatable(false).instantTurnIn(false).build());
+    public static final RegistryObject<QuestType<?>> TOY_ARMY = QUESTS.register("toy_army", () -> QuestType.Builder.of(ToyArmyQuest::new).repeatable(false).instantTurnIn(false).build());
+    public static final RegistryObject<QuestType<?>> FREDDY_PIZZA = QUESTS.register("freddy_pizza", () -> QuestType.Builder.of(FreddyPizzaQuest::new).repeatable(false).instantTurnIn(false).build());
 }

@@ -1,6 +1,8 @@
 package dev._100media.rgrfreddy.init;
 
+import dev._100media.hundredmediaquests.skill.requirements.ItemTagSkillRequirement;
 import dev._100media.rgrfreddy.RGRFreddy;
+import dev._100media.rgrfreddy.requirement.EnchantedItemRequirement;
 import dev._100media.rgrfreddy.skill.MorphSkill;
 import dev._100media.rgrfreddy.skill.tree.CombatTree;
 import dev._100media.rgrfreddy.skill.tree.EvolutionTree;
@@ -16,6 +18,7 @@ import dev._100media.hundredmediaquests.skill.defaults.QuestSkill;
 import dev._100media.hundredmediaquests.skill.defaults.SimpleSkill;
 import dev._100media.hundredmediaquests.skill.requirements.ItemSkillRequirement;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
@@ -87,172 +90,157 @@ public class SkillInit {
             Arrays.asList(KID_FREDDY, TOY_FREDDY, FREDDY_FAZBEAR, GOLDEN_FREDDY_FAZBEAR, NIGHTMARE_FREDDY_FAZBEAR)
     ));
     // Combat
-    public static final RegistryObject<Skill> MOUNTED_WRIST_ROCKETS = SKILLS.register("mounted_wrist_rockets", () -> new QuestSkill(
-            Component.literal("Mounted Wrist Rockets"),
+    public static final RegistryObject<Skill> FREDDY_MICROPHONE = SKILLS.register("freddy_microphone", () -> new QuestSkill(
+            Component.literal("Freddy's Microphone"),
             Component.literal("""
-                    Point at any enemy within your vision while holding this item to begin locking onto them.
-                    Once the lock on is finished, right click to fire 2 missiles out of your wrist that chase
-                    the targeted enemy until detonation.
+                    A weapon that acts like a diamond sword. When right clicked, all nearby hunters nausea for 10 seconds.
+                    COOLDOWN: 30s
                     """),
-            QuestInit.MOUNTED_WRIST_ROCKETS
+            QuestInit.FREDDY_MICROPHONE
     ));
-    public static final RegistryObject<Skill> MECHA_WARDEN_LASER = SKILLS.register("mecha_warden_laser", () -> new QuestSkill(
-            Component.literal("Mecha Warden Laser"),
+    public static final RegistryObject<Skill> FREDDY_HAT = SKILLS.register("freddy_hat", () -> new QuestSkill(
+            Component.literal("Freddy's Hat"),
             Component.literal("""
-                    The Mecha Warden gets access to a powerful laser that can be fired from its mouth.
-                    When you right-click with this ability, a wide beam of energy is fired forward similar
-                    to the normal Warden Laser, but continuous. This beam damages any enemies in its path continuously.
-                    SCULK: 12/s
-                    COOLDOWN: 10s
+                    A weapon that can be thrown at the hunters. When thrown, the camera will follow the hat.
+                    The hat will be controllable by Freddy, guided like a cruise missile.
+                    If the hat lands within 3 blocks of the hunters, it will attach to one. Then, Freddy will be able to
+                    control this hunter. Control lasts for 1 minute.
+                    COOLDOWN: 120s
                     """),
-            QuestInit.MECHA_WARDEN_LASER
+            QuestInit.FREDDY_HAT
     ));
-    public static final RegistryObject<Skill> SCULKY_MECHA_MINES = SKILLS.register("sculky_mecha_mines", () -> new QuestSkill(
-            Component.literal("Sculky Mecha Mines"),
+    public static final RegistryObject<Skill> TOY_ARMY = SKILLS.register("toy_army", () -> new QuestSkill(
+            Component.literal("Toy Army"),
             Component.literal("""
-                    Place down a mine below the Warden that blows up if an entity walks within 2 blocks of it.
-                    The Mine does a massive explosion of 8 blocks with massive damage and transforms surface 
-                    layer blocks into sculk blocks. Players standing on these sculk blocks will receive Slowness II 
-                    and take automatic crits.
-                    SCULK: 10
-                    COOLDOWN: 3s
+                    Summon a group of 10 miniature Toy Freddy's that chase / attack the hunters.
+                    COOLDOWN: 60s
                     """),
-            QuestInit.SCULKY_MECHA_MINES
+            QuestInit.TOY_ARMY
     ));
-    public static final RegistryObject<Skill> MECHA_MORPH = SKILLS.register("mecha_morph", () -> new QuestSkill(
-            Component.literal("Mecha Morph"),
+    public static final RegistryObject<Skill> TOY_BOX_TRAP = SKILLS.register("toy_box_trap", () -> new QuestSkill(
+            Component.literal("Toy Box Trap"),
             Component.literal("""
-                    The Mecha Warden unlocks the ability to transform into a stationary laser turret,
-                    alongside the ability to mimic any block he has the ability to left click.
-                    The turret's attack damage and attack speed depends on the users Evolution stage.
-                    SCULK: 20
-                    COOLDOWN: 5s
+                    Place a toy box as a trap on the ground where Freddy is looking. If a hunter gets anywhere within 10
+                    blocks of the toy box, they start getting sucked into the toy box.  When a player is sucked fully into the Toy Box,
+                    they cannot move and a timer begins playing on their screen counting down from 20. Once it reaches 0,
+                    they will be teleported somewhere.
                     """),
-            QuestInit.MECHA_MORPH
+            QuestInit.TOY_BOX_TRAP
     ));
-    public static final RegistryObject<Skill> PORTABLE_TESLA_COIL = SKILLS.register("portable_tesla_coil", () -> new QuestSkill(
-            Component.literal("Portable Tesla Coil"),
+    public static final RegistryObject<Skill> FREDDY_PIZZA = SKILLS.register("freddy_pizza", () -> new QuestSkill(
+            Component.literal("Freddy's Pizza"),
             Component.literal("""
-                    The Mecha Warden gains a Tesla Coil on their back that can be toggled
-                    with a hotkey. The Warden also has a 40 block aura that targets the
-                    closest enemy and constantly zaps them for 1 heart.
-                    SCULK: 5/s
+                    Freddy gets a box of pizza, that when right click is hit or held down, rapidly shoots out pizza
+                    that hones in on the nearest player or entity. When the pizza hits a player it explodes doing
+                    massive damage to players and blocks.
                     """),
-            QuestInit.PORTABLE_TESLA_COIL
+            QuestInit.FREDDY_PIZZA
     ));
 
     public static final RegistryObject<MenuProvidingTree> COMBAT_TREE = SKILL_TREES.register("combat", () -> new CombatTree(
             Component.literal("Combat"),
-            Arrays.asList(MOUNTED_WRIST_ROCKETS, MECHA_WARDEN_LASER, SCULKY_MECHA_MINES, MECHA_MORPH, PORTABLE_TESLA_COIL)
+            Arrays.asList(FREDDY_MICROPHONE, FREDDY_HAT, TOY_BOX_TRAP, TOY_ARMY, FREDDY_PIZZA)
     ));
     // Utility
-    public static final RegistryObject<Skill> MECHA_BOARD = SKILLS.register("mecha_board", () -> new SimpleSkill(
-            Component.literal("Mecha Board"),
+    public static final RegistryObject<Skill> EERIE_LULLABY = SKILLS.register("eerie_lullaby", () -> new SimpleSkill(
+            Component.literal("Eerie Lullaby"),
             Component.literal("""
-                    The Mecha Warden transforms its robotic legs into a Hover Board that works similarly to
-                    creative flight, but has a height limit and speed limit per Evolution.
+                    When this ability is used, all enemies within a 20 block diameter are frozen with fear. And their
+                    screens should begin to shake. The amount of time they are feared depends on evolution level.
                     """),
             Arrays.asList(
-                    new ItemSkillRequirement(() -> Items.SHIELD, 1),
-                    new ItemSkillRequirement(() -> Items.REPEATER, 2),
-                    new ItemSkillRequirement(() -> Items.POWERED_RAIL, 12)
+                    new ItemSkillRequirement(() -> Items.SNIFFER_EGG, 1),
+                    new ItemSkillRequirement(() -> Items.IRON_INGOT, 64),
+                    new ItemSkillRequirement(() -> Items.SALMON, 32)
+            ),
+            player -> {
+                unlockAbility(player, AbilityInit.EERIE_LULLABY.get());
+            },
+            player -> {
+                removeAbility(player, AbilityInit.EERIE_LULLABY.get());
+            }
+    ));
+    public static final RegistryObject<Skill> MYSTIC_MUSIC_BOX = SKILLS.register("mystic_music_box", () -> new SimpleSkill(
+            Component.literal("Mystic Music Box"),
+            Component.literal("""
+                    Activate a mystical music box that appears at Freddy’s feet when activated. The music box lulls enemy hunters into a trance,
+                    causing them to get slowness 2, and scramble their controls when within 20 blocks.
+                    Also, Freddy obtains Speed 10 and Strength 2 levels higher than what it is based from evolution.
+                    """),
+            Arrays.asList(
+                    new ItemSkillRequirement(() -> Items.JUKEBOX, 1),
+                    new ItemSkillRequirement(() -> Items.EMERALD, 16),
+                    new ItemSkillRequirement(() -> Items.NAUTILUS_SHELL, 1)
             ),
             player -> {
 
             },
             player -> {
-
             }
     ));
-    public static final RegistryObject<Skill> SCULKY_SNACK = SKILLS.register("sculky_snack", () -> new SimpleSkill(
-            Component.literal("Sculky Snack"),
+    public static final RegistryObject<Skill> SMOKE_BOMBS = SKILLS.register("smoke_bombs", () -> new SimpleSkill(
+            Component.literal("Smoke Bombs"),
             Component.literal("""
-                    A sculky snack that when eaten by the Mecha Warden gives him 5 hunger bars,
-                    regeneration 2 for 5 seconds, and Resistance (level equivalent to Evolution tier) 
-                    for 4 seconds.
-                    COOLDOWN: 5s
-                    """),
-            Arrays.asList(
-                    new ItemSkillRequirement(() -> Items.GLOW_BERRIES, 10),
-                    new ItemSkillRequirement(() -> Items.FERMENTED_SPIDER_EYE, 2),
-                    new ItemSkillRequirement(() -> Items.SCULK_VEIN, 12)
-            ),
-            player -> {
-
-            },
-            player -> {
-            }
-    ));
-    public static final RegistryObject<Skill> FUSION_REACTOR_CORE = SKILLS.register("fusion_reactor_core", () -> new SimpleSkill(
-            Component.literal("Fusion Reactor Core Ejection"),
-            Component.literal("""
-                    Upon activation, this ability shoots a reactor core up into the air (like a mortar) that lands where
-                    the Mecha Warden is looking. After 5 seconds on the ground, a mini-nuclear explosion destroys
-                    everything within a 60 block circumference of the reactor core
-                    SCULK: 80
-                    COOLDOWN: 40s
+                    Deploy a smoke bomb that create a thick fog, obscuring vision and disorienting enemy hunters, allowing Freddy to close the gap unnoticed.
+                    When in the smoke, hunters are given blindness for 20 seconds. Additionally, Freddy turns invisible for 30 seconds.
                     """),
             Arrays.asList(
                     /*  new ItemTreasureMapSkillRequirement(1),*/
-                    new ItemSkillRequirement(() -> Items.RECOVERY_COMPASS, 1),
-                    new ItemSkillRequirement(() -> Items.RESPAWN_ANCHOR, 1),
-                    new ItemSkillRequirement(() -> Items.TNT, 8)
+                    new ItemSkillRequirement(() -> Items.GRAY_DYE, 10),
+                    new ItemSkillRequirement(() -> Items.LAPIS_LAZULI, 10),
+                    new ItemSkillRequirement(() -> Items.REDSTONE, 5)
             ),
             player -> {
-                unlockAbility(player, AbilityInit.FUSION_CORE_REACTOR.get());
+                // TODO: Add Smoke bomb item to player inventory
             },
             player -> {
-                removeAbility(player, AbilityInit.FUSION_CORE_REACTOR.get());
+
             }
     ));
 
-    public static final RegistryObject<Skill> MECHOLOCATION = SKILLS.register("mecholocation", () -> new SimpleSkill(
-            Component.literal("Mecholocation"),
+    public static final RegistryObject<Skill> FREDDY_SNARES = SKILLS.register("freddy_snares", () -> new SimpleSkill(
+            Component.literal("Freddy's Snares"),
             Component.literal("""
-                    Once unlocked, the Mecha Warden can use this item to “scan” the area in a 50 block radius.
-                    If no players are in that 50 block radius, the Mecholocator will show a "title" of the
-                    nearest hunter that is x amount of blocks away in y direction. If one or more players is found,
-                    it will instead highlight those players in red for the Mecha Warden until their next death.
-                    SCULK: 20
-                    COOLDOWN: 10s
+                    Place down a snare where Freddy is looking. This snare will activate whenever a player (Except Freddy) steps on it;
+                    they instantly go blind with darkness, cant move with slowness, and their coordinates are broadcast to the entire server.
+                    Heartbeats will start playing for anyone within 20 blocks of the snare, once it's been activated.
                     """),
             Arrays.asList(
-                   /* new ItemTreasureMapSkillRequirement(1),*/
-                    new ItemSkillRequirement(() -> Items.DAYLIGHT_DETECTOR, 10),
-                    new ItemSkillRequirement(() -> Items.LODESTONE, 1)
+                    new EnchantedItemRequirement(p -> p.isEnchanted() && p.is(Items.TRIDENT), "Enchanted Trident"),
+                    new ItemSkillRequirement(() -> Items.TRIPWIRE_HOOK, 32),
+                    new ItemSkillRequirement(() -> Items.RABBIT_FOOT, 2)
             ),
             player -> {
-
+                unlockAbility(player, AbilityInit.FREDDY_SNARES.get());
             },
             player -> {
+                removeAbility(player, AbilityInit.FREDDY_SNARES.get());
             }
     ));
-    public static final RegistryObject<Skill> DEEP_DARK_DESTROYER = SKILLS.register("deep_dark_destroyer", () -> new SimpleSkill(
-            Component.literal("Deep Dark Destroyer"),
+    public static final RegistryObject<Skill> DIMENSIONAL_TRAPDOOR = SKILLS.register("dimensional_trapdoor", () -> new SimpleSkill(
+            Component.literal("Dimensional Trapdoor"),
             Component.literal("""
-                    This shoulder mounted blaster shoots out a large blue orb of charged magnetic pulse.
-                    Upon impact with an enemy or block, the orb should grow until it is 10 blocks wide,
-                    sucking in enemies and soft blocks nearby, excluding the Mecha Warden. Enemies within
-                    the grasp of the Deep Dark Destroyer orb are given blindness and take constant damage \
-                    until death.
-                    COOLDOWN: 15s
+                    Freddy can set 2 teleporters down; that teleport freddy from Portal A to Portal B. These portals should look like a trap door
+                    When Freddy jumps in, Freddy should pop up next to the other portal, allowing Freddy to teleport around. If the hunters
+                    try to enter these doors, they will instantly die.
                     """),
             Arrays.asList(
-                    new ItemSkillRequirement(() -> Items.HEART_OF_THE_SEA, 1),
-                    new ItemSkillRequirement(() -> Items.NAUTILUS_SHELL, 1),
-                    new ItemSkillRequirement(() -> Items.WITHER_SKELETON_SKULL, 1),
-                    new ItemSkillRequirement(() -> Items.DRAGON_EGG, 1)
+                    new ItemTagSkillRequirement(() -> ItemTags.TRAPDOORS, 32, Component.literal("[Trapdoor]")),
+                    new ItemSkillRequirement(() -> Items.DRAGON_EGG, 1),
+                    new ItemSkillRequirement(() -> Items.DRAGON_HEAD, 1),
+                    new ItemSkillRequirement(() -> Items.END_CRYSTAL, 4)
             ),
             player -> {
-
+                unlockAbility(player, AbilityInit.DIMENSIONAL_TRAPDOOR.get());
             },
             player -> {
+                removeAbility(player, AbilityInit.DIMENSIONAL_TRAPDOOR.get());
             }
     ));
 
     public static final RegistryObject<MenuProvidingTree> UTILITY_TREE = SKILL_TREES.register("utility", () -> new UtilityTree(
             Component.literal("Utility"),
-            Arrays.asList(MECHA_BOARD, SCULKY_SNACK, FUSION_REACTOR_CORE, MECHOLOCATION, DEEP_DARK_DESTROYER)
+            Arrays.asList(EERIE_LULLABY, MYSTIC_MUSIC_BOX, SMOKE_BOMBS, FREDDY_SNARES, DIMENSIONAL_TRAPDOOR)
     ));
 
 
