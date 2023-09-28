@@ -3,7 +3,9 @@
   "package": "dev._100media.rgrfreddy.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "${mod_id}.refmap.json",
-  "mixins": [],
+  "mixins": [
+    "ParrotMixin"
+  ],
   "client": [],
   "minVersion": "0.8.5"
 }

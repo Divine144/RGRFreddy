@@ -1,6 +1,7 @@
 package dev._100media.rgrfreddy.event;
 
 import dev._100media.rgrfreddy.RGRFreddy;
+import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
 import dev._100media.rgrfreddy.init.MenuInit;
 import dev._100media.rgrfreddy.init.SkillInit;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -105,8 +106,8 @@ public class ClientModEvents {
     }
 
     @SubscribeEvent
-    public static void registerOverlays(RegisterGuiOverlaysEvent event) {
-
+    public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerAboveAll("jumpscare", JumpscareOverlay.INSTANCE);
     }
 
     private static <T extends IHasGeoRenderer & GeoAnimatable> void createSimpleMorphRenderer(Morph morph, String name, T animatable, float scale) {

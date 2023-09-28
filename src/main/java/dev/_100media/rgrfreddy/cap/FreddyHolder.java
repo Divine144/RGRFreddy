@@ -9,33 +9,31 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public class FreddyHolder extends PlayerCapability {
-    private int example;
+    private int timeNearHunters;
 
     protected FreddyHolder(Player entity) {
         super(entity);
     }
 
-    public int getExample() {
-        return this.example;
+    public int getTimeNearHunters() {
+        return this.timeNearHunters;
     }
 
-    public void setExample(int example) {
-        this.example = example;
+    public void setTimeNearHunters(int timeNearHunters) {
+        this.timeNearHunters = timeNearHunters;
         updateTracking();
     }
 
     @Override
     public CompoundTag serializeNBT(boolean savingToDisk) {
         CompoundTag tag = new CompoundTag();
-
-        tag.putInt("example", this.example);
-
+        tag.putInt("timeNearHunters", this.timeNearHunters);
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt, boolean readingFromDisk) {
-        this.example = nbt.getInt("example");
+        this.timeNearHunters = nbt.getInt("timeNearHunters");
     }
 
     @Override

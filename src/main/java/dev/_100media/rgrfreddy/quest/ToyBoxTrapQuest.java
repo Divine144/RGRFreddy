@@ -3,7 +3,14 @@ package dev._100media.rgrfreddy.quest;
 import dev._100media.hundredmediaquests.goal.QuestGoal;
 import dev._100media.hundredmediaquests.quest.Quest;
 import dev._100media.hundredmediaquests.quest.QuestType;
+import dev._100media.hundredmediaquests.reward.ItemQuestReward;
 import dev._100media.hundredmediaquests.reward.QuestReward;
+import dev._100media.rgrfreddy.init.BlockInit;
+import dev._100media.rgrfreddy.quest.goal.ControlPlayerToLavaGoal;
+import dev._100media.rgrfreddy.quest.goal.HitWardenGoal;
+import dev._100media.rgrfreddy.quest.goal.JumpscareHuntersGoal;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +24,18 @@ public class ToyBoxTrapQuest extends Quest {
     @Override
     protected List<QuestGoal> initializeGoals() {
         List<QuestGoal> goals = new ArrayList<>();
-/*        goals.add(new AquireAdvancementGoal("play_jukebox_in_meadows", "sound_of_music_advancement_goal"));
-        goals.add(new KillSpecificTypeGoal(10, EntityType.PIGLIN_BRUTE));
-        goals.add(new BreakBlocksMechaMinesGoal(500));*/
+        // TODO: Implement Freddy's hat then implement this goal
+        goals.add(new ControlPlayerToLavaGoal(1));
+        // TODO: I guess verify how many hunters are actually there somehow
+        goals.add(new JumpscareHuntersGoal(3));
+        goals.add(new HitWardenGoal(10));
         return goals;
     }
 
     @Override
     protected List<QuestReward> initializeRewards() {
         List<QuestReward> rewards = new ArrayList<>();
-/*        rewards.add(new ItemQuestReward(new ItemStack(ItemInit.BLOCK_MORPH.get())));
-        rewards.add(new AbilityQuestReward(AbilityInit.LASER_TURRET_MORPH));
-        rewards.add(new AbilityQuestReward(AbilityInit.LASER_TURRET_SHOOT));*/
+        rewards.add(new ItemQuestReward(new ItemStack(BlockInit.TOY_BOX_TRAP_BLOCK.get().asItem())));
         return rewards;
     }
 }

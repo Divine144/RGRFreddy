@@ -6,8 +6,10 @@ import dev._100media.hundredmediaabilities.init.HMAMarkerInit;
 import dev._100media.hundredmediamorphs.HundredMediaMorphsMod;
 import dev._100media.hundredmediamorphs.morph.Morph;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -20,7 +22,9 @@ public class MorphInit {
             .dimensions(0.65f, 0.65f)
             .eyeHeight(0.5f)
             .morphedTo(entity -> {
-
+                if (entity instanceof ServerPlayer player) {
+                    player.getInventory().add(new ItemStack(ItemInit.JUMPSCARE.get()));
+                }
             })
             .demorph(entity -> {
 

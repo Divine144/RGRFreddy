@@ -94,6 +94,16 @@ public class FreddyUtils {
         });
     }
 
+    public static <T extends QuestGoal> void addToGenericQuestGoal(ServerPlayer player, Class<T> clazz, int amount) {
+        QuestHolderAttacher.checkAllGoals(player, goal -> {
+            if (goal.getClass() == clazz) {
+                goal.addProgress(amount);
+                return true;
+            }
+            return false;
+        });
+    }
+
     public static void fancyExplosion(Vec3 center, Level level, int radius, BlockState afterMathState) {
         Set<BlockPos> set = Sets.newHashSet();
         ExplosionDamageCalculator damageCalculator = new ExplosionDamageCalculator();
