@@ -42,7 +42,7 @@ public class ModLangProvider extends LanguageProvider {
         add("itemGroup.hundredMediaTab", "100 Media");
         add("key.rgrfreddy.skill_tree", "Open Skill Tree");
         add("key.category.rgrfreddy", "RGRFreddy");
-        add("effect.rgrfreddy.lock_on", "Targeted");
+        add("effect.rgrfreddy.netted", "Targeted");
 
         // Quest Descriptions
         add("quest.goal.rgrmechawarden.sound_of_music_advancement_goal.description", "Earn the Advancement \"Sound of Music\"");

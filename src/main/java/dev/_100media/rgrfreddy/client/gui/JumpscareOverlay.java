@@ -21,11 +21,15 @@ public class JumpscareOverlay implements IGuiOverlay {
 
     public static final JumpscareOverlay INSTANCE = new JumpscareOverlay();
     private static final ResourceLocation[] EVO_1_FRAMES = initializeEvoOneFrames();
+    private static final ResourceLocation[] EVO_2_FRAMES = initializeEvoTwoFrames();
+    private static final ResourceLocation[] EVO_3_FRAMES = initializeEvoThreeFrames();
+    private static final ResourceLocation[] EVO_4_FRAMES = initializeEvoFourFrames();
+    private static final ResourceLocation[] EVO_5_FRAMES = initializeEvoFiveFrames();
+    private static final List<ResourceLocation[]> framesList = List.of(EVO_1_FRAMES, EVO_2_FRAMES, EVO_3_FRAMES, EVO_4_FRAMES, EVO_5_FRAMES);
 
     private long startTime = 0;
     private boolean enabled = false;
-
-    private int loopTimes = 0;
+    private int evolutionStage = 0;
 
     public void setStartTime(long startTime) {
         this.startTime = startTime;
@@ -33,6 +37,10 @@ public class JumpscareOverlay implements IGuiOverlay {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void setEvolutionStage(int evolutionStage) {
+        this.evolutionStage = Mth.clamp(evolutionStage, 0, 4);
     }
 
     public boolean isEnabled() {
@@ -43,11 +51,59 @@ public class JumpscareOverlay implements IGuiOverlay {
 
     private static ResourceLocation[] initializeEvoOneFrames() {
         List<ResourceLocation> locations = new ArrayList<>();
-        for (int i = 1; i <= 300; i++) {
-            ResourceLocation location = new ResourceLocation(RGRFreddy.MODID, "textures/gui/confetti/%04d.png".formatted(i));
+        for (int i = 1; i <= 30; i++) {
+            ResourceLocation location = new ResourceLocation(RGRFreddy.MODID, "textures/gui/evo_one/%04d.png".formatted(i));
             locations.add(location);
         }
         return locations.toArray(ResourceLocation[]::new);
+    }
+
+    private static ResourceLocation[] initializeEvoTwoFrames() {
+        List<ResourceLocation> locations = new ArrayList<>();
+        for (int i = 1; i <= 138; i++) {
+            ResourceLocation location = new ResourceLocation(RGRFreddy.MODID, "textures/gui/evo_two/%04d.png".formatted(i));
+            locations.add(location);
+        }
+        return locations.toArray(ResourceLocation[]::new);
+    }
+
+    private static ResourceLocation[] initializeEvoThreeFrames() {
+        List<ResourceLocation> locations = new ArrayList<>();
+        for (int i = 1; i <= 28; i++) {
+            ResourceLocation location = new ResourceLocation(RGRFreddy.MODID, "textures/gui/evo_three/%04d.png".formatted(i));
+            locations.add(location);
+        }
+        return locations.toArray(ResourceLocation[]::new);
+    }
+
+    private static ResourceLocation[] initializeEvoFourFrames() {
+        List<ResourceLocation> locations = new ArrayList<>();
+        for (int i = 1; i <= 111; i++) {
+            ResourceLocation location = new ResourceLocation(RGRFreddy.MODID, "textures/gui/evo_four/%04d.png".formatted(i));
+            locations.add(location);
+        }
+        return locations.toArray(ResourceLocation[]::new);
+    }
+
+    private static ResourceLocation[] initializeEvoFiveFrames() {
+        List<ResourceLocation> locations = new ArrayList<>();
+        for (int i = 1; i <= 28; i++) {
+            ResourceLocation location = new ResourceLocation(RGRFreddy.MODID, "textures/gui/evo_five/%04d.png".formatted(i));
+            locations.add(location);
+        }
+        return locations.toArray(ResourceLocation[]::new);
+    }
+
+    private ResourceLocation[] getFramesForEvo() {
+        return framesList.get(evolutionStage);
+    }
+
+    private long getDurationForEvo() {
+        return switch (evolutionStage) {
+            case 0 -> 5000L;
+            case 1 -> 8000L;
+            default -> 10000L;
+        };
     }
 
     @Override
@@ -57,21 +113,15 @@ public class JumpscareOverlay implements IGuiOverlay {
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         long elapsedTime = Util.getMillis() - this.startTime;
-
-        if (elapsedTime > 6_000L) {
-            if (++loopTimes < 5) {
-                setStartTime(Util.getMillis());
-            }
-            else {
-                this.enabled = false;
-                loopTimes = 0;
-                return;
-            }
+        ResourceLocation[] frames = getFramesForEvo();
+        if (elapsedTime > getDurationForEvo()) {
+            this.enabled = false;
+            return;
         }
-
-        int currentFrame = Mth.clamp((int) (elapsedTime / 20), 0, 299);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, ((float) (299 - currentFrame) / 299));
-        RenderSystem.setShaderTexture(0, EVO_1_FRAMES[currentFrame]);
+        int frameLength = frames.length - 1;
+        int currentFrame = Mth.clamp((int) (elapsedTime / 20), 0, frameLength);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, ((float) ((frameLength) - currentFrame) / frameLength));
+        RenderSystem.setShaderTexture(0, frames[currentFrame]);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);

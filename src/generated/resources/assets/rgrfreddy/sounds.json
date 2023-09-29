@@ -1,0 +1,12 @@
+{
+  "heartbeat": {
+    "sounds": [
+      "rgrfreddy:heartbeat"
+    ]
+  },
+  "microphone": {
+    "sounds": [
+      "rgrfreddy:microphone"
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 package dev._100media.rgrfreddy;
 
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
+import dev._100media.rgrfreddy.cap.GlobalHolderAttacher;
 import dev._100media.rgrfreddy.config.ExampleClientConfig;
 import dev._100media.rgrfreddy.config.ExampleConfig;
 import dev._100media.rgrfreddy.init.*;
@@ -44,6 +45,7 @@ public class RGRFreddy {
         SkillInit.SKILLS.register(modBus);
         SkillInit.SKILL_TREES.register(modBus);
         FreddyHolderAttacher.register();
+        GlobalHolderAttacher.register();
         GeckoLib.initialize();
     }
 

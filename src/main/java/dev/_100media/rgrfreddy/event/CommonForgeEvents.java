@@ -1,15 +1,21 @@
 package dev._100media.rgrfreddy.event;
 
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
+import dev._100media.rgrfreddy.cap.GlobalHolderAttacher;
 import dev._100media.rgrfreddy.init.ItemInit;
+import dev._100media.rgrfreddy.init.SoundInit;
 import dev._100media.rgrfreddy.quest.goal.*;
 import com.mojang.brigadier.Command;
 import dev._100media.hundredmediamorphs.capability.MorphHolderAttacher;
 import dev._100media.hundredmediaquests.cap.QuestHolderAttacher;
 import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.monster.warden.Warden;
@@ -46,8 +52,24 @@ public class CommonForgeEvents {
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         var dispatcher = event.getDispatcher();
         dispatcher.register(Commands.literal(RGRFreddy.MODID)
-                .then(Commands.literal("test")
-                        .executes(context -> Command.SINGLE_SUCCESS)
+                .then(Commands.literal("heartbeat")
+                        .then(Commands.argument("isEnabled", BoolArgumentType.bool())
+                                .executes(context -> {
+                                    boolean arg = BoolArgumentType.getBool(context, "isEnabled");
+                                    GlobalHolderAttacher.getGlobalLevelCapability(context.getSource().getLevel()).ifPresent(c -> c.setShouldPlayHeartBeat(arg));
+                                    return Command.SINGLE_SUCCESS;
+                                })
+
+                        )
+                )
+                .then(Commands.literal("toyTrapTeleportPos")
+                        .then(Commands.argument("blockPos", BlockPosArgument.blockPos())
+                                .executes(context -> {
+                                    BlockPos pos = BlockPosArgument.getBlockPos(context, "blockPos");
+                                    GlobalHolderAttacher.getGlobalLevelCapability(context.getSource().getLevel()).ifPresent(c -> c.setToyBoxTeleportPos(pos));
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                        )
                 )
         );
     }
@@ -154,8 +176,14 @@ public class CommonForgeEvents {
         if (event.player instanceof ServerPlayer player && event.phase == TickEvent.Phase.END) {
             FreddyHolderAttacher.getHolder(player).ifPresent(cap -> {
                 if (MorphHolderAttacher.getCurrentMorph(player).isPresent()) {
+                    var list = FreddyUtils.getEntitiesInRange(player, Player.class, 30, 25, 30, p -> p != player);
+                    var globalHolder = GlobalHolderAttacher.getGlobalLevelCapabilityUnwrap(player.serverLevel());
+                    if (globalHolder != null && globalHolder.isShouldPlayHeartBeat()) {
+                        if (player.tickCount % 12 == 0 && !list.isEmpty()) {
+                            player.serverLevel().playSound(null, player.blockPosition(), SoundInit.HEARTBEAT.get(), SoundSource.PLAYERS, 0.65f, 1f);
+                        }
+                    }
                     if (player.tickCount % 20 == 0) {
-                        var list = FreddyUtils.getEntitiesInRange(player, Player.class, 30, 25, 30, p -> p != player);
                         QuestHolderAttacher.checkAllGoals(player, goal -> {
                             if (goal instanceof StayNearHunterGoal hunterGoal) {
                                 if (list.isEmpty() && !hunterGoal.isGoalMet()) {

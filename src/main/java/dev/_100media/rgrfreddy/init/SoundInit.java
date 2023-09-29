@@ -11,6 +11,10 @@ public class SoundInit {
 
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, RGRFreddy.MODID);
 
+    public static final RegistryObject<SoundEvent> HEARTBEAT = sound("heartbeat");
+
+    public static final RegistryObject<SoundEvent> MICROPHONE = sound("microphone");
+
 /*    public static final RegistryObject<SoundEvent> SHOCK_TRAP = sound("shock_trap");
     public static final RegistryObject<SoundEvent> WRIST_ROCKETS = sound("wrist_rockets");
     public static final RegistryObject<SoundEvent> WARDEN_LASER = sound("warden_laser");

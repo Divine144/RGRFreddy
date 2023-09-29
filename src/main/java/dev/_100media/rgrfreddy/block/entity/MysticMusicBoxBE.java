@@ -16,37 +16,22 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.UUID;
-
-public class ToyBoxTrapBE extends BlockEntity implements GeoBlockEntity {
+public class MysticMusicBoxBE extends BlockEntity implements GeoBlockEntity {
 
     private final AnimatableInstanceCache instanceCache = GeckoLibUtil.createInstanceCache(this);
-    private int timesHit = 0;
-    private int timer = 20 * 20; // 20 second initial timer
-    private UUID trappedPlayerUUID = null;
 
-    public ToyBoxTrapBE(BlockPos pPos, BlockState pBlockState) {
-        super(BlockInit.TOY_BOX_TRAP_BE.get(), pPos, pBlockState);
+    public MysticMusicBoxBE(BlockPos pPos, BlockState pBlockState) {
+        super(BlockInit.MYSTIC_MUSIC_BOX_BE.get(), pPos, pBlockState);
     }
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.putInt("timer", timer);
-        pTag.putInt("timesHit", this.timesHit);
-        if (trappedPlayerUUID != null) {
-            pTag.putUUID("playerUUID", this.trappedPlayerUUID);
-        }
     }
 
     @Override
     public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
-        this.timer = pTag.getInt("timer");
-        this.timesHit = pTag.getInt("timesHit");
-        if (pTag.hasUUID("playerUUID")) {
-            this.trappedPlayerUUID = pTag.getUUID("playerUUID");
-        }
     }
 
     @Override
@@ -65,7 +50,7 @@ public class ToyBoxTrapBE extends BlockEntity implements GeoBlockEntity {
 
     @Override
     public BlockEntityType<?> getType() {
-        return BlockInit.TOY_BOX_TRAP_BE.get();
+        return BlockInit.MYSTIC_MUSIC_BOX_BE.get();
     }
 
     @Override
@@ -79,42 +64,5 @@ public class ToyBoxTrapBE extends BlockEntity implements GeoBlockEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return instanceCache;
-    }
-
-    public int getTimer() {
-        return timer;
-    }
-
-    public void setTimer(int timer) {
-        this.timer = timer;
-    }
-
-    public void decrementTimer() {
-        if (--timer < 0) {
-            timer = 0;
-        }
-    }
-
-    @Nullable
-    public UUID getTrappedPlayerUUID() {
-        return trappedPlayerUUID;
-    }
-
-    public void setTrappedPlayerUUID(UUID trappedPlayerUUID) {
-        this.trappedPlayerUUID = trappedPlayerUUID;
-    }
-
-    public int getTimesHit() {
-        return timesHit;
-    }
-
-    public void setTimesHit(int timesHit) {
-        this.timesHit = timesHit;
-    }
-
-    public void incrementTimesHit() {
-        if (++timesHit > 3) {
-            timesHit = 3;
-        }
     }
 }

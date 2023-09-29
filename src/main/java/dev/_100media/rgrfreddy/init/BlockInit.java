@@ -2,7 +2,9 @@ package dev._100media.rgrfreddy.init;
 
 import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.block.HundredMediaBlock;
+import dev._100media.rgrfreddy.block.MysticMusicBoxBlock;
 import dev._100media.rgrfreddy.block.ToyBoxTrapBlock;
+import dev._100media.rgrfreddy.block.entity.MysticMusicBoxBE;
 import dev._100media.rgrfreddy.block.entity.ToyBoxTrapBE;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
@@ -23,9 +25,13 @@ public class BlockInit {
 
     public static final RegistryObject<HundredMediaBlock> HUNDRED_MEDIA = registerBlock("hundred_media", () -> new HundredMediaBlock(BlockBehaviour.Properties.of().mapColor(DyeColor.RED).noOcclusion().strength(1)));
 
-    public static final RegistryObject<Block> TOY_BOX_TRAP_BLOCK = registerBlock("shock_trap", () -> new ToyBoxTrapBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().noCollission().isValidSpawn((a, b, c, d) -> false)));
+    public static final RegistryObject<Block> TOY_BOX_TRAP_BLOCK = registerBlock("toy_box_trap", () -> new ToyBoxTrapBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().noCollission().isValidSpawn((a, b, c, d) -> false)));
+
+    public static final RegistryObject<Block> MYSTIC_MUSIC_BOX_BLOCK = registerBlock("mystic_music_box", () -> new MysticMusicBoxBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().noCollission().isValidSpawn((a, b, c, d) -> false)));
 
     public static final RegistryObject<BlockEntityType<ToyBoxTrapBE>> TOY_BOX_TRAP_BE = BLOCK_ENTITIES.register("toy_box_trap_be", () -> BlockEntityType.Builder.of(ToyBoxTrapBE::new, TOY_BOX_TRAP_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<MysticMusicBoxBE>> MYSTIC_MUSIC_BOX_BE = BLOCK_ENTITIES.register("mystic_music_box_be", () -> BlockEntityType.Builder.of(MysticMusicBoxBE::new, MYSTIC_MUSIC_BOX_BLOCK.get()).build(null));
 
 
     protected static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {

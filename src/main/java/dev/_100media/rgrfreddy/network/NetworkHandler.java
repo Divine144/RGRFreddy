@@ -1,9 +1,13 @@
 package dev._100media.rgrfreddy.network;
 
+import dev._100media.capabilitysyncer.network.SimpleLevelCapabilityStatusPacket;
 import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import com.google.common.collect.ImmutableList;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
+import dev._100media.rgrfreddy.cap.GlobalHolderAttacher;
+import dev._100media.rgrfreddy.network.clientbound.PlayJumpscarePacket;
+import dev._100media.rgrfreddy.network.clientbound.UnboundControlsPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -24,10 +28,11 @@ public class NetworkHandler {
     public static void register() {
         List<BiConsumer<SimpleChannel, Integer>> packets = ImmutableList.<BiConsumer<SimpleChannel, Integer>>builder()
                 .add(SimpleEntityCapabilityStatusPacket::register)
+                .add(PlayJumpscarePacket::register)
+                .add(UnboundControlsPacket::register)
                 .build();
-
         SimpleEntityCapabilityStatusPacket.registerRetriever(FreddyHolderAttacher.LOCATION, FreddyHolderAttacher::getHolderUnwrap);
-
+        SimpleLevelCapabilityStatusPacket.registerRetriever(GlobalHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, GlobalHolderAttacher::getGlobalLevelCapabilityUnwrap);
         packets.forEach(consumer -> consumer.accept(INSTANCE, getNextId()));
     }
 

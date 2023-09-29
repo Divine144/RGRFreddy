@@ -1,10 +1,7 @@
 package dev._100media.rgrfreddy.init;
 
 import dev._100media.rgrfreddy.RGRFreddy;
-import dev._100media.rgrfreddy.item.FreddyHatItem;
-import dev._100media.rgrfreddy.item.FreddyMicrophoneItem;
-import dev._100media.rgrfreddy.item.JumpscareItem;
-import dev._100media.rgrfreddy.item.ToyArmyItem;
+import dev._100media.rgrfreddy.item.*;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -17,7 +14,7 @@ public class ItemInit {
     public static final RegistryObject<Item> FREDDY_HAT = ITEMS.register("freddy_hat", () -> new FreddyHatItem(getItemProperties().stacksTo(1)));
     public static final RegistryObject<Item> TOY_ARMY_ITEM = ITEMS.register("toy_army", () -> new ToyArmyItem(getItemProperties().stacksTo(1)));
 
-    public static final RegistryObject<Item> FREDDY_PIZZA = ITEMS.register("freddy_pizza", () -> new ToyArmyItem(getItemProperties().stacksTo(1)));
+    public static final RegistryObject<Item> FREDDY_PIZZA = ITEMS.register("freddy_pizza", () -> new FreddyPizzaItem(getItemProperties().stacksTo(1)));
 
     public static final RegistryObject<Item> JUMPSCARE = ITEMS.register("jumpscare", () -> new JumpscareItem(getItemProperties().stacksTo(1)));
 
