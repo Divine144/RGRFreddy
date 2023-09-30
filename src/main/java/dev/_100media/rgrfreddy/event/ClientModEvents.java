@@ -1,8 +1,12 @@
 package dev._100media.rgrfreddy.event;
 
+import dev._100media.hundredmediageckolib.client.animatable.SimpleAnimatable;
+import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
 import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
+import dev._100media.rgrfreddy.init.EntityInit;
 import dev._100media.rgrfreddy.init.MenuInit;
+import dev._100media.rgrfreddy.init.MorphInit;
 import dev._100media.rgrfreddy.init.SkillInit;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -22,6 +26,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,6 +40,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import java.util.Arrays;
 
@@ -50,6 +56,13 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
+        event.registerEntityRenderer(EntityInit.PIZZA.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
+        createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "pizza", new SimpleAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.TOY_FREDDY.get(), "pizza", new SimpleAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.FREDDY_FAZBEAR.get(), "pizza", new SimpleAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.GOLDEN_FREDDY_FAZBEAR.get(), "pizza", new SimpleAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.NIGHTMARE_FREDDY_FAZBEAR.get(), "pizza", new SimpleAnimatable(), 1.0f);
 
      /*   event.registerEntityRenderer(EntityInit.MISSILE.get(), MissileEntityRenderer::new);*/
 

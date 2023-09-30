@@ -1,5 +1,6 @@
 package dev._100media.rgrfreddy.network;
 
+import dev._100media.capabilitysyncer.core.GlobalLevelCapability;
 import dev._100media.capabilitysyncer.network.SimpleLevelCapabilityStatusPacket;
 import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
@@ -28,6 +29,7 @@ public class NetworkHandler {
     public static void register() {
         List<BiConsumer<SimpleChannel, Integer>> packets = ImmutableList.<BiConsumer<SimpleChannel, Integer>>builder()
                 .add(SimpleEntityCapabilityStatusPacket::register)
+                .add(SimpleLevelCapabilityStatusPacket::register)
                 .add(PlayJumpscarePacket::register)
                 .add(UnboundControlsPacket::register)
                 .build();

@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "rgrfreddy:shock_trap"
+          "name": "rgrfreddy:mystic_music_box"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "rgrfreddy:blocks/shock_trap"
+  "random_sequence": "rgrfreddy:blocks/mystic_music_box"
 }
