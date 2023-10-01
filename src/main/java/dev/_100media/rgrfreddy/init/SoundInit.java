@@ -1,6 +1,7 @@
 package dev._100media.rgrfreddy.init;
 
 import dev._100media.rgrfreddy.RGRFreddy;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.registries.DeferredRegister;
@@ -14,6 +15,8 @@ public class SoundInit {
     public static final RegistryObject<SoundEvent> HEARTBEAT = sound("heartbeat");
 
     public static final RegistryObject<SoundEvent> MICROPHONE = sound("microphone");
+
+    public static final RegistryObject<SoundEvent> MUSIC_BOX = sound("music_box");
 
 /*    public static final RegistryObject<SoundEvent> SHOCK_TRAP = sound("shock_trap");
     public static final RegistryObject<SoundEvent> WRIST_ROCKETS = sound("wrist_rockets");

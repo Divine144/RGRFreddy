@@ -27,6 +27,7 @@ public class JumpscareItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
+
         if (pLevel.isClientSide) {
             return InteractionResultHolder.consume(itemStack);
         }
@@ -35,7 +36,12 @@ public class JumpscareItem extends Item {
                 var list = FreddyUtils.getEntitiesInRange(pPlayer, ServerPlayer.class, 10, 10, 10, p -> p != pPlayer);
                 if (!list.isEmpty()) {
                     ServerPlayer targeted = list.get(0);
-                    targeted.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 10, 0, false, false, false));
+                    int duration = 20 * 10;
+                    switch (getEvolutionStage(player)) {
+                        case 0 -> duration = 20 * 5;
+                        case 1 -> duration = 20 * 8;
+                    }
+                    targeted.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, duration, 0, false, false, false));
                     NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> targeted), new PlayJumpscarePacket(getEvolutionStage(player)));
                     player.getCooldowns().addCooldown(this, 20 * 10);
                 }

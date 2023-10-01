@@ -2,8 +2,10 @@ package dev._100media.rgrfreddy.event;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import dev._100media.rgrfreddy.RGRFreddy;
+import dev._100media.rgrfreddy.block.entity.DimensionalTrapDoorBE;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.cap.GlobalHolderAttacher;
+import dev._100media.rgrfreddy.init.BlockInit;
 import dev._100media.rgrfreddy.init.ItemInit;
 import dev._100media.rgrfreddy.init.SoundInit;
 import dev._100media.rgrfreddy.quest.goal.*;
@@ -21,6 +23,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -84,11 +87,6 @@ public class CommonForgeEvents {
     }
 
     @SubscribeEvent
-    public static void onBlockBreak(BlockEvent.BreakEvent event) {
-
-    }
-
-    @SubscribeEvent
     public static void onVillagerTrade(TradeWithVillagerEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             ItemStack costStack = event.getMerchantOffer().getCostA();
@@ -101,6 +99,46 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void onPlayerLeave(EntityLeaveLevelEvent event) {
 
+
+    }
+
+    @SubscribeEvent
+    public static void onBlockBreak(BlockEvent.BreakEvent event) {
+        if (event.getPlayer() instanceof ServerPlayer player) {
+            if (event.getState().is(BlockInit.DIMENSIONAL_TRAPDOOR_BLOCK.get())) {
+                var holder = FreddyHolderAttacher.getHolderUnwrap(player);
+                if (holder != null) {
+                    if (player.level().getBlockEntity(event.getPos()) instanceof DimensionalTrapDoorBE be) {
+                        BlockPos pos = be.getLinkedBlockPos();
+                        if (pos != null && event.getPos().equals(holder.getLastPortalBlockPos())) {
+                            holder.setLastPortalBlockPos(pos);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player && event.getPlacedBlock().is(BlockInit.DIMENSIONAL_TRAPDOOR_BLOCK.get())) {
+            // Check if player has morph
+            var holder = FreddyHolderAttacher.getHolderUnwrap(player);
+            if (holder != null) {
+                BlockPos holderPos = holder.getLastPortalBlockPos();
+                if (player.level().getBlockEntity(event.getPos()) instanceof DimensionalTrapDoorBE be) {
+                    if (be.getLinkedBlockPos() == null || !(player.level().getBlockEntity(be.getLinkedBlockPos()) instanceof DimensionalTrapDoorBE)) {
+                        if (player.level().getBlockEntity(holderPos) instanceof DimensionalTrapDoorBE other) {
+                            if (other.getLinkedBlockPos() == null || !(player.level().getBlockEntity(other.getLinkedBlockPos()) instanceof DimensionalTrapDoorBE)) {
+                                be.setLinkedBlockPos(holderPos);
+                                other.setLinkedBlockPos(event.getPos());
+                            }
+                        }
+                        else holder.setLastPortalBlockPos(event.getPos());
+                    }
+                }
+            }
+        }
     }
 
     @SubscribeEvent

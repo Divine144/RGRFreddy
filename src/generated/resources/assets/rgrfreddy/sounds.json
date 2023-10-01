@@ -8,5 +8,10 @@
     "sounds": [
       "rgrfreddy:microphone"
     ]
+  },
+  "music_box": {
+    "sounds": [
+      "rgrfreddy:music_box"
+    ]
   }
 }

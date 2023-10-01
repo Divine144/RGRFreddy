@@ -1,16 +1,18 @@
 package dev._100media.rgrfreddy.init;
 
 import dev._100media.rgrfreddy.RGRFreddy;
-import dev._100media.rgrfreddy.block.HundredMediaBlock;
-import dev._100media.rgrfreddy.block.MysticMusicBoxBlock;
-import dev._100media.rgrfreddy.block.ToyBoxTrapBlock;
+import dev._100media.rgrfreddy.block.*;
+import dev._100media.rgrfreddy.block.entity.DimensionalTrapDoorBE;
 import dev._100media.rgrfreddy.block.entity.MysticMusicBoxBE;
+import dev._100media.rgrfreddy.block.entity.SnareBE;
 import dev._100media.rgrfreddy.block.entity.ToyBoxTrapBE;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -29,9 +31,17 @@ public class BlockInit {
 
     public static final RegistryObject<Block> MYSTIC_MUSIC_BOX_BLOCK = registerBlock("mystic_music_box", () -> new MysticMusicBoxBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().noCollission().isValidSpawn((a, b, c, d) -> false)));
 
+    public static final RegistryObject<Block> SNARE_BLOCK = registerBlock("snare", () -> new SnareBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().noCollission().isValidSpawn((a, b, c, d) -> false)));
+
+    public static final RegistryObject<Block> DIMENSIONAL_TRAPDOOR_BLOCK = registerBlock("dimensional_door", () -> new DimensionalTrapDoorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().isValidSpawn((a, b, c, d) -> false).ignitedByLava()));
+
     public static final RegistryObject<BlockEntityType<ToyBoxTrapBE>> TOY_BOX_TRAP_BE = BLOCK_ENTITIES.register("toy_box_trap_be", () -> BlockEntityType.Builder.of(ToyBoxTrapBE::new, TOY_BOX_TRAP_BLOCK.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<MysticMusicBoxBE>> MYSTIC_MUSIC_BOX_BE = BLOCK_ENTITIES.register("mystic_music_box_be", () -> BlockEntityType.Builder.of(MysticMusicBoxBE::new, MYSTIC_MUSIC_BOX_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<SnareBE>> SNARE_BE = BLOCK_ENTITIES.register("snare_be", () -> BlockEntityType.Builder.of(SnareBE::new, SNARE_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<DimensionalTrapDoorBE>> DIMENSIONAL_TRAPDOOR_BE = BLOCK_ENTITIES.register("dimensional_door_be", () -> BlockEntityType.Builder.of(DimensionalTrapDoorBE::new, DIMENSIONAL_TRAPDOOR_BLOCK.get()).build(null));
 
 
     protected static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {

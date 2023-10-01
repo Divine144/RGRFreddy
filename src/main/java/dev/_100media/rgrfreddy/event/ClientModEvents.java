@@ -4,10 +4,8 @@ import dev._100media.hundredmediageckolib.client.animatable.SimpleAnimatable;
 import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
 import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
-import dev._100media.rgrfreddy.init.EntityInit;
-import dev._100media.rgrfreddy.init.MenuInit;
-import dev._100media.rgrfreddy.init.MorphInit;
-import dev._100media.rgrfreddy.init.SkillInit;
+import dev._100media.rgrfreddy.client.renderer.blockentity.DimensionalTrapDoorRenderer;
+import dev._100media.rgrfreddy.init.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
@@ -22,7 +20,9 @@ import dev._100media.hundredmediaquests.client.screen.TreeScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
@@ -56,6 +56,7 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(BlockInit.DIMENSIONAL_TRAPDOOR_BE.get(), DimensionalTrapDoorRenderer::new);
         event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
         event.registerEntityRenderer(EntityInit.PIZZA.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
         createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "pizza", new SimpleAnimatable(), 1.0f);
@@ -78,6 +79,7 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void initClient(FMLClientSetupEvent event) {
+        ItemBlockRenderTypes.setRenderLayer(BlockInit.DIMENSIONAL_TRAPDOOR_BLOCK.get(), RenderType.cutout());
         MenuScreens.register(MenuInit.SKILL_TREE.get(), (AbstractContainerMenu menu, Inventory inv, Component title) -> new TreeScreen(menu, inv, title,
                 new ResourceLocation(RGRFreddy.MODID, "textures/gui/screen/skill_tree.png"), 23, 23,
                 Arrays.asList(

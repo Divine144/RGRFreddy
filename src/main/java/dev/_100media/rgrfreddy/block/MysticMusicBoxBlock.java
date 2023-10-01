@@ -6,12 +6,17 @@ import dev._100media.hundredmediamorphs.morph.Morph;
 import dev._100media.rgrfreddy.block.entity.MysticMusicBoxBE;
 import dev._100media.rgrfreddy.init.BlockInit;
 import dev._100media.rgrfreddy.init.MarkerInit;
+import dev._100media.rgrfreddy.init.MorphInit;
+import dev._100media.rgrfreddy.init.SoundInit;
 import dev._100media.rgrfreddy.network.NetworkHandler;
 import dev._100media.rgrfreddy.network.clientbound.UnboundControlsPacket;
 import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -29,6 +34,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class MysticMusicBoxBlock extends BaseEntityBlock {
 
@@ -73,37 +80,73 @@ public class MysticMusicBoxBlock extends BaseEntityBlock {
     }
 
     private void tick(Level level, BlockPos blockPos, BlockState state, BlockEntity blockEntity) {
-        if (!level.isClientSide) {
+        if (level instanceof ServerLevel serverLevel) {
             BlockEntity entity = level.getBlockEntity(blockPos);
             if (entity instanceof MysticMusicBoxBE) {
+                if (serverLevel.getServer().getTickCount() % 100 == 0) {
+                    serverLevel.playSound(null, blockPos, SoundInit.MUSIC_BOX.get(), SoundSource.PLAYERS, 0.65f, 1f);
+                }
                 var list = FreddyUtils.getEntitiesInRange(blockPos, level, ServerPlayer.class, 20, 20, 20, p -> true);
                 list.forEach(player -> {
-                    if (MorphHolderAttacher.getCurrentMorph(player).isEmpty()) {
-                        MarkerHolderAttacher.getMarkerHolder(player).ifPresent(holder -> {
-                            if (!holder.hasMarker(MarkerInit.UNBOUND_CONTROLS_MARKER.get())) {
-                                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new UnboundControlsPacket(false));
-                                holder.addMarker(MarkerInit.UNBOUND_CONTROLS_MARKER.get(), true);
+                    var markerHolder = MarkerHolderAttacher.getMarkerHolderUnwrap(player);
+                    if (markerHolder != null) {
+                        if (MorphHolderAttacher.getCurrentMorph(player).isEmpty()) {
+                            MarkerHolderAttacher.getMarkerHolder(player).ifPresent(holder -> {
+                                if (!holder.hasMarker(MarkerInit.UNBOUND_CONTROLS_MARKER.get())) {
+                                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, -1, 1, false, false, false));
+                                    NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new UnboundControlsPacket(false));
+                                    holder.addMarker(MarkerInit.UNBOUND_CONTROLS_MARKER.get(), false);
+                                }
+                            });
+                        }
+                        else {
+                            var effect = player.getEffect(MobEffects.MOVEMENT_SPEED);
+                            if (effect != null) {
+                                if (effect.getAmplifier() < 9) {
+                                    player.removeEffect(MobEffects.DAMAGE_BOOST);
+                                    player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, getAmplifierForEvo(player) + 2, false, false,false));
+                                    player.removeEffect(MobEffects.MOVEMENT_SPEED);
+                                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 9, false, false, false));
+                                }
                             }
-                        });
+                        }
                     }
                 });
-                ((ServerLevel) level).players().forEach(player -> {
-                    if (!list.contains(player)) { // If the player is out of the box's range
-                        Morph morph = MorphHolderAttacher.getCurrentMorphUnwrap(player);
-                        if (morph != null) {
-                            // TODO: do only once
-                            player.removeAllEffects();
-                            morph.onMorphedTo(player);
-                        }
-                        MarkerHolderAttacher.getMarkerHolder(player).ifPresent(holder -> {
-                            if (holder.hasMarker(MarkerInit.UNBOUND_CONTROLS_MARKER.get())) {
-                                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new UnboundControlsPacket(true));
-                                holder.removeMarker(MarkerInit.UNBOUND_CONTROLS_MARKER.get(), true);
+                // If the player is out of the box's range (we do the logic here for ease of access I guess)
+                serverLevel.players().stream().filter(player -> !list.contains(player)).forEach(player -> {
+                    Morph morph = MorphHolderAttacher.getCurrentMorphUnwrap(player);
+                    if (morph != null) {
+                        var effect = player.getEffect(MobEffects.MOVEMENT_SPEED);
+                        if (effect != null) {
+                            if (effect.getAmplifier() == 9) {
+                                player.removeAllEffects();
+                                morph.onMorphedTo(player);
                             }
-                        });
+                        }
                     }
+                    MarkerHolderAttacher.getMarkerHolder(player).ifPresent(holder -> {
+                        if (holder.hasMarker(MarkerInit.UNBOUND_CONTROLS_MARKER.get())) {
+                            player.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+                            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new UnboundControlsPacket(true));
+                            holder.removeMarker(MarkerInit.UNBOUND_CONTROLS_MARKER.get(), false);
+                        }
+                    });
                 });
             }
         }
+    }
+
+    public int getAmplifierForEvo(ServerPlayer player) {
+        Morph morph = MorphHolderAttacher.getCurrentMorphUnwrap(player);
+        if (morph == MorphInit.FREDDY_FAZBEAR.get()) {
+            return 1;
+        }
+        else if (morph == MorphInit.GOLDEN_FREDDY_FAZBEAR.get()) {
+            return 2;
+        }
+        else if (morph == MorphInit.NIGHTMARE_FREDDY_FAZBEAR.get()) {
+            return 4;
+        }
+        return 0;
     }
 }

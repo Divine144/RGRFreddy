@@ -15,6 +15,7 @@ public class ClientHandler {
     }
 
     public static void unboundControls() {
+
         Minecraft mc = Minecraft.getInstance();
         mc.options.setKey(mc.options.keyJump, InputConstants.UNKNOWN);
         mc.options.setKey(mc.options.keyUp, InputConstants.UNKNOWN);
