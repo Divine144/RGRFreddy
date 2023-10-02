@@ -1,6 +1,8 @@
-// 1.20.1	2023-09-30T16:40:33.2798184	Loot Tables
+// 1.20.1	2023-10-01T16:23:14.1829821	Loot Tables
 fd4b8de3c110dd6520c537a4ad260224895021a8 data/rgrfreddy/loot_tables/blocks/dimensional_door.json
+1947b3ec0c052d50762bfe36eb3e9d0ad583d121 data/rgrfreddy/loot_tables/blocks/emp_generator.json
 2b8161c5e74657973577ffe6961f9bdfab4b78f8 data/rgrfreddy/loot_tables/blocks/hundred_media.json
+8b0bb68f3dbcd5d5f960563900727cbb1e287aef data/rgrfreddy/loot_tables/blocks/jail_door.json
 59c548153baafa45fd5d7061a50dbe6e15d707e4 data/rgrfreddy/loot_tables/blocks/mystic_music_box.json
 474e300bb245a688cb75ec27d73f56487fdda5f0 data/rgrfreddy/loot_tables/blocks/snare.json
 3a44a8a9c56858cdde19c4abec5dcace9cdff333 data/rgrfreddy/loot_tables/blocks/toy_box_trap.json

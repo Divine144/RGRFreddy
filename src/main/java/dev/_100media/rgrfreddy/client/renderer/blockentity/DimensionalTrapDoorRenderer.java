@@ -15,9 +15,7 @@ import org.joml.Matrix4f;
 
 public class DimensionalTrapDoorRenderer<T extends DimensionalTrapDoorBE> implements BlockEntityRenderer<T> {
 
-    public DimensionalTrapDoorRenderer(BlockEntityRendererProvider.Context pContext) {
-
-    }
+    public DimensionalTrapDoorRenderer(BlockEntityRendererProvider.Context pContext) {}
 
     public void render(T pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         BlockState state = pBlockEntity.getBlockState();

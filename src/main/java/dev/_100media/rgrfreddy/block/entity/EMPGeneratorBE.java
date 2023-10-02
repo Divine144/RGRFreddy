@@ -7,7 +7,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,26 +15,22 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class MysticMusicBoxBE extends BlockEntity implements GeoBlockEntity {
+public class EMPGeneratorBE extends BlockEntity implements GeoBlockEntity {
 
     private final AnimatableInstanceCache instanceCache = GeckoLibUtil.createInstanceCache(this);
 
-    private int tickCount = 20 * 20;
-
-    public MysticMusicBoxBE(BlockPos pPos, BlockState pBlockState) {
-        super(BlockInit.MYSTIC_MUSIC_BOX_BE.get(), pPos, pBlockState);
+    public EMPGeneratorBE(BlockPos pPos, BlockState pBlockState) {
+        super(BlockInit.EMP_GENERATOR_BE.get(), pPos, pBlockState);
     }
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.putInt("tickCount", this.tickCount);
     }
 
     @Override
     public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
-        this.tickCount = pTag.getInt("tickCount");
     }
 
     @Override
@@ -53,11 +48,6 @@ public class MysticMusicBoxBE extends BlockEntity implements GeoBlockEntity {
     }
 
     @Override
-    public BlockEntityType<?> getType() {
-        return BlockInit.MYSTIC_MUSIC_BOX_BE.get();
-    }
-
-    @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
     }
@@ -68,19 +58,5 @@ public class MysticMusicBoxBE extends BlockEntity implements GeoBlockEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return instanceCache;
-    }
-
-    public int getTickCount() {
-        return tickCount;
-    }
-
-    public void decrementTickCount() {
-        if (--tickCount < 0) {
-            tickCount = 0;
-        }
-    }
-
-    public void setTickCount(int tickCount) {
-        this.tickCount = tickCount;
     }
 }

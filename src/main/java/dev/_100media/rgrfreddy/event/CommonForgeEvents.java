@@ -8,14 +8,19 @@ import dev._100media.rgrfreddy.cap.GlobalHolderAttacher;
 import dev._100media.rgrfreddy.init.BlockInit;
 import dev._100media.rgrfreddy.init.ItemInit;
 import dev._100media.rgrfreddy.init.SoundInit;
+import dev._100media.rgrfreddy.network.NetworkHandler;
+import dev._100media.rgrfreddy.network.clientbound.StopControllingPlayerPacket;
 import dev._100media.rgrfreddy.quest.goal.*;
 import com.mojang.brigadier.Command;
 import dev._100media.hundredmediamorphs.capability.MorphHolderAttacher;
 import dev._100media.hundredmediaquests.cap.QuestHolderAttacher;
 import dev._100media.rgrfreddy.util.FreddyUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
@@ -23,6 +28,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
@@ -33,6 +39,9 @@ import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
+
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = RGRFreddy.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CommonForgeEvents {
@@ -74,6 +83,25 @@ public class CommonForgeEvents {
                                 })
                         )
                 )
+                .then(Commands.literal("control")
+                        .then(Commands.argument("controllingPlayer", EntityArgument.player())
+                                .then(Commands.argument("toBeControlled", EntityArgument.player())
+                                        .executes(context -> {
+                                            Player controller = EntityArgument.getPlayer(context, "controllingPlayer");
+                                            Player controlee = EntityArgument.getPlayer(context, "toBeControlled");
+                                            FreddyHolderAttacher.getHolder(controlee).ifPresent(p -> {
+                                                p.setControllingPlayer(controller.getUUID());
+                                                p.setControlTicks(20 * 60);
+                                                FreddyHolderAttacher.getHolder(controller).ifPresent(o -> {
+                                                    o.setControlledPlayer(controlee.getUUID());
+                                                    o.setControlTicks(20 * 60);
+                                                });
+                                            });
+                                            return Command.SINGLE_SUCCESS;
+                                        })
+                                )
+                        )
+                )
         );
     }
 
@@ -105,15 +133,10 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void onBlockBreak(BlockEvent.BreakEvent event) {
         if (event.getPlayer() instanceof ServerPlayer player) {
-            if (event.getState().is(BlockInit.DIMENSIONAL_TRAPDOOR_BLOCK.get())) {
+            if (event.getState().is(BlockInit.EMP_GENERATOR_BLOCK.get())) {
                 var holder = FreddyHolderAttacher.getHolderUnwrap(player);
-                if (holder != null) {
-                    if (player.level().getBlockEntity(event.getPos()) instanceof DimensionalTrapDoorBE be) {
-                        BlockPos pos = be.getLinkedBlockPos();
-                        if (pos != null && event.getPos().equals(holder.getLastPortalBlockPos())) {
-                            holder.setLastPortalBlockPos(pos);
-                        }
-                    }
+                if (holder != null && holder.isHasPlacedGenerator()) {
+                    holder.setHasPlacedGenerator(false);
                 }
             }
         }
@@ -121,21 +144,35 @@ public class CommonForgeEvents {
 
     @SubscribeEvent
     public static void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player && event.getPlacedBlock().is(BlockInit.DIMENSIONAL_TRAPDOOR_BLOCK.get())) {
-            // Check if player has morph
+        if (event.getEntity() instanceof ServerPlayer player) {
             var holder = FreddyHolderAttacher.getHolderUnwrap(player);
             if (holder != null) {
-                BlockPos holderPos = holder.getLastPortalBlockPos();
-                if (player.level().getBlockEntity(event.getPos()) instanceof DimensionalTrapDoorBE be) {
-                    if (be.getLinkedBlockPos() == null || !(player.level().getBlockEntity(be.getLinkedBlockPos()) instanceof DimensionalTrapDoorBE)) {
+                if (event.getPlacedBlock().is(BlockInit.DIMENSIONAL_TRAPDOOR_BLOCK.get())) {
+                    // Check if player has morph
+                    BlockPos holderPos = holder.getLastPortalBlockPos();
+                    if (player.level().getBlockEntity(event.getPos()) instanceof DimensionalTrapDoorBE be) {
                         if (player.level().getBlockEntity(holderPos) instanceof DimensionalTrapDoorBE other) {
-                            if (other.getLinkedBlockPos() == null || !(player.level().getBlockEntity(other.getLinkedBlockPos()) instanceof DimensionalTrapDoorBE)) {
-                                be.setLinkedBlockPos(holderPos);
-                                other.setLinkedBlockPos(event.getPos());
-                            }
+                            be.setLinkedBlockPos(holderPos);
+                            other.setLinkedBlockPos(event.getPos());
+                            holder.setLastPortalBlockPos(BlockPos.ZERO);
+                            player.sendSystemMessage(Component.literal("Linked to: %s %s %s"
+                                    .formatted(holderPos.getX(), holderPos.getY(), holderPos.getZ())).withStyle(ChatFormatting.GREEN), true);
                         }
-                        else holder.setLastPortalBlockPos(event.getPos());
+                        else {
+                            holder.setLastPortalBlockPos(event.getPos());
+                            player.sendSystemMessage(Component.literal("Ready for Link at: %s %s %s"
+                                            .formatted(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ()))
+                                    .withStyle(ChatFormatting.GREEN), true);
+                        }
                     }
+
+                }
+                else if (event.getPlacedBlock().is(BlockInit.EMP_GENERATOR_BLOCK.get())) {
+                    if (holder.isHasPlacedGenerator()) {
+                        player.sendSystemMessage(Component.literal("You can only place one generator at a time!").withStyle(ChatFormatting.RED), true);
+                        event.setCanceled(true);
+                    }
+                    else holder.setHasPlacedGenerator(true);
                 }
             }
         }
@@ -213,6 +250,35 @@ public class CommonForgeEvents {
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.player instanceof ServerPlayer player && event.phase == TickEvent.Phase.END) {
             FreddyHolderAttacher.getHolder(player).ifPresent(cap -> {
+                if (cap.getLastTeleportTicks() > 0) {
+                    cap.setLastTeleportTicks(cap.getLastTeleportTicks() - 1);
+                }
+                if (cap.getFearTicks() > 0) {
+                    cap.decrementFearTicks();
+                }
+                if (cap.getControlTicks() > 0) {
+                    cap.decrementControlTicks();
+                }
+                else {
+                    UUID controllingPlayer = cap.getControllingPlayer();
+                    UUID controlledPlayer = cap.getControlledPlayer();
+                    if (controllingPlayer != null) {
+                        Player controller = player.level().getPlayerByUUID(controllingPlayer);
+                        if (controller instanceof ServerPlayer serverPlayer) {
+                            FreddyHolderAttacher.getHolder(serverPlayer).ifPresent(p -> p.setControlledPlayer(null));
+                            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new StopControllingPlayerPacket());
+                        }
+                        cap.setControllingPlayer(null);
+                    }
+                    else if (controlledPlayer != null) {
+                        Player controlled = player.level().getPlayerByUUID(controlledPlayer);
+                        if (controlled instanceof ServerPlayer serverPlayer) {
+                            FreddyHolderAttacher.getHolder(serverPlayer).ifPresent(p -> p.setControllingPlayer(null));
+                        }
+                        cap.setControlledPlayer(null);
+                        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new StopControllingPlayerPacket());
+                    }
+                }
                 if (MorphHolderAttacher.getCurrentMorph(player).isPresent()) {
                     var list = FreddyUtils.getEntitiesInRange(player, Player.class, 30, 25, 30, p -> p != player);
                     var globalHolder = GlobalHolderAttacher.getGlobalLevelCapabilityUnwrap(player.serverLevel());

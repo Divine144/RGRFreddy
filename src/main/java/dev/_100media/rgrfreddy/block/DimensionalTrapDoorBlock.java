@@ -2,9 +2,13 @@ package dev._100media.rgrfreddy.block;
 
 import dev._100media.hundredmediamorphs.capability.MorphHolderAttacher;
 import dev._100media.rgrfreddy.block.entity.DimensionalTrapDoorBE;
+import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.init.BlockInit;
+import dev._100media.rgrfreddy.init.SoundInit;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -12,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -54,25 +59,36 @@ public class DimensionalTrapDoorBlock extends BaseEntityBlock implements SimpleW
     }
 
     @Override
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        if (level instanceof ServerLevel serverLevel && serverLevel.getBlockEntity(pos) instanceof DimensionalTrapDoorBE be) {
+            BlockPos linkedPos = be.getLinkedBlockPos();
+            if (linkedPos != null && serverLevel.getBlockEntity(linkedPos) instanceof DimensionalTrapDoorBE other) {
+                serverLevel.setBlockAndUpdate(other.getBlockPos(), Blocks.AIR.defaultBlockState());
+            }
+        }
+        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+    }
+
+    @Override
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
         if (pEntity instanceof ServerPlayer player && player.level() instanceof ServerLevel level) {
-         /*   if (MorphHolderAttacher.getCurrentMorph(player).isEmpty()) {
-                player.kill();
-            }
-            else {
-
-            }*/
             if (level.getBlockEntity(pPos) instanceof DimensionalTrapDoorBE be && be.getBlockState().getValue(OPEN)) {
-                BlockPos pos = be.getLinkedBlockPos();
-                if (pos != null) {
-                    if (level.getBlockEntity(pos) instanceof DimensionalTrapDoorBE linkedBE) {
-                        if (!linkedBE.getBlockState().getValue(OPEN)) {
-                            linkedBE.getBlockState().setValue(OPEN, true);
+                if (MorphHolderAttacher.getCurrentMorph(player).isEmpty()) {
+                    player.kill();
+                }
+                else {
+                    BlockPos pos = be.getLinkedBlockPos();
+                    if (pos != null) {
+                        if (level.getBlockEntity(pos) instanceof DimensionalTrapDoorBE) {
+                            var holder = FreddyHolderAttacher.getHolderUnwrap(player);
+                            if (holder != null && holder.getLastTeleportTicks() == 0) {
+                                holder.setLastTeleportTicks(60);
+                                player.teleportTo(pos.getX(), pos.getY(), pos.getZ());
+                                level.playSound(null, pos, SoundInit.TELEPORT.get(), SoundSource.PLAYERS, 0.6f, 1f);
+                            }
                         }
-                        /*this.use(pState, pLevel, pPos, player, InteractionHand.MAIN_HAND, null);*/
-                        player.teleportTo(pos.getX(), pos.getY(), pos.getZ());
+                        else be.setLinkedBlockPos(null);
                     }
-                    else be.setLinkedBlockPos(null);
                 }
             }
         }
@@ -111,7 +127,7 @@ public class DimensionalTrapDoorBlock extends BaseEntityBlock implements SimpleW
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!this.type.canOpenByHand()) {
-            return InteractionResult.PASS;
+            return InteractionResult.CONSUME;
         }
         else {
             pState = pState.cycle(OPEN);

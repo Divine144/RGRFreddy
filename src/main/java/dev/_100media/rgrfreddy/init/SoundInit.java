@@ -18,6 +18,14 @@ public class SoundInit {
 
     public static final RegistryObject<SoundEvent> MUSIC_BOX = sound("music_box");
 
+    public static final RegistryObject<SoundEvent> TELEPORT = sound("teleport");
+
+    public static final RegistryObject<SoundEvent> GENERATOR = sound("generator");
+
+    public static final RegistryObject<SoundEvent> SMOKE = sound("smoke");
+
+    public static final RegistryObject<SoundEvent> LULLABY = sound("lullaby");
+
 /*    public static final RegistryObject<SoundEvent> SHOCK_TRAP = sound("shock_trap");
     public static final RegistryObject<SoundEvent> WRIST_ROCKETS = sound("wrist_rockets");
     public static final RegistryObject<SoundEvent> WARDEN_LASER = sound("warden_laser");

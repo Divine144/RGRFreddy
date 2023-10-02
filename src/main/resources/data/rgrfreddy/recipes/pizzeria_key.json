@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "minecraft:diamond"
+    },
+    "#": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "X  ",
+    " # ",
+    "  #"
+  ],
+  "result": {
+    "item": "rgrfreddy:pizzeria_key"
+  }
+}

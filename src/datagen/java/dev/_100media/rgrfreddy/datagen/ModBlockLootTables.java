@@ -1,5 +1,6 @@
 package dev._100media.rgrfreddy.datagen;
 
+import dev._100media.rgrfreddy.block.SmokeBombBlock;
 import dev._100media.rgrfreddy.init.BlockInit;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
@@ -40,7 +41,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
     }
 
     protected boolean shouldGenerateLoot(Block block) {
-        return block.asItem() != Items.AIR && !(block instanceof DropExperienceBlock);
+        return block.asItem() != Items.AIR && !(block instanceof DropExperienceBlock) && !(block instanceof SmokeBombBlock);
     }
 
     protected LootTable.Builder createOreStoneDrops(Block pCropBlock, Item pGrownCropItem, Item pSeedsItem, LootItemCondition.Builder state, LootItemCondition.Builder state2, LootItemCondition.Builder state3) {

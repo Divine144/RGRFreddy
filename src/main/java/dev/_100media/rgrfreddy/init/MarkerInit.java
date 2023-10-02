@@ -10,4 +10,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class MarkerInit {
     public static final DeferredRegister<Marker> MARKERS = DeferredRegister.create(new ResourceLocation(HundredMediaAbilitiesMod.MODID, "markers"), RGRFreddy.MODID);
     public static final RegistryObject<Marker> UNBOUND_CONTROLS_MARKER = MARKERS.register("unbound_controls", Marker::new);
+    public static final RegistryObject<Marker> FEARED_MARKER = MARKERS.register("scared", Marker::new);
+
 }

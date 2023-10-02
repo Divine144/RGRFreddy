@@ -326,6 +326,11 @@ public class FreddyUtils {
                                 relativePos.getX() + xBound, relativePos.getY() + yBound, relativePos.getZ() + zBound))
                 .stream().sorted(getBlockComparator(relativePos)).filter(filter).collect(Collectors.toList());
     }
+
+    public static AABB AABBofSizeAccurate(BlockPos relativePos, double xBound, double yBound, double zBound) {
+        return new AABB(relativePos.getX() - xBound, relativePos.getY() - yBound, relativePos.getZ() - zBound,
+                relativePos.getX() + xBound, relativePos.getY() + yBound, relativePos.getZ() + zBound);
+    }
     /**
      * Returns a comparator which compares entities' distances to a given LivingEntity
      */

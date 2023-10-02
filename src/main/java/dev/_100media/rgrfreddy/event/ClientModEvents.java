@@ -48,10 +48,12 @@ import java.util.Arrays;
 public class ClientModEvents {
 
     public static final KeyMapping SKILL_TREE_KEY = new KeyMapping("key." + RGRFreddy.MODID + ".skill_tree", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, "key.category." + RGRFreddy.MODID);
+    public static final KeyMapping SWITCH_CONTROL_KEY = new KeyMapping("key." + RGRFreddy.MODID + ".switch_control", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.category." + RGRFreddy.MODID);
 
     @SubscribeEvent
     public static void registerKeybind(RegisterKeyMappingsEvent event) {
         event.register(SKILL_TREE_KEY);
+        event.register(SWITCH_CONTROL_KEY);
     }
 
     @SubscribeEvent

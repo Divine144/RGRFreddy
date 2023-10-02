@@ -191,7 +191,7 @@ public class SkillInit {
                     new ItemSkillRequirement(() -> Items.REDSTONE, 5)
             ),
             player -> {
-                // TODO: Add Smoke bomb item to player inventory
+                player.getInventory().add(new ItemStack(ItemInit.SMOKE_BOMB.get()));
             },
             player -> {
 

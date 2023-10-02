@@ -6,6 +6,8 @@
   "mixins": [
     "ParrotMixin"
   ],
-  "client": [],
+  "client": [
+    "LocalPlayerMixin"
+  ],
   "minVersion": "0.8.5"
 }

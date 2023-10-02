@@ -1,7 +1,17 @@
 {
+  "generator": {
+    "sounds": [
+      "rgrfreddy:generator"
+    ]
+  },
   "heartbeat": {
     "sounds": [
       "rgrfreddy:heartbeat"
+    ]
+  },
+  "lullaby": {
+    "sounds": [
+      "rgrfreddy:lullaby"
     ]
   },
   "microphone": {
@@ -12,6 +22,16 @@
   "music_box": {
     "sounds": [
       "rgrfreddy:music_box"
+    ]
+  },
+  "smoke": {
+    "sounds": [
+      "rgrfreddy:smoke"
+    ]
+  },
+  "teleport": {
+    "sounds": [
+      "rgrfreddy:teleport"
     ]
   }
 }

@@ -5,8 +5,15 @@ import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
 import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
 
 public class ClientHandler {
+
+    public static Player getPlayer() {
+        return Minecraft.getInstance().player;
+    }
 
     public static void startJumpscareAnimation(int evolutionStage) {
         JumpscareOverlay.INSTANCE.setStartTime(Util.getMillis());
@@ -15,7 +22,6 @@ public class ClientHandler {
     }
 
     public static void unboundControls() {
-
         Minecraft mc = Minecraft.getInstance();
         mc.options.setKey(mc.options.keyJump, InputConstants.UNKNOWN);
         mc.options.setKey(mc.options.keyUp, InputConstants.UNKNOWN);
@@ -37,5 +43,19 @@ public class ClientHandler {
         mc.options.keyJump.setToDefault();
         mc.options.keyShift.setToDefault();
         KeyMapping.resetMapping();
+    }
+
+    public static void syncPlayerInputToControlled(boolean up, boolean down, boolean left, boolean right, boolean shift, float forwardImpulse, float leftImpulse) {
+        Player currentPlayer = getPlayer();
+        if (currentPlayer instanceof LocalPlayer controlled) {
+            Input input = controlled.input;
+            input.up = up;
+            input.down = down;
+            input.left = left;
+            input.right = right;
+            input.shiftKeyDown = shift;
+            input.forwardImpulse = forwardImpulse;
+            input.leftImpulse = leftImpulse;
+        }
     }
 }

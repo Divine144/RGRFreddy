@@ -18,6 +18,10 @@ public class ItemInit {
 
     public static final RegistryObject<Item> JUMPSCARE = ITEMS.register("jumpscare", () -> new JumpscareItem(getItemProperties().stacksTo(1)));
 
+    public static final RegistryObject<Item> SMOKE_BOMB = ITEMS.register("smoke_bomb_item", () -> new SmokeBombItem(getItemProperties().stacksTo(1)));
+
+    public static final RegistryObject<Item> PIZZERIA_KEY = ITEMS.register("pizzeria_key", () -> new Item(getItemProperties().stacksTo(1)));
+
     public static Item.Properties getItemProperties() {
         return new Item.Properties();
     }
