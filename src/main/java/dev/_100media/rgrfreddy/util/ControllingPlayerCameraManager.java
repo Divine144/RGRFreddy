@@ -31,6 +31,7 @@ public class ControllingPlayerCameraManager {
         if (minecraft.player == null) {
             return;
         }
+        System.out.println(minecraft.player.input.leftImpulse);
         if (controlledPlayer != null && controlledPlayer.isRemoved()) {
             remove();
             return;

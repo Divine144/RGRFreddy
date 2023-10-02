@@ -3,7 +3,7 @@ package dev._100media.rgrfreddy.network.serverbound;
 import dev._100media.capabilitysyncer.network.IPacket;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.network.NetworkHandler;
-import dev._100media.rgrfreddy.network.clientbound.NotifyClientControlPacket;
+import dev._100media.rgrfreddy.network.clientbound.NotifyClientMousePacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -14,7 +14,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.UUID;
 
-public record NotifyServerControlPacket(boolean up, boolean down, boolean left, boolean right, boolean jump, boolean shift, float leftImpulse, float forwardImpulse) implements IPacket {
+public record NotifyServerMousePacket(float xRot, float yRot) implements IPacket {
 
     @Override
     public void handle(NetworkEvent.Context context) {
@@ -28,7 +28,7 @@ public record NotifyServerControlPacket(boolean up, boolean down, boolean left, 
                         Player controlledPlayer = player.level().getPlayerByUUID(controlledPlayerUUID);
                         if (controlledPlayer instanceof ServerPlayer controlledServerPlayer) {
                             NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> controlledServerPlayer),
-                                    new NotifyClientControlPacket(up, down, left, right, jump, shift, leftImpulse, forwardImpulse));
+                                    new NotifyClientMousePacket(xRot, yRot));
                         }
                     }
                 }
@@ -39,21 +39,15 @@ public record NotifyServerControlPacket(boolean up, boolean down, boolean left, 
 
     @Override
     public void write(FriendlyByteBuf packetBuf) {
-        packetBuf.writeBoolean(up);
-        packetBuf.writeBoolean(down);
-        packetBuf.writeBoolean(left);
-        packetBuf.writeBoolean(right);
-        packetBuf.writeBoolean(jump);
-        packetBuf.writeBoolean(shift);
-        packetBuf.writeFloat(leftImpulse);
-        packetBuf.writeFloat(forwardImpulse);
+        packetBuf.writeFloat(xRot);
+        packetBuf.writeFloat(yRot);
     }
 
-    public static NotifyServerControlPacket read(FriendlyByteBuf buf) {
-        return new NotifyServerControlPacket(buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readFloat(), buf.readFloat());
+    public static NotifyServerMousePacket read(FriendlyByteBuf buf) {
+        return new NotifyServerMousePacket(buf.readFloat(), buf.readFloat());
     }
 
     public static void register(SimpleChannel channel, int id) {
-        IPacket.register(channel, id, NetworkDirection.PLAY_TO_SERVER, NotifyServerControlPacket.class, NotifyServerControlPacket::read);
+        IPacket.register(channel, id, NetworkDirection.PLAY_TO_SERVER, NotifyServerMousePacket.class, NotifyServerMousePacket::read);
     }
 }

@@ -7,7 +7,8 @@
     "ParrotMixin"
   ],
   "client": [
-    "LocalPlayerMixin"
+    "LocalPlayerMixin",
+    "MouseHandlerMixin"
   ],
   "minVersion": "0.8.5"
 }

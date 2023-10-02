@@ -7,12 +7,12 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-public record NotifyClientControlPacket(boolean up, boolean down, boolean left, boolean right, boolean shift, float leftImpulse, float forwardImpulse) implements IPacket {
+public record NotifyClientControlPacket(boolean up, boolean down, boolean left, boolean right, boolean jump, boolean shift, float leftImpulse, float forwardImpulse) implements IPacket {
 
     @Override
     public void handle(NetworkEvent.Context context) {
         context.enqueueWork(() -> {
-            ClientHandler.syncPlayerInputToControlled(up, down, left, right, shift, leftImpulse, forwardImpulse);
+            ClientHandler.syncPlayerInputToControlled(up, down, left, right, jump, shift, leftImpulse, forwardImpulse);
         });
         context.setPacketHandled(true);
     }
@@ -23,13 +23,14 @@ public record NotifyClientControlPacket(boolean up, boolean down, boolean left, 
         packetBuf.writeBoolean(down);
         packetBuf.writeBoolean(left);
         packetBuf.writeBoolean(right);
+        packetBuf.writeBoolean(jump);
         packetBuf.writeBoolean(shift);
         packetBuf.writeFloat(leftImpulse);
         packetBuf.writeFloat(forwardImpulse);
     }
 
     public static NotifyClientControlPacket read(FriendlyByteBuf buf) {
-        return new NotifyClientControlPacket(buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readFloat(), buf.readFloat());
+        return new NotifyClientControlPacket(buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readFloat(), buf.readFloat());
     }
 
     public static void register(SimpleChannel channel, int id) {

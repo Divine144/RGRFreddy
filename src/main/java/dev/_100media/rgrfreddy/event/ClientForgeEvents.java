@@ -91,7 +91,7 @@ public class ClientForgeEvents {
                 Player controlledPlayer = player.level().getPlayerByUUID(controlledPlayerUUID);
                 if (controlledPlayer instanceof RemotePlayer) {
                     NetworkHandler.INSTANCE.sendToServer(new NotifyServerControlPacket(
-                            input.up, input.down, input.left, input.right,
+                            input.up, input.down, input.left, input.right, input.jumping,
                             input.shiftKeyDown, input.leftImpulse, input.forwardImpulse
                     ));
                 }

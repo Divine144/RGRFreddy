@@ -45,7 +45,7 @@ public class ClientHandler {
         KeyMapping.resetMapping();
     }
 
-    public static void syncPlayerInputToControlled(boolean up, boolean down, boolean left, boolean right, boolean shift, float forwardImpulse, float leftImpulse) {
+    public static void syncPlayerInputToControlled(boolean up, boolean down, boolean left, boolean right, boolean jump, boolean shift, float leftImpulse, float forwardImpulse) {
         Player currentPlayer = getPlayer();
         if (currentPlayer instanceof LocalPlayer controlled) {
             Input input = controlled.input;
@@ -53,9 +53,17 @@ public class ClientHandler {
             input.down = down;
             input.left = left;
             input.right = right;
+            input.jumping = jump;
             input.shiftKeyDown = shift;
             input.forwardImpulse = forwardImpulse;
             input.leftImpulse = leftImpulse;
+        }
+    }
+
+    public static void syncPlayerMouseControlled(float xRot, float yRot) {
+        Player currentPlayer = getPlayer();
+        if (currentPlayer instanceof LocalPlayer controlled) {
+           controlled.turn(xRot, yRot);
         }
     }
 }

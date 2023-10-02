@@ -7,11 +7,9 @@ import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import com.google.common.collect.ImmutableList;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
 import dev._100media.rgrfreddy.cap.GlobalHolderAttacher;
-import dev._100media.rgrfreddy.network.clientbound.NotifyClientControlPacket;
-import dev._100media.rgrfreddy.network.clientbound.PlayJumpscarePacket;
-import dev._100media.rgrfreddy.network.clientbound.StopControllingPlayerPacket;
-import dev._100media.rgrfreddy.network.clientbound.UnboundControlsPacket;
+import dev._100media.rgrfreddy.network.clientbound.*;
 import dev._100media.rgrfreddy.network.serverbound.NotifyServerControlPacket;
+import dev._100media.rgrfreddy.network.serverbound.NotifyServerMousePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -38,6 +36,8 @@ public class NetworkHandler {
                 .add(StopControllingPlayerPacket::register)
                 .add(NotifyServerControlPacket::register)
                 .add(NotifyClientControlPacket::register)
+                .add(NotifyServerMousePacket::register)
+                .add(NotifyClientMousePacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(FreddyHolderAttacher.LOCATION, FreddyHolderAttacher::getHolderUnwrap);
         SimpleLevelCapabilityStatusPacket.registerRetriever(GlobalHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, GlobalHolderAttacher::getGlobalLevelCapabilityUnwrap);
