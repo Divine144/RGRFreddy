@@ -8,6 +8,7 @@ import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 public record NotifyClientControlPacket(boolean up, boolean down, boolean left, boolean right, boolean shift, float leftImpulse, float forwardImpulse) implements IPacket {
+
     @Override
     public void handle(NetworkEvent.Context context) {
         context.enqueueWork(() -> {
