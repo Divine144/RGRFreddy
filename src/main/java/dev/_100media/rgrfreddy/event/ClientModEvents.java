@@ -3,6 +3,7 @@ package dev._100media.rgrfreddy.event;
 import dev._100media.hundredmediageckolib.client.animatable.SimpleAnimatable;
 import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
 import dev._100media.rgrfreddy.RGRFreddy;
+import dev._100media.rgrfreddy.client.animatable.FreddyAnimatable;
 import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
 import dev._100media.rgrfreddy.client.renderer.blockentity.DimensionalTrapDoorRenderer;
 import dev._100media.rgrfreddy.init.*;
@@ -29,6 +30,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -40,6 +42,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.model.DefaultedBlockGeoModel;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import java.util.Arrays;
@@ -59,24 +63,31 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(BlockInit.DIMENSIONAL_TRAPDOOR_BE.get(), DimensionalTrapDoorRenderer::new);
-        event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
+        event.registerBlockEntityRenderer(BlockInit.TOY_BOX_TRAP_BE.get(), ctx -> new GeoBlockRenderer<>(
+                new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "toy_box_trap_be"))
+        ));
+
+        event.registerBlockEntityRenderer(BlockInit.MYSTIC_MUSIC_BOX_BE.get(), ctx -> new GeoBlockRenderer<>(
+                new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "mystic_music_box_be"))
+        ));
+
+        event.registerBlockEntityRenderer(BlockInit.SNARE_BE.get(), ctx -> new GeoBlockRenderer<>(
+                new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "snare_be"))
+        ));
+        event.registerBlockEntityRenderer(BlockInit.JAIL_DOOR_BE.get(), ctx -> new GeoBlockRenderer<>(
+                new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "jail_door_be"))
+        ));
+
+        event.registerBlockEntityRenderer(BlockInit.EMP_GENERATOR_BE.get(), ctx -> new GeoBlockRenderer<>(
+                new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "emp_generator_be"))
+        ));
+        event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "toy_army")).withScale(0.5f));
         event.registerEntityRenderer(EntityInit.PIZZA.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
-        createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "pizza", new SimpleAnimatable(), 1.0f);
-        createSimpleMorphRenderer(MorphInit.TOY_FREDDY.get(), "pizza", new SimpleAnimatable(), 1.0f);
-        createSimpleMorphRenderer(MorphInit.FREDDY_FAZBEAR.get(), "pizza", new SimpleAnimatable(), 1.0f);
-        createSimpleMorphRenderer(MorphInit.GOLDEN_FREDDY_FAZBEAR.get(), "pizza", new SimpleAnimatable(), 1.0f);
-        createSimpleMorphRenderer(MorphInit.NIGHTMARE_FREDDY_FAZBEAR.get(), "pizza", new SimpleAnimatable(), 1.0f);
-
-     /*   event.registerEntityRenderer(EntityInit.MISSILE.get(), MissileEntityRenderer::new);*/
-
-/*        createSimpleMorphRenderer(MorphInit.BABY_MECHA.get(), "baby_mecha", new WardenAnimatable()
-                .runAnim(RawAnimation.begin().thenLoop("walk"))
-                .hoverboardAnim(RawAnimation.begin().then("hoverboard spawn", Animation.LoopType.PLAY_ONCE).thenLoop("hoverboard on")), 0.5f);
-        createSimpleMorphRenderer(MorphInit.MECHA_TEEN.get(), "mecha_teen", new WardenAnimatable()
-                .hoverboardAnim(RawAnimation.begin().then("hoverboard on", Animation.LoopType.PLAY_ONCE).thenLoop("hoverboard")), 1.0f);
-        createSimpleMorphRenderer(MorphInit.MECHA_WARDEN.get(), "mecha_warden", new WardenAnimatable(), 1.0f);
-        createSimpleMorphRenderer(MorphInit.MECHA_KING.get(), "mecha_king", new WardenAnimatable(), 1.0f);
-        createSimpleMorphRenderer(MorphInit.MECHA_SCULK.get(), "mecha_sculk", new WardenAnimatable().sitAnim(RawAnimation.begin().thenLoop("crouch")), 3f);*/
+        createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "kid_freddy", new FreddyAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.TOY_FREDDY.get(), "toy_freddy", new FreddyAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.FREDDY_FAZBEAR.get(), "freddy_fazbear", new FreddyAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.GOLDEN_FREDDY_FAZBEAR.get(), "golden_freddy_fazbear", new FreddyAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.NIGHTMARE_FREDDY_FAZBEAR.get(), "nightmare_freddy_fazbear", new FreddyAnimatable(), 1.0f);
     }
 
     @SubscribeEvent

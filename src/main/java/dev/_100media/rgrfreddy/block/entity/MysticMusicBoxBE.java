@@ -1,24 +1,34 @@
 package dev._100media.rgrfreddy.block.entity;
 
+import dev._100media.rgrfreddy.block.SmokeBombBlock;
 import dev._100media.rgrfreddy.init.BlockInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.Animation;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.network.GeckoLibNetwork;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class MysticMusicBoxBE extends BlockEntity implements GeoBlockEntity {
 
     private final AnimatableInstanceCache instanceCache = GeckoLibUtil.createInstanceCache(this);
+
+    private static final RawAnimation OPEN = RawAnimation.begin().then("open", Animation.LoopType.PLAY_ONCE).then("open_still", Animation.LoopType.PLAY_ONCE).thenLoop("open_playing");
 
     private int tickCount = 20 * 20;
 
@@ -63,7 +73,22 @@ public class MysticMusicBoxBE extends BlockEntity implements GeoBlockEntity {
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event -> {
+            var controller = event.getController();
+            var currentAnimation = controller.getCurrentAnimation();
+            if (event.getData(DataTickets.BLOCK_ENTITY) instanceof MysticMusicBoxBE be) {
+                BlockState state = be.getBlockState();
+                if (!(state.getBlock() instanceof SmokeBombBlock)) {
+                    Animation animation = currentAnimation.animation();
+                    if (animation != null && !animation.name().contains("open")) {
+                        return event.setAndContinue(OPEN);
+                    }
+                }
+            }
+            return PlayState.CONTINUE;
+        }));
+    }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

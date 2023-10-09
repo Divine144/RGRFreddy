@@ -2,25 +2,22 @@ package dev._100media.rgrfreddy.util;
 
 import com.mojang.datafixers.util.Pair;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
-import dev._100media.rgrfreddy.entity.FreddyHatProjectileEntity;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.UUID;
-
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 @OnlyIn(Dist.CLIENT)
 public class ControllingPlayerCameraManager {
 
-    public static RemotePlayer controlledPlayer;
+    public static Player controlledPlayer;
     public static Entity previousCamera;
     private static CameraType previousCameraType;
     private static Pair<Float, Float> previousCameraView;
@@ -31,7 +28,7 @@ public class ControllingPlayerCameraManager {
         if (minecraft.player == null) {
             return;
         }
-        System.out.println(minecraft.player.input.leftImpulse);
+
         if (controlledPlayer != null && controlledPlayer.isRemoved()) {
             remove();
             return;
@@ -49,7 +46,7 @@ public class ControllingPlayerCameraManager {
         }
     }
 
-    public static void add(RemotePlayer proj) {
+    public static void add(Player proj) {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
         var holder = FreddyHolderAttacher.getHolderUnwrap(proj);

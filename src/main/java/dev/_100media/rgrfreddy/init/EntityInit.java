@@ -24,7 +24,7 @@ public class EntityInit {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, RGRFreddy.MODID);
     private static final List<AttributesRegister<?>> attributeSuppliers = new ArrayList<>();
 
-    public static final RegistryObject<EntityType<ToyFreddyEntity>> TOY_FREDDY = registerEntity("toy_freddy", () ->
+    public static final RegistryObject<EntityType<ToyFreddyEntity>> TOY_FREDDY = registerEntity("toy_army", () ->
             EntityType.Builder.of(ToyFreddyEntity::new, MobCategory.MISC).sized(0.5F, 0.5F), ToyFreddyEntity::createAttributes);
 
     public static final RegistryObject<EntityType<PizzaProjectileEntity>> PIZZA = registerEntity("pizza", () ->

@@ -1,0 +1,136 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"open": {
+			"animation_length": 1.25,
+			"bones": {
+				"coperchio": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.0": {
+							"vector": [-110, 0, 0],
+							"easing": "easeInOutCubic"
+						}
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					},
+					"scale": {
+						"vector": [1, 1, 1]
+					}
+				}
+			}
+		},
+		"open_still": {
+			"loop": true,
+			"bones": {
+				"coperchio": {
+					"rotation": {
+						"vector": [-110, 0, 0],
+						"easing": "easeInOutCubic"
+					}
+				}
+			}
+		},
+		"open_playing": {
+			"loop": true,
+			"animation_length": 2.25,
+			"bones": {
+				"coperchio": {
+					"rotation": {
+						"vector": [-110, 0, 0],
+						"easing": "easeInOutCubic"
+					}
+				},
+				"lever": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"2.25": {
+							"vector": [1080, 0, 0]
+						}
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					},
+					"scale": {
+						"vector": [1, 1, 1]
+					}
+				}
+			}
+		},
+		"close": {
+			"animation_length": 1.25,
+			"bones": {
+				"coperchio": {
+					"rotation": {
+						"0.0": {
+							"vector": [-110, 0, 0],
+							"easing": "easeInOutCubic"
+						},
+						"1.0": {
+							"vector": [0, 0, 0],
+							"easing": "easeInCubic"
+						}
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					},
+					"scale": {
+						"vector": [1, 1, 1]
+					}
+				},
+				"bone2": {
+					"rotation": {
+						"1.0417": {
+							"vector": [0, 0, 0]
+						},
+						"1.125": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"position": {
+						"1.0417": {
+							"vector": [0, 0, 0]
+						},
+						"1.0833": {
+							"vector": [0, -0.2, 0]
+						},
+						"1.125": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"scale": {
+						"1.0417": {
+							"vector": [1, 1, 1]
+						},
+						"1.125": {
+							"vector": [1, 1, 1]
+						}
+					}
+				}
+			}
+		},
+		"close_still": {
+			"loop": true,
+			"bones": {
+				"coperchio": {
+					"rotation": {
+						"vector": [0, 0, 0],
+						"easing": "easeInCubic"
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					},
+					"scale": {
+						"vector": [1, 1, 1]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

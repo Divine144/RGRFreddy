@@ -20,8 +20,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -31,9 +35,7 @@ import java.util.UUID;
 public class ToyFreddyEntity extends PathfinderMob implements GeoEntity {
 
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-/*    private static final RawAnimation ATTACK = RawAnimation.begin().thenLoop("attack");
-    private static final RawAnimation RUN = RawAnimation.begin().thenLoop("run");
-    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");*/
+    private static final RawAnimation MOVEMENT = RawAnimation.begin().thenLoop("Movement");
 
     private static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(ToyFreddyEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 
@@ -49,11 +51,6 @@ public class ToyFreddyEntity extends PathfinderMob implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide) {
-            if (!this.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 5, false, false, false));
-            }
-        }
     }
 
     @Override
@@ -134,23 +131,12 @@ public class ToyFreddyEntity extends PathfinderMob implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-/*        controllerRegistrar.add(new AnimationController<>(this, "controller", 0, state -> {
-            AnimationController<?> controller = state.getController();
-            if (state.getData(DataTickets.ENTITY) instanceof AntDroneEntity entity) {
-                controller.transitionLength(0);
-                if (entity.swingTime > 0) {
-                    controller.setAnimation(ATTACK);
-                    return PlayState.CONTINUE;
-                }
-                else if (state.isMoving()) {
-                    controller.setAnimation(RUN);
-                }
-                else {
-                    controller.setAnimation(IDLE);
-                }
+        controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event -> {
+            if (event.isMoving()) {
+                return event.setAndContinue(MOVEMENT);
             }
-            return PlayState.CONTINUE;
-        }));*/
+            return PlayState.STOP;
+        }));
     }
 
     @Override

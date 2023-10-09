@@ -1,6 +1,5 @@
 package dev._100media.rgrfreddy.network;
 
-import dev._100media.capabilitysyncer.core.GlobalLevelCapability;
 import dev._100media.capabilitysyncer.network.SimpleLevelCapabilityStatusPacket;
 import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;

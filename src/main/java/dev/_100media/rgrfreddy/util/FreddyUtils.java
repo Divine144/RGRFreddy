@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import dev._100media.hundredmediamorphs.morph.Morph;
 import dev._100media.hundredmediaquests.cap.QuestHolderAttacher;
 import dev._100media.hundredmediaquests.goal.QuestGoal;
+import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,6 +39,30 @@ public class FreddyUtils {
         return player.getItemInHand(InteractionHand.MAIN_HAND).getItem() == item || player.getItemInHand(InteractionHand.OFF_HAND).getItem() == item;
     }
 
+    @Nullable
+    public static Player getControlledPlayer(Player controllingPlayer) {
+        var holder = FreddyHolderAttacher.getHolderUnwrap(controllingPlayer);
+        if (holder != null) {
+            UUID controlledPlayerUUID = holder.getControlledPlayer();
+            if (controlledPlayerUUID != null) {
+                return controllingPlayer.level().getPlayerByUUID(controlledPlayerUUID);
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static Player getControllingPlayer(Player controlledPlayer) {
+        var holder = FreddyHolderAttacher.getHolderUnwrap(controlledPlayer);
+        if (holder != null) {
+            UUID controllingPlayerUUID = holder.getControllingPlayer();
+            if (controllingPlayerUUID != null) {
+                return controlledPlayer.level().getPlayerByUUID(controllingPlayerUUID);
+            }
+        }
+        return null;
+    }
+
     public static void scanHitWithFollowup(Entity shooter, double range, boolean hitFluids, Consumer<HitResult> followup) {
         Predicate<Entity> filter = e -> true;
         Vec3 eyePos = shooter.getEyePosition(1);
@@ -46,7 +71,8 @@ public class FreddyUtils {
         ClipContext.Fluid mode;
         if (hitFluids) {
             mode = ClipContext.Fluid.ANY;
-        } else {
+        }
+        else {
             mode = ClipContext.Fluid.NONE;
         }
         HitResult result = shooter.level().clip(new ClipContext(eyePos, traceVec, ClipContext.Block.COLLIDER, mode, shooter));

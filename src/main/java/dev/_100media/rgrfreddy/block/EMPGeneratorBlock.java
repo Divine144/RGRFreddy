@@ -8,6 +8,7 @@ import dev._100media.rgrfreddy.init.SoundInit;
 import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -75,6 +76,9 @@ public class EMPGeneratorBlock extends BaseEntityBlock {
 
     private void tick(Level level, BlockPos blockPos, BlockState state, BlockEntity blockEntity) {
         if (level instanceof ServerLevel serverLevel) {
+            if (serverLevel.getServer().getTickCount() % 3 == 0) {
+                serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 3, 0, 0, 0.2, 0.1);
+            }
             var list = FreddyUtils.getEntitiesInRange(blockPos, level, Player.class, 10, 10, 10, p -> MorphHolderAttacher.getCurrentMorph(p).isPresent());
             if (!list.isEmpty()) {
                 if (serverLevel.getServer().getTickCount() % 30 == 0) {

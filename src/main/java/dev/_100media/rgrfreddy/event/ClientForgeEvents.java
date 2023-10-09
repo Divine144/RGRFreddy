@@ -96,7 +96,7 @@ public class ClientForgeEvents {
                     ));
                 }
             }
-            else if (controllingPlayerUUID != null) {
+            if (controllingPlayerUUID != null) {
                 Player controllingPlayer = player.level().getPlayerByUUID(controllingPlayerUUID);
                 if (controllingPlayer instanceof RemotePlayer) {
 

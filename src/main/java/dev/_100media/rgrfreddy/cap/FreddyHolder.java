@@ -19,6 +19,7 @@ public class FreddyHolder extends PlayerCapability {
     private boolean hasPlacedGenerator = false;
     private boolean abilitiesDisabled = false;
     private int fearTicks;
+    private int jumpscareBlockTicks = 0;
     private UUID controllingPlayer = null;
     private UUID controlledPlayer = null;
     private int controlTicks = 0;
@@ -51,6 +52,7 @@ public class FreddyHolder extends PlayerCapability {
             tag.putUUID("controlledPlayer", controlledPlayer);
         }
         tag.putInt("controlTicks", this.controlTicks);
+        tag.putInt("jump", this.jumpscareBlockTicks);
         return tag;
     }
 
@@ -70,6 +72,7 @@ public class FreddyHolder extends PlayerCapability {
             this.controlledPlayer = nbt.getUUID("controlledPlayer");
         }
         this.controlTicks = nbt.getInt("controlTicks");
+        this.jumpscareBlockTicks = nbt.getInt("jump");
     }
 
     @Override
@@ -155,5 +158,18 @@ public class FreddyHolder extends PlayerCapability {
     public void setControlTicks(int controlTicks) {
         this.controlTicks = controlTicks;
         updateTracking();
+    }
+
+    public int getJumpscareBlockTicks() {
+        return jumpscareBlockTicks;
+    }
+
+    public void decrementJumpscareBlockTicks() {
+        if (--jumpscareBlockTicks == 0) {}
+        else if (jumpscareBlockTicks < 0) this.jumpscareBlockTicks = 0;
+    }
+
+    public void setJumpscareBlockTicks(int jumpscareBlockTicks) {
+        this.jumpscareBlockTicks = jumpscareBlockTicks;
     }
 }

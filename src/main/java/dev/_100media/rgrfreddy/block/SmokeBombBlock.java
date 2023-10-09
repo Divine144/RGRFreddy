@@ -86,7 +86,7 @@ public class SmokeBombBlock extends BaseEntityBlock {
                         });
                     }
                     for (Player player : list) {
-                        if (player.getBoundingBox().intersects(aabb)) {
+                        if (player.getBoundingBox().intersects(aabb) && MorphHolderAttacher.getCurrentMorph(player).isEmpty()) {
                             if (!player.hasEffect(MobEffects.BLINDNESS)) {
                                 player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * 20, 0, false, false, false));
                             }

@@ -259,6 +259,9 @@ public class CommonForgeEvents {
                 if (cap.getControlTicks() > 0) {
                     cap.decrementControlTicks();
                 }
+                if (cap.getJumpscareBlockTicks() > 0) {
+                    cap.decrementJumpscareBlockTicks();
+                }
                 else {
                     UUID controllingPlayer = cap.getControllingPlayer();
                     UUID controlledPlayer = cap.getControlledPlayer();

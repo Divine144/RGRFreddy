@@ -2,12 +2,17 @@ package dev._100media.rgrfreddy.network;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
+import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
+import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
+
+import java.util.UUID;
 
 public class ClientHandler {
 
@@ -64,6 +69,16 @@ public class ClientHandler {
         Player currentPlayer = getPlayer();
         if (currentPlayer instanceof LocalPlayer controlled) {
            controlled.turn(xRot, yRot);
+        }
+    }
+
+    public static void addCamera(double x, double y, double z) {
+        Player currentPlayer = getPlayer();
+        if (currentPlayer instanceof LocalPlayer player) {
+            Player controlledPlayer = FreddyUtils.getControlledPlayer(currentPlayer);
+            if (controlledPlayer != null) {
+
+            }
         }
     }
 }

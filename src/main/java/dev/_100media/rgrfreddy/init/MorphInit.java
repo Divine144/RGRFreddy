@@ -33,9 +33,8 @@ public class MorphInit {
 
     public static final RegistryObject<Morph> TOY_FREDDY = MORPHS.register("toy_freddy", () -> new Morph(new Morph.Properties<>()
             .maxHealth(30)
-            .dimensions(1f, 1f)
+            .dimensions(1f, 2f)
             .morphedTo(entity -> {
-                // TODO: Incorporate Blindness Immunity
                 entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 0, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 0, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 0, false, false, false));
@@ -48,9 +47,8 @@ public class MorphInit {
     ));
     public static final RegistryObject<Morph> FREDDY_FAZBEAR = MORPHS.register("freddy_fazbear", () -> new Morph(new Morph.Properties<>()
             .maxHealth(50)
-            .dimensions(1.5f, 3f)
+            .dimensions(1.5f, 2f)
             .morphedTo(entity -> {
-                // TODO: Incorporate Blindness Immunity
                 entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false, false));
@@ -75,9 +73,8 @@ public class MorphInit {
     ));
     public static final RegistryObject<Morph> GOLDEN_FREDDY_FAZBEAR = MORPHS.register("golden_freddy_fazbear", () -> new Morph(new Morph.Properties<>()
             .maxHealth(80)
-            .dimensions(1.5f, 3f)
+            .dimensions(1.5f, 2f)
             .morphedTo(entity -> {
-                // TODO: Incorporate Blindness Immunity
                 entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 2, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 2, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 2, false, false, false));
@@ -102,9 +99,8 @@ public class MorphInit {
     ));
     public static final RegistryObject<Morph> NIGHTMARE_FREDDY_FAZBEAR = MORPHS.register("nightmare_freddy_fazbear", () -> new Morph(new Morph.Properties<>()
             .maxHealth(120)
-            .dimensions(2f, 4f)
+            .dimensions(2f, 2f)
             .morphedTo(entity -> {
-                // TODO: Incorporate Blindness Immunity
                 entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 4, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 4, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 3, false, false, false));
