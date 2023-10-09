@@ -1,6 +1,7 @@
 package dev._100media.rgrfreddy.init;
 
 import dev._100media.rgrfreddy.RGRFreddy;
+import dev._100media.rgrfreddy.entity.FreddyHatProjectileEntity;
 import dev._100media.rgrfreddy.entity.PizzaProjectileEntity;
 import dev._100media.rgrfreddy.entity.ToyFreddyEntity;
 import net.minecraft.world.entity.Entity;
@@ -29,6 +30,9 @@ public class EntityInit {
 
     public static final RegistryObject<EntityType<PizzaProjectileEntity>> PIZZA = registerEntity("pizza", () ->
             EntityType.Builder.of(PizzaProjectileEntity::new, MobCategory.MISC).sized(0.5F, 0.5F));
+
+    public static final RegistryObject<EntityType<FreddyHatProjectileEntity>> FREDDY_HAT = registerEntity("freddy_hat", () ->
+        EntityType.Builder.<FreddyHatProjectileEntity>of(FreddyHatProjectileEntity::new, MobCategory.MISC).sized(0.5F, 0.5F));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String name, Supplier<EntityType.Builder<T>> supplier) {
         return ENTITIES.register(name, () -> supplier.get().build(RGRFreddy.MODID + ":" + name));

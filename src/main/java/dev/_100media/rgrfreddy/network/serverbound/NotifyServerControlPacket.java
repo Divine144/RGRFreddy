@@ -22,15 +22,9 @@ public record NotifyServerControlPacket(boolean up, boolean down, boolean left, 
             ServerPlayer player = context.getSender();
             if (player != null) {
                 var holder = FreddyHolderAttacher.getHolderUnwrap(player);
-                if (holder != null) {
-                    UUID controlledPlayerUUID = holder.getControlledPlayer();
-                    if (controlledPlayerUUID != null) {
-                        Player controlledPlayer = player.level().getPlayerByUUID(controlledPlayerUUID);
-                        if (controlledPlayer instanceof ServerPlayer controlledServerPlayer) {
-                            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> controlledServerPlayer),
-                                    new NotifyClientControlPacket(up, down, left, right, jump, shift, leftImpulse, forwardImpulse));
-                        }
-                    }
+                if (holder != null && holder.getControlledPlayer() instanceof ServerPlayer controlledServerPlayer) {
+                    NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> controlledServerPlayer),
+                            new NotifyClientControlPacket(up, down, left, right, jump, shift, leftImpulse, forwardImpulse));
                 }
             }
         });

@@ -61,6 +61,7 @@ public class ClientModEvents {
         event.registerBlockEntityRenderer(BlockInit.DIMENSIONAL_TRAPDOOR_BE.get(), DimensionalTrapDoorRenderer::new);
         event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
         event.registerEntityRenderer(EntityInit.PIZZA.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
+        event.registerEntityRenderer(EntityInit.FREDDY_HAT.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
         createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "pizza", new SimpleAnimatable(), 1.0f);
         createSimpleMorphRenderer(MorphInit.TOY_FREDDY.get(), "pizza", new SimpleAnimatable(), 1.0f);
         createSimpleMorphRenderer(MorphInit.FREDDY_FAZBEAR.get(), "pizza", new SimpleAnimatable(), 1.0f);

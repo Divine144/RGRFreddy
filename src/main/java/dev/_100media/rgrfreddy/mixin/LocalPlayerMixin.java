@@ -47,18 +47,14 @@ public class LocalPlayerMixin {
 
     @Redirect(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/Input;tick(ZF)V"))
     public void tickInput(Input instance, boolean pIsSneaking, float pSneakingSpeedMultiplier) {
-        LocalPlayer localPlayer = (LocalPlayer) (Object) this;
-        var holder = FreddyHolderAttacher.getHolderUnwrap(localPlayer);
+        var holder = FreddyHolderAttacher.getHolderUnwrap((LocalPlayer) (Object) this);
+
         if (holder != null) {
-            UUID controllingPlayerUUID = holder.getControllingPlayer();
-            if (controllingPlayerUUID == null) {
+            Player controllingPlayer = holder.getControllingPlayer();
+
+            // Only tick the input if the local player is not controlling a player
+            if (controllingPlayer == null) {
                 instance.tick(pIsSneaking, pSneakingSpeedMultiplier);
-            }
-            else {
-                Player player = localPlayer.level().getPlayerByUUID(controllingPlayerUUID);
-                if (player == null) {
-                    instance.tick(pIsSneaking, pSneakingSpeedMultiplier);
-                }
             }
         }
     }

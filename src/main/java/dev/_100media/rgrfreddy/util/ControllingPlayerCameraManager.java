@@ -31,7 +31,7 @@ public class ControllingPlayerCameraManager {
         if (minecraft.player == null) {
             return;
         }
-        System.out.println(minecraft.player.input.leftImpulse);
+        // System.out.println(minecraft.player.input.leftImpulse);
         if (controlledPlayer != null && controlledPlayer.isRemoved()) {
             remove();
             return;
@@ -53,7 +53,7 @@ public class ControllingPlayerCameraManager {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
         var holder = FreddyHolderAttacher.getHolderUnwrap(proj);
-        if (player == null || holder == null || holder.getControllingPlayer() == null || !player.getUUID().equals(holder.getControllingPlayer())) {
+        if (player == null || holder == null || holder.getControllingPlayer() != player) {
             return;
         }
         controlledPlayer = proj;

@@ -25,6 +25,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -260,21 +261,22 @@ public class CommonForgeEvents {
                     cap.decrementControlTicks();
                 }
                 else {
-                    UUID controllingPlayer = cap.getControllingPlayer();
-                    UUID controlledPlayer = cap.getControlledPlayer();
+                    Player controllingPlayer = cap.getControllingPlayer();
+                    Player controlledPlayer = cap.getControlledPlayer();
                     if (controllingPlayer != null) {
-                        Player controller = player.level().getPlayerByUUID(controllingPlayer);
-                        if (controller instanceof ServerPlayer serverPlayer) {
+                        if (controllingPlayer instanceof ServerPlayer serverPlayer) {
                             FreddyHolderAttacher.getHolder(serverPlayer).ifPresent(p -> p.setControlledPlayer(null));
                             NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new StopControllingPlayerPacket());
                         }
                         cap.setControllingPlayer(null);
                     }
                     else if (controlledPlayer != null) {
-                        Player controlled = player.level().getPlayerByUUID(controlledPlayer);
-                        if (controlled instanceof ServerPlayer serverPlayer) {
+                        if (controlledPlayer instanceof ServerPlayer serverPlayer) {
                             FreddyHolderAttacher.getHolder(serverPlayer).ifPresent(p -> p.setControllingPlayer(null));
                         }
+                        ItemStack helmetStack = controlledPlayer.getItemBySlot(EquipmentSlot.HEAD);
+                        if (helmetStack.is(ItemInit.FREDDY_HAT.get()))
+                            controlledPlayer.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                         cap.setControlledPlayer(null);
                         NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new StopControllingPlayerPacket());
                     }

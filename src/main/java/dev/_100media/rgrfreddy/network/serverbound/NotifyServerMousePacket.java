@@ -6,13 +6,10 @@ import dev._100media.rgrfreddy.network.NetworkHandler;
 import dev._100media.rgrfreddy.network.clientbound.NotifyClientMousePacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
-
-import java.util.UUID;
 
 public record NotifyServerMousePacket(float xRot, float yRot) implements IPacket {
 
@@ -22,15 +19,9 @@ public record NotifyServerMousePacket(float xRot, float yRot) implements IPacket
             ServerPlayer player = context.getSender();
             if (player != null) {
                 var holder = FreddyHolderAttacher.getHolderUnwrap(player);
-                if (holder != null) {
-                    UUID controlledPlayerUUID = holder.getControlledPlayer();
-                    if (controlledPlayerUUID != null) {
-                        Player controlledPlayer = player.level().getPlayerByUUID(controlledPlayerUUID);
-                        if (controlledPlayer instanceof ServerPlayer controlledServerPlayer) {
-                            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> controlledServerPlayer),
-                                    new NotifyClientMousePacket(xRot, yRot));
-                        }
-                    }
+                if (holder != null && holder.getControlledPlayer() instanceof ServerPlayer controlledServerPlayer) {
+                    NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> controlledServerPlayer),
+                            new NotifyClientMousePacket(xRot, yRot));
                 }
             }
         });

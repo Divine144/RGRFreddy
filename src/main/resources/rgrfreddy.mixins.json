@@ -8,7 +8,8 @@
   ],
   "client": [
     "LocalPlayerMixin",
-    "MouseHandlerMixin"
+    "MouseHandlerMixin",
+    "RemotePlayerMixin"
   ],
   "minVersion": "0.8.5"
 }
