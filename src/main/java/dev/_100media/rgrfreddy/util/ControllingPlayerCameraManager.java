@@ -35,7 +35,7 @@ public class ControllingPlayerCameraManager {
         }
         if (controlledPlayer != null && previousCamera == null && event.phase == TickEvent.Phase.START) {
             previousCameraType = minecraft.options.getCameraType();
-            minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
             previousCamera = minecraft.getCameraEntity();
             minecraft.setCameraEntity(controlledPlayer);
         }

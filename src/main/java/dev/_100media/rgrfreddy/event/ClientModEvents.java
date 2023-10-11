@@ -6,6 +6,7 @@ import dev._100media.rgrfreddy.client.animatable.FreddyAnimatable;
 import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
 import dev._100media.rgrfreddy.client.renderer.blockentity.DimensionalTrapDoorRenderer;
 import dev._100media.rgrfreddy.client.renderer.blockentity.JailDoorBlockRenderer;
+import dev._100media.rgrfreddy.client.renderer.blockentity.SnareBlockRenderer;
 import dev._100media.rgrfreddy.init.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -27,6 +28,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.api.distmarker.Dist;
@@ -69,7 +71,7 @@ public class ClientModEvents {
                 new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "mystic_music_box_be"))
         ));
 
-        event.registerBlockEntityRenderer(BlockInit.SNARE_BE.get(), ctx -> new GeoBlockRenderer<>(
+        event.registerBlockEntityRenderer(BlockInit.SNARE_BE.get(), ctx -> new SnareBlockRenderer<>(
                 new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "snare_be"))
         ));
         event.registerBlockEntityRenderer(BlockInit.JAIL_DOOR_BE.get(), ctx -> new JailDoorBlockRenderer<>(
@@ -81,6 +83,7 @@ public class ClientModEvents {
         ).withScale(2));
         event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "toy_army")).withScale(0.5f));
         event.registerEntityRenderer(EntityInit.PIZZA.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
+        event.registerEntityRenderer(EntityInit.FREDDY_HAT_PROJECTILE.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "freddy_hat")));
         createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "kid_freddy", new FreddyAnimatable(), 1.0f);
         createSimpleMorphRenderer(MorphInit.TOY_FREDDY.get(), "toy_freddy", new FreddyAnimatable(), 1.0f);
         createSimpleMorphRenderer(MorphInit.FREDDY_FAZBEAR.get(), "freddy_fazbear", new FreddyAnimatable(), 1.0f);

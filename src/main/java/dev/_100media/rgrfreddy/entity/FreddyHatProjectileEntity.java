@@ -1,9 +1,11 @@
 package dev._100media.rgrfreddy.entity;
 
+import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.init.ItemInit;
 import dev._100media.rgrfreddy.network.ClientHandler;
 import dev._100media.rgrfreddy.util.FreddyHatCameraManager;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -13,6 +15,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.common.world.ForgeChunkManager;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -39,7 +42,11 @@ public class FreddyHatProjectileEntity extends ThrowableProjectile implements Ge
             FreddyHatCameraManager.add(this);
             added = true;
         }
-        setDeltaMovement(calculateViewVector(getXRot(), getYRot()).scale(1.8));
+        if (!level().isClientSide && this.getOwner() != null && this.distanceTo(getOwner()) >= 50) {
+            discard();
+            return;
+        }
+        setDeltaMovement(calculateViewVector(0, getYRot()).scale(1));
     }
 
     @Override

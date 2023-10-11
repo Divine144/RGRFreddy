@@ -57,6 +57,9 @@ public class FreddyHatItem extends Item implements GeoItem {
         // pLevel.playSound((Player) null, player.getX(), player.getY(), player.getZ(), SoundEvents.EGG_THROW, SoundSource.PLAYERS, 0.5F, 0.4F / (pLevel.getRandom().nextFloat() * 0.4F + 0.8F));
         if (!pLevel.isClientSide) {
             FreddyHatProjectileEntity projectile = new FreddyHatProjectileEntity(EntityInit.FREDDY_HAT_PROJECTILE.get(), pLevel);
+            projectile.setPos(player.getX(), player.getEyeY(), player.getZ());
+            projectile.setXRot(player.getXRot());
+            projectile.setYRot(player.getYRot());
             projectile.setOwner(player);
             projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
             pLevel.addFreshEntity(projectile);

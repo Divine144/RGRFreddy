@@ -59,6 +59,11 @@ public class FreddyPizzaItem extends Item implements GeoItem {
     }
 
     @Override
+    public int getUseDuration(ItemStack pStack) {
+        return 72000;
+    }
+
+    @Override
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
         if (!pLevel.isClientSide) {
             if (pLivingEntity instanceof ServerPlayer player) {
@@ -67,7 +72,7 @@ public class FreddyPizzaItem extends Item implements GeoItem {
                     PizzaProjectileEntity missile = new PizzaProjectileEntity(EntityInit.PIZZA.get(), pLevel);
                     missile.setPos(player.position());
                     missile.setOwner(player);
-                    missile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 1.5F, 0);
+                    missile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.8F, 0);
                     if (!list.isEmpty()) {
                         missile.setTarget(list.get(0));
                     }

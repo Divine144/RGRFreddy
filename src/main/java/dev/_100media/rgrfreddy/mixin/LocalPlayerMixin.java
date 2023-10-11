@@ -27,7 +27,9 @@ public class LocalPlayerMixin {
 
     @Inject(method = "isControlledCamera", at = @At("HEAD"), cancellable = true)
     public void isControlledCamera(CallbackInfoReturnable<Boolean> cir) {
-
+        if (this.minecraft.getCameraEntity() instanceof FreddyHatProjectileEntity projectile && projectile.getOwner() == ((LocalPlayer) (Object) this)) {
+            cir.setReturnValue(true);
+        }
     }
 
     @Redirect(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/Input;tick(ZF)V"))
