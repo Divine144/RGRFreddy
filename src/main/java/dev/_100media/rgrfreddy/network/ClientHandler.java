@@ -3,6 +3,7 @@ package dev._100media.rgrfreddy.network;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
 import dev._100media.rgrfreddy.init.SoundInit;
+import dev._100media.rgrfreddy.mixin.MinecraftAccessor;
 import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
 import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.Util;
@@ -87,12 +88,23 @@ public class ClientHandler {
         }
     }
 
+    public static void addControlledPlayer() {
+        Player currentPlayer = getPlayer();
+        if (currentPlayer != null) {
+            Player controlledPlayer = FreddyUtils.getControlledPlayer(currentPlayer);
+            if (controlledPlayer != null) {
+                ControllingPlayerCameraManager.add(controlledPlayer);
+            }
+        }
+    }
+
     public static void handleClick() {
         Player currentPlayer = getPlayer();
         if (currentPlayer instanceof LocalPlayer controlled) {
-            KeyMapping.set(InputConstants.Type.MOUSE.getOrCreate(0), true);
-            KeyMapping.click(InputConstants.Type.MOUSE.getOrCreate(0));
             controlled.swing(InteractionHand.MAIN_HAND);
+            if (Minecraft.getInstance() instanceof MinecraftAccessor accessor) {
+                accessor.invokeStartAttack();
+            }
         }
     }
 

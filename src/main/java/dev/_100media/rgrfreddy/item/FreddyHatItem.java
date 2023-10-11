@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.entity.FreddyHatProjectileEntity;
 import dev._100media.rgrfreddy.init.EntityInit;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +13,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -20,10 +22,12 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
+import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -86,6 +90,17 @@ public class FreddyHatItem extends Item implements GeoItem {
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
+
+            private GeoArmorRenderer<?> armorRenderer;
+
+            @Override
+            public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
+                if (this.armorRenderer == null)
+                    this.armorRenderer = new GeoArmorRenderer<FreddyHatItem>(new DefaultedItemGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "armor/freddy_hat")));
+                this.armorRenderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
+                return this.armorRenderer;
+            }
+
             private BlockEntityWithoutLevelRenderer renderer;
 
             @Override

@@ -40,6 +40,7 @@ public class NetworkHandler {
                 .add(NotifyClientMousePacket::register)
                 .add(NotifyServerClickPacket::register)
                 .add(NotifyClientClickPacket::register)
+                .add(StartControllingPlayerPacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(FreddyHolderAttacher.LOCATION, FreddyHolderAttacher::getHolderUnwrap);
         SimpleLevelCapabilityStatusPacket.registerRetriever(GlobalHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, GlobalHolderAttacher::getGlobalLevelCapabilityUnwrap);

@@ -4,8 +4,11 @@ import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.init.ItemInit;
 import dev._100media.rgrfreddy.network.ClientHandler;
+import dev._100media.rgrfreddy.network.NetworkHandler;
+import dev._100media.rgrfreddy.network.clientbound.StartControllingPlayerPacket;
 import dev._100media.rgrfreddy.util.FreddyHatCameraManager;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.world.ForgeChunkManager;
+import net.minecraftforge.network.PacketDistributor;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -46,7 +50,7 @@ public class FreddyHatProjectileEntity extends ThrowableProjectile implements Ge
             discard();
             return;
         }
-        setDeltaMovement(calculateViewVector(0, getYRot()).scale(1));
+        setDeltaMovement(calculateViewVector(getXRot(), getYRot()).scale(1));
     }
 
     @Override
@@ -57,21 +61,21 @@ public class FreddyHatProjectileEntity extends ThrowableProjectile implements Ge
         }
         if (pResult.getEntity() instanceof Player player) {
             ItemStack stack = player.getItemBySlot(EquipmentSlot.HEAD);
-            if (!stack.is(Items.AIR)) {
+            if (stack.is(Items.AIR)) {
                 player.getInventory().add(stack.copyAndClear());
-                // TODO: Actually make the hat an armor
-                if (this.getOwner() != null) {
-                    FreddyHolderAttacher.getHolder(player).ifPresent(p -> {
-                        p.setControllingPlayer(this.getOwner().getUUID());
-                        p.setControlTicks(20 * 60);
-                        FreddyHolderAttacher.getHolder(this.getOwner()).ifPresent(o -> {
-                            o.setControlledPlayer(player.getUUID());
-                            o.setControlTicks(20 * 60);
-                        });
+            }
+            if (this.getOwner() instanceof ServerPlayer serverPlayer) {
+                FreddyHolderAttacher.getHolder(player).ifPresent(p -> {
+                    p.setControllingPlayer(this.getOwner().getUUID());
+                    p.setControlTicks(20 * 60);
+                    FreddyHolderAttacher.getHolder(this.getOwner()).ifPresent(o -> {
+                        o.setControlledPlayer(player.getUUID());
+                        o.setControlTicks(20 * 60);
                     });
-                }
+                });
                 player.setItemSlot(EquipmentSlot.HEAD, ItemInit.FREDDY_HAT.get().getDefaultInstance());
                 discard();
+                NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new StartControllingPlayerPacket());
             }
         }
     }

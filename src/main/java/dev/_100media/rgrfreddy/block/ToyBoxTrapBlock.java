@@ -129,6 +129,9 @@ public class ToyBoxTrapBlock extends BaseEntityBlock {
                         toyBoxTrapBE.decrementTimer();
                     }
                 }
+                else if (toyBoxTrapBE.getTimesHit() >= 3) {
+                    level.setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState());
+                }
                 else {
                     var list = FreddyUtils.getEntitiesInRange(blockPos, level, Player.class, 10, 10, 10, p -> MorphHolderAttacher.getCurrentMorph(p).isEmpty());
                     list.forEach(player -> FreddyUtils.pullEntityToPoint(player, blockPos.getCenter(), 3));

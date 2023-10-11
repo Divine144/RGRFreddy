@@ -10,6 +10,7 @@
   "client": [
     "GameRendererMixin",
     "LocalPlayerMixin",
+    "MinecraftAccessor",
     "MinecraftMixin",
     "MouseHandlerMixin"
   ],

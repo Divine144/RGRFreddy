@@ -58,24 +58,23 @@ public class JailDoorBlock extends DoorBlock implements EntityBlock {
             return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection()).setValue(HINGE, this.getHinge(pContext)).setValue(POWERED, Boolean.valueOf(flag)).setValue(OPEN, false).setValue(HALF, DoubleBlockHalf.LOWER);
         }
         else {
-            return null;
+            return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection()).setValue(HINGE, this.getHinge(pContext)).setValue(POWERED, Boolean.valueOf(Boolean.FALSE)).setValue(OPEN, false).setValue(HALF, DoubleBlockHalf.LOWER);
         }
     }
 
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         Direction direction = pState.getValue(FACING);
         boolean flag = !pState.getValue(OPEN);
-        boolean flag1 = pState.getValue(HINGE) == DoorHingeSide.RIGHT;
         switch (direction) {
             case EAST:
             default:
-                return flag ? EAST_AABB : (flag1 ? NORTH_AABB : SOUTH_AABB);
+                return flag ? EAST_AABB : (SOUTH_AABB);
             case SOUTH:
-                return flag ? SOUTH_AABB : (flag1 ? EAST_AABB : WEST_AABB);
+                return flag ? SOUTH_AABB : (WEST_AABB);
             case WEST:
-                return flag ? WEST_AABB : (flag1 ? SOUTH_AABB : NORTH_AABB);
+                return flag ? WEST_AABB : (NORTH_AABB);
             case NORTH:
-                return flag ? NORTH_AABB : (flag1 ? WEST_AABB : EAST_AABB);
+                return flag ? NORTH_AABB : (SOUTH_AABB);
         }
     }
 

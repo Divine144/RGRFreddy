@@ -28,8 +28,7 @@ public class ControllingPlayerCameraManager {
         if (minecraft.player == null) {
             return;
         }
-
-        if (controlledPlayer != null && controlledPlayer.isRemoved()) {
+        if (controlledPlayer != null && controlledPlayer.isRemoved() || controlledPlayer != null && controlledPlayer.isDeadOrDying()) {
             remove();
             return;
         }

@@ -27,7 +27,7 @@ public class JailDoorBlockRenderer<T extends BlockEntity & GeoAnimatable> extend
                     poseStack.mulPose(Axis.YP.rotationDegrees(90));
                     switch (be.getBlockState().getValue(DoorBlock.FACING)) {
                         case NORTH: poseStack.translate(0.15, 0, 0.5);
-                        case SOUTH: poseStack.translate(0.4, 0, 0.3);
+                        case SOUTH: poseStack.translate(-0.6, 0, -0.15);
                         case EAST: poseStack.translate(0, 0, -0.8);
                         case WEST: poseStack.translate(-1, 0, 0.4);
                     }

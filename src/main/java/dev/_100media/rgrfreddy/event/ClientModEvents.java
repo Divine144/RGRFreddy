@@ -5,6 +5,7 @@ import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.client.animatable.FreddyAnimatable;
 import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
 import dev._100media.rgrfreddy.client.renderer.blockentity.DimensionalTrapDoorRenderer;
+import dev._100media.rgrfreddy.client.renderer.blockentity.EMPGeneratorBlockRenderer;
 import dev._100media.rgrfreddy.client.renderer.blockentity.JailDoorBlockRenderer;
 import dev._100media.rgrfreddy.client.renderer.blockentity.SnareBlockRenderer;
 import dev._100media.rgrfreddy.init.*;
@@ -78,7 +79,7 @@ public class ClientModEvents {
                 new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "jail_door_be"))
         ));
 
-        event.registerBlockEntityRenderer(BlockInit.EMP_GENERATOR_BE.get(), ctx -> new GeoBlockRenderer<>(
+        event.registerBlockEntityRenderer(BlockInit.EMP_GENERATOR_BE.get(), ctx -> new EMPGeneratorBlockRenderer<>(
                 new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "emp_generator_be"))
         ).withScale(2));
         event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "toy_army")).withScale(0.5f));
@@ -143,6 +144,7 @@ public class ClientModEvents {
         MorphRenderers.registerPlayerMorphRenderer(morph, context -> {
             var renderer = new GeoPlayerRenderer<>(context, new SimpleGeoPlayerModel<>(RGRFreddy.MODID, name) {
                 private final ResourceLocation defaultLocation = new ResourceLocation(RGRFreddy.MODID, "textures/entity/" + name + ".png");
+
                 @Override
                 public ResourceLocation getTextureResource(T animatable1, @Nullable AbstractClientPlayer player) {
                     return defaultLocation;

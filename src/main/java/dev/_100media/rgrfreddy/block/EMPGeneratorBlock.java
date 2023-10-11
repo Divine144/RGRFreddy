@@ -93,9 +93,9 @@ public class EMPGeneratorBlock extends BaseEntityBlock {
                     Vec3 traceVector = player.position().subtract(origin);
                     Vec3 direction = traceVector.normalize();
                     BlockPositionSource source = new BlockPositionSource(player.blockPosition());
-                    for (float i = 0.1f; i < Mth.floor(traceVector.length()) + 15; ++i) {
+                    for (float i = 0.5f; i < Mth.floor(traceVector.length()); ++i) {
                         Vec3 particlePosition = origin.add(direction.scale(i));
-                        ((ServerPlayer) player).serverLevel().sendParticles(new VibrationParticleOption(source, 30), particlePosition.x, particlePosition.y, particlePosition.z, 10, 0, 0, 0, 0);
+                        ((ServerPlayer) player).serverLevel().sendParticles(new VibrationParticleOption(source, 20), particlePosition.x, particlePosition.y, particlePosition.z, 20, 0, 0, 0, 0);
                     }
                 }
                 var holder = FreddyHolderAttacher.getHolderUnwrap(player);

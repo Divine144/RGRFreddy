@@ -22,9 +22,9 @@ public class SnareBlockRenderer<T extends BlockEntity & GeoAnimatable> extends G
             if (be.getBlockState().hasProperty(SnareBlock.TYPE)) {
                 poseStack.pushPose();
                 if (be.getBlockState().getValue(SnareBlock.TYPE) == SlabType.TOP) {
-                    poseStack.translate(0, 0.5, 0);
-                    super.render(animatable, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+                    poseStack.translate(0, 1, 0);
                 }
+                super.render(animatable, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
                 poseStack.popPose();
             }
         }
