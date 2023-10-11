@@ -39,6 +39,14 @@ public class FreddyUtils {
         return player.getItemInHand(InteractionHand.MAIN_HAND).getItem() == item || player.getItemInHand(InteractionHand.OFF_HAND).getItem() == item;
     }
 
+    public static boolean hasLeftControl(Player controllingPlayer) {
+        if (controllingPlayer != null) {
+            var holder = FreddyHolderAttacher.getHolderUnwrap(controllingPlayer);
+            return holder != null && holder.isLeftControl();
+        }
+        return false;
+    }
+
     @Nullable
     public static Player getControlledPlayer(Player controllingPlayer) {
         var holder = FreddyHolderAttacher.getHolderUnwrap(controllingPlayer);

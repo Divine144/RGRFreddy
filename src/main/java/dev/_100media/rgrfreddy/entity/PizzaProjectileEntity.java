@@ -13,6 +13,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -34,26 +36,32 @@ public class PizzaProjectileEntity extends ThrowableProjectile implements GeoEnt
     public void tick() {
         super.tick();
         if (target == null) return;
-        if (!level().isClientSide && target == null) {
+        Vec3 vec3 = target.position().subtract(position()).normalize().scale(0.5);
+        setDeltaMovement(vec3);
+        double d2 = this.getX() + vec3.x;
+        double d0 = this.getY() + vec3.y;
+        double d1 = this.getZ() + vec3.z;
+        this.setPos(d2, d0, d1);
+        updateRotation();
+    }
+
+    @Override
+    protected void onHit(HitResult pResult) {
+        if (pResult instanceof EntityHitResult result && result.getEntity() == this.getOwner()) return;
+        super.onHit(pResult);
+        if (!level().isClientSide) {
             discard();
-            return;
-        }
-        if (!level().isClientSide && (target.distanceToSqr(this) <= 2 * 2 || (!level().getBlockState(blockPosition()).isAir()))) {
-            level().explode(owner, getX(), getY(), getZ(), 2, Level.ExplosionInteraction.NONE);
-            discard();
-            return;
-        }
-        if (target != null) {
-            Vec3 vec3 = target.position().subtract(position()).normalize().scale(0.5);
-            setDeltaMovement(vec3);
-            double d2 = this.getX() + vec3.x;
-            double d0 = this.getY() + vec3.y;
-            double d1 = this.getZ() + vec3.z;
-            this.setPos(d2, d0, d1);
-            updateRotation();
         }
     }
 
+    @Override
+    protected void onHitEntity(EntityHitResult pResult) {
+        super.onHitEntity(pResult);
+        if (!level().isClientSide && pResult.getEntity() != this.getOwner() && pResult.getEntity() instanceof LivingEntity living) {
+            living.hurt(this.damageSources().mobProjectile(this, getOwner() instanceof LivingEntity l ? l : null), 6.0f);
+            level().explode(this, this.getX(), this.getY(), this.getZ(), 4f, Level.ExplosionInteraction.TNT);
+        }
+    }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {

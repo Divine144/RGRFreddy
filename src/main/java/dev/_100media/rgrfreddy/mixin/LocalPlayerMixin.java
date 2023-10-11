@@ -3,10 +3,10 @@ package dev._100media.rgrfreddy.mixin;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.entity.FreddyHatProjectileEntity;
 import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
+import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -54,7 +54,7 @@ public class LocalPlayerMixin {
             }
             else {
                 Player player = localPlayer.level().getPlayerByUUID(controllingPlayerUUID);
-                if (player == null) {
+                if (player == null || FreddyUtils.hasLeftControl(player)) {
                     instance.tick(pIsSneaking, pSneakingSpeedMultiplier);
                 }
             }

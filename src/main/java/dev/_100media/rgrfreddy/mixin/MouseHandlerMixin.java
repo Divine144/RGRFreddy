@@ -4,6 +4,7 @@ import com.mojang.blaze3d.Blaze3D;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.network.NetworkHandler;
 import dev._100media.rgrfreddy.network.serverbound.NotifyServerMousePacket;
+import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
@@ -45,13 +46,13 @@ public abstract class MouseHandlerMixin {
                 UUID controlledPlayer = holder.getControlledPlayer();
                 if (controllingPlayer != null) {
                     Player player = instance.level().getPlayerByUUID(controllingPlayer);
-                    if (player != null) {
+                    if (player != null && !FreddyUtils.hasLeftControl(player)) {
                         ci.cancel();
                     }
                 }
                 else if (controlledPlayer != null) {
                     Player player = instance.level().getPlayerByUUID(controlledPlayer);
-                    if (player != null) {
+                    if (player != null && !FreddyUtils.hasLeftControl(player)) {
                         double d0 = Blaze3D.getTime();
                         double d1 = d0 - this.lastMouseEventTime;
                         this.lastMouseEventTime = d0;

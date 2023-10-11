@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
 import dev._100media.rgrfreddy.cap.GlobalHolderAttacher;
 import dev._100media.rgrfreddy.network.clientbound.*;
+import dev._100media.rgrfreddy.network.serverbound.LeaveControlPacket;
 import dev._100media.rgrfreddy.network.serverbound.NotifyServerClickPacket;
 import dev._100media.rgrfreddy.network.serverbound.NotifyServerControlPacket;
 import dev._100media.rgrfreddy.network.serverbound.NotifyServerMousePacket;
@@ -41,6 +42,7 @@ public class NetworkHandler {
                 .add(NotifyServerClickPacket::register)
                 .add(NotifyClientClickPacket::register)
                 .add(StartControllingPlayerPacket::register)
+                .add(LeaveControlPacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(FreddyHolderAttacher.LOCATION, FreddyHolderAttacher::getHolderUnwrap);
         SimpleLevelCapabilityStatusPacket.registerRetriever(GlobalHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, GlobalHolderAttacher::getGlobalLevelCapabilityUnwrap);

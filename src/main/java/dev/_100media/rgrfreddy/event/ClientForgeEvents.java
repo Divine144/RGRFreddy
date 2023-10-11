@@ -7,6 +7,7 @@ import dev._100media.rgrfreddy.init.EffectInit;
 import dev._100media.rgrfreddy.init.MenuInit;
 import dev._100media.rgrfreddy.network.ClientHandler;
 import dev._100media.rgrfreddy.network.NetworkHandler;
+import dev._100media.rgrfreddy.network.serverbound.LeaveControlPacket;
 import dev._100media.rgrfreddy.network.serverbound.NotifyServerClickPacket;
 import dev._100media.rgrfreddy.network.serverbound.NotifyServerControlPacket;
 import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
@@ -47,9 +48,11 @@ public class ClientForgeEvents {
                     if (controlledPlayer instanceof RemotePlayer controlledLocal) {
                         if (ControllingPlayerCameraManager.controlledPlayer == null) {
                             ControllingPlayerCameraManager.add(controlledLocal);
+                            NetworkHandler.INSTANCE.sendToServer(new LeaveControlPacket(false));
                             return;
                         }
                     }
+                    NetworkHandler.INSTANCE.sendToServer(new LeaveControlPacket(true));
                     ControllingPlayerCameraManager.remove();
                 }
             }
@@ -103,7 +106,7 @@ public class ClientForgeEvents {
             UUID controllingPlayerUUID = holder.getControllingPlayer();
             if (controlledPlayerUUID != null) {
                 Player controlledPlayer = player.level().getPlayerByUUID(controlledPlayerUUID);
-                if (controlledPlayer != null) {
+                if (controlledPlayer != null && !FreddyUtils.hasLeftControl(controlledPlayer)) {
                     NetworkHandler.INSTANCE.sendToServer(new NotifyServerControlPacket(
                             input.up, input.down, input.left, input.right, input.jumping,
                             input.shiftKeyDown, input.leftImpulse, input.forwardImpulse

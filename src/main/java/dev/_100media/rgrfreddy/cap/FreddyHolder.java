@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.UUID;
@@ -20,6 +21,7 @@ public class FreddyHolder extends PlayerCapability {
     private boolean abilitiesDisabled = false;
     private int fearTicks;
     private int jumpscareBlockTicks = 0;
+    private boolean leftControl = false;
     private UUID controllingPlayer = null;
     private UUID controlledPlayer = null;
     private int controlTicks = 0;
@@ -53,6 +55,7 @@ public class FreddyHolder extends PlayerCapability {
         }
         tag.putInt("controlTicks", this.controlTicks);
         tag.putInt("jump", this.jumpscareBlockTicks);
+        tag.putBoolean("leftControl", this.leftControl);
         return tag;
     }
 
@@ -73,6 +76,7 @@ public class FreddyHolder extends PlayerCapability {
         }
         this.controlTicks = nbt.getInt("controlTicks");
         this.jumpscareBlockTicks = nbt.getInt("jump");
+        this.leftControl = nbt.getBoolean("leftControl");
     }
 
     @Override
@@ -171,5 +175,14 @@ public class FreddyHolder extends PlayerCapability {
 
     public void setJumpscareBlockTicks(int jumpscareBlockTicks) {
         this.jumpscareBlockTicks = jumpscareBlockTicks;
+    }
+
+    public boolean isLeftControl() {
+        return leftControl;
+    }
+
+    public void setLeftControl(boolean leftControl) {
+        this.leftControl = leftControl;
+        updateTracking();
     }
 }

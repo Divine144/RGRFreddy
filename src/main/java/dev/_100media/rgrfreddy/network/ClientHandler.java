@@ -5,6 +5,7 @@ import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
 import dev._100media.rgrfreddy.init.SoundInit;
 import dev._100media.rgrfreddy.mixin.MinecraftAccessor;
 import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
+import dev._100media.rgrfreddy.util.FreddyHatCameraManager;
 import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
@@ -16,6 +17,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.EntityHitResult;
+import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
 import java.util.UUID;
 
@@ -93,17 +96,20 @@ public class ClientHandler {
         if (currentPlayer != null) {
             Player controlledPlayer = FreddyUtils.getControlledPlayer(currentPlayer);
             if (controlledPlayer != null) {
-                ControllingPlayerCameraManager.add(controlledPlayer);
+
             }
         }
     }
 
     public static void handleClick() {
         Player currentPlayer = getPlayer();
+        Minecraft minecraft = Minecraft.getInstance();
         if (currentPlayer instanceof LocalPlayer controlled) {
-            controlled.swing(InteractionHand.MAIN_HAND);
-            if (Minecraft.getInstance() instanceof MinecraftAccessor accessor) {
-                accessor.invokeStartAttack();
+            if (minecraft.hitResult instanceof EntityHitResult result) {
+                if (minecraft.gameMode != null) {
+                    controlled.swing(InteractionHand.MAIN_HAND);
+                    minecraft.gameMode.attack(controlled, result.getEntity());
+                }
             }
         }
     }
