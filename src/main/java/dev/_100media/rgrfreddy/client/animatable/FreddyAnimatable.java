@@ -1,7 +1,9 @@
 package dev._100media.rgrfreddy.client.animatable;
 
 import dev._100media.hundredmediageckolib.client.animatable.MotionAttackAnimatable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.world.entity.Entity;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -51,5 +53,10 @@ public class FreddyAnimatable extends MotionAttackAnimatable {
             }
         }
         return PlayState.CONTINUE;
+    }
+
+    @Override
+    public double getTick(Object entity) {
+        return ((Entity) entity).tickCount + Minecraft.getInstance().getPartialTick();
     }
 }

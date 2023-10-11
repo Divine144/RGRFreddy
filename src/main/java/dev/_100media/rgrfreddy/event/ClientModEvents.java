@@ -85,7 +85,7 @@ public class ClientModEvents {
         event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "toy_army")).withScale(0.5f));
         event.registerEntityRenderer(EntityInit.PIZZA.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
         event.registerEntityRenderer(EntityInit.FREDDY_HAT_PROJECTILE.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "freddy_hat")));
-        createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "kid_freddy", new FreddyAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "kid_freddy", new FreddyAnimatable() {}, 1.0f);
         createSimpleMorphRenderer(MorphInit.TOY_FREDDY.get(), "toy_freddy", new FreddyAnimatable(), 1.0f);
         createSimpleMorphRenderer(MorphInit.FREDDY_FAZBEAR.get(), "freddy_fazbear", new FreddyAnimatable(), 1.0f);
         createSimpleMorphRenderer(MorphInit.GOLDEN_FREDDY_FAZBEAR.get(), "golden_freddy_fazbear", new FreddyAnimatable(), 1.0f);
