@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "rgrfreddy:block/jail_door",
+    "particle": "minecraft:block/iron_block"
+  }
+}

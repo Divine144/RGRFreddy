@@ -22,6 +22,4 @@ public class AbilityInit {
     public static final RegistryObject<Ability> FREDDY_SNARES = ABILITIES.register("freddy_snares", FreddySnaresAbility::new);
 
     public static final RegistryObject<Ability> DIMENSIONAL_TRAPDOOR = ABILITIES.register("dimensional_trapdoor", DimensionalTrapdoorAbility::new);
-
-    public static final RegistryObject<Ability> SCULKY_MECHA_MINES = ABILITIES.register("sculky_mecha_mines", Ability::new);
 }

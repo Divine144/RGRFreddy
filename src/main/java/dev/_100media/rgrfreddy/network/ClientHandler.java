@@ -9,6 +9,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 
@@ -69,6 +70,15 @@ public class ClientHandler {
         Player currentPlayer = getPlayer();
         if (currentPlayer instanceof LocalPlayer controlled) {
            controlled.turn(xRot, yRot);
+        }
+    }
+
+    public static void handleClick() {
+        Player currentPlayer = getPlayer();
+        if (currentPlayer instanceof LocalPlayer controlled) {
+            KeyMapping.set(InputConstants.Type.MOUSE.getOrCreate(0), true);
+            KeyMapping.click(InputConstants.Type.MOUSE.getOrCreate(0));
+            controlled.swing(InteractionHand.MAIN_HAND);
         }
     }
 

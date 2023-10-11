@@ -24,9 +24,7 @@ public class ToyBoxTrapQuest extends Quest {
     @Override
     protected List<QuestGoal> initializeGoals() {
         List<QuestGoal> goals = new ArrayList<>();
-        // TODO: Implement Freddy's hat then implement this goal
         goals.add(new ControlPlayerToLavaGoal(1));
-        // TODO: I guess verify how many hunters are actually there somehow
         goals.add(new JumpscareHuntersGoal(3));
         goals.add(new HitWardenGoal(10));
         return goals;

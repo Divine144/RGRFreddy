@@ -1,1 +1,11 @@
-// 1.20.1	2023-09-27T21:24:13.4345921	Block States: rgrfreddy
+// 1.20.1	2023-10-10T16:06:45.527252	Block States: rgrfreddy
+fcceabc2fe44b859c890049d53da5b52d11f64b9 assets/rgrfreddy/blockstates/emp_generator.json
+664556c13ac0fb6339cfb9fb19455f51b978acc0 assets/rgrfreddy/blockstates/jail_door.json
+e923682526633146ab1962edf73532254be363ce assets/rgrfreddy/blockstates/mystic_music_box.json
+83f8d81b13ec63d2dc9d0f959f9344ced6bc4672 assets/rgrfreddy/blockstates/snare.json
+7afbef8b740263b8d8a0700a53074141a46a9b46 assets/rgrfreddy/blockstates/toy_box_trap.json
+2b0ab503d34ad215e2b4e7083faa40a2a7b798c7 assets/rgrfreddy/models/block/emp_generator.json
+3bad9a7ee29cd063ab6ca50aad15672f48ca3a03 assets/rgrfreddy/models/block/jail_door.json
+47cafc2b524a70d4044c4e33a46e914c37a07939 assets/rgrfreddy/models/block/mystic_music_box.json
+f2d0947e680d224b4748d4bb643c2b7dd18f597d assets/rgrfreddy/models/block/snare.json
+6fa2892870860d7bc1689c45655c681446031e9c assets/rgrfreddy/models/block/toy_box_trap.json

@@ -9,6 +9,31 @@
       "rgrfreddy:heartbeat"
     ]
   },
+  "jump1": {
+    "sounds": [
+      "rgrfreddy:jump1"
+    ]
+  },
+  "jump2": {
+    "sounds": [
+      "rgrfreddy:jump2"
+    ]
+  },
+  "jump3": {
+    "sounds": [
+      "rgrfreddy:jump3"
+    ]
+  },
+  "jump4": {
+    "sounds": [
+      "rgrfreddy:jump4"
+    ]
+  },
+  "jump5": {
+    "sounds": [
+      "rgrfreddy:jump5"
+    ]
+  },
   "lullaby": {
     "sounds": [
       "rgrfreddy:lullaby"

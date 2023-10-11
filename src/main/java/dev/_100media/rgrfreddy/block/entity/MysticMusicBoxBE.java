@@ -7,7 +7,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,7 +20,6 @@ import software.bernie.geckolib.core.animation.Animation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.network.GeckoLibNetwork;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class MysticMusicBoxBE extends BlockEntity implements GeoBlockEntity {
@@ -80,8 +78,7 @@ public class MysticMusicBoxBE extends BlockEntity implements GeoBlockEntity {
             if (event.getData(DataTickets.BLOCK_ENTITY) instanceof MysticMusicBoxBE be) {
                 BlockState state = be.getBlockState();
                 if (!(state.getBlock() instanceof SmokeBombBlock)) {
-                    Animation animation = currentAnimation.animation();
-                    if (animation != null && !animation.name().contains("open")) {
+                    if (currentAnimation == null || currentAnimation.animation() == null || !currentAnimation.animation().name().contains("open")) {
                         return event.setAndContinue(OPEN);
                     }
                 }

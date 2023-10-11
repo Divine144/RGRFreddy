@@ -9,11 +9,14 @@ import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.VibrationParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -28,6 +31,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.gameevent.BlockPositionSource;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -81,10 +86,18 @@ public class EMPGeneratorBlock extends BaseEntityBlock {
             }
             var list = FreddyUtils.getEntitiesInRange(blockPos, level, Player.class, 10, 10, 10, p -> MorphHolderAttacher.getCurrentMorph(p).isPresent());
             if (!list.isEmpty()) {
+                Player player = list.get(0);
                 if (serverLevel.getServer().getTickCount() % 30 == 0) {
                     level.playSound(null, blockPos, SoundInit.GENERATOR.get(), SoundSource.PLAYERS, 0.65f, 1f);
+                    Vec3 origin = blockPos.getCenter();
+                    Vec3 traceVector = player.position().subtract(origin);
+                    Vec3 direction = traceVector.normalize();
+                    BlockPositionSource source = new BlockPositionSource(player.blockPosition());
+                    for (float i = 0.1f; i < Mth.floor(traceVector.length()) + 15; ++i) {
+                        Vec3 particlePosition = origin.add(direction.scale(i));
+                        ((ServerPlayer) player).serverLevel().sendParticles(new VibrationParticleOption(source, 30), particlePosition.x, particlePosition.y, particlePosition.z, 10, 0, 0, 0, 0);
+                    }
                 }
-                Player player = list.get(0);
                 var holder = FreddyHolderAttacher.getHolderUnwrap(player);
                 if (holder != null && !holder.isAbilitiesDisabled()) {
                     holder.setAbilitiesDisabled(true);

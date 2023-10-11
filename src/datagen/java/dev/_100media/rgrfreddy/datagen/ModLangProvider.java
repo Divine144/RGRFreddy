@@ -45,34 +45,33 @@ public class ModLangProvider extends LanguageProvider {
         add("effect.rgrfreddy.netted", "Targeted");
 
         // Quest Descriptions
-        add("quest.goal.rgrmechawarden.sound_of_music_advancement_goal.description", "Earn the Advancement \"Sound of Music\"");
-        add("quest.goal.rgrmechawarden.voluntary_exile_advancement_goal.description", "Earn the Advancement \"Voluntary Exile\"");
-        add("quest.goal.rgrmechawarden.kill_bat_bow_goal.description", "Kill Bats with a Bow 5 Times");
-        add("quest.goal.rgrmechawarden.break_block_mecha_mines_goal.description", "Break 500 Blocks with Sculky Mecha Mines");
-        add("quest.goal.rgrmechawarden.kill_players_wrist_rockets_goal.description", "Kill 3 Warden Hunters with your Wrist Rockets");
-        add("quest.goal.rgrmechawarden.dolphin_grace_effect_goal.description", "Gain the Dolphin's Grace Effect");
-        add("quest.goal.rgrmechawarden.trade_with_villager_goal.description", "Trade with a Villager");
-        add("quest.goal.rgrmechawarden.kill_warden_hunters_goal.description", "Kill 2 Warden Hunters");
-        add("quest.goal.rgrmechawarden.bring_home_the_beacon_advancement_goal.description", "Earn the Advancement \"Bring Home the Beacon\"");
-        add("quest.goal.rgrmechawarden.damage_players_mecha_morph_goal.description", "Deal 200 Damage to Warden Hunters while Mechamorphed");
-        add("quest.goal.rgrmechawarden.zombie_doctor_advancement_goal.description", "Earn the Advancement \"Zombie Doctor\"");
-        add("quest.goal.rgrmechawarden.mine_spawner_nether_goal.description", "Mine 2 Spawners in the Nether");
-        add("quest.goal.rgrmechawarden.kill_players_laser_goal.description", "Kill 4 Warden Hunters with your Laser");
+        add("quest.goal.rgrfreddy.get_enchanted_golden_item_goal.description", "Get an Enchanted Golden Item");
+        add("quest.goal.rgrfreddy.get_music_disc_goal.description", "Get a music disc");
+        add("quest.goal.rgrfreddy.control_player_to_lava_goal.description", "Control a Player into Lava");
+        add("quest.goal.rgrfreddy.craft_disc_goal.description", "Craft Music Disc 5");
+        add("quest.goal.rgrfreddy.hit_players_microphone_goal.description", "Deal 100 Total Damage to players with your Microphone");
+        add("quest.goal.rgrfreddy.give_parrot_cookie_goal.description", "Give a Parrot a Cookie");
+        add("quest.goal.rgrfreddy.hit_players_goal.description", "Hit Players 30 Times");
+        add("quest.goal.rgrfreddy.punch_warden_goal.description", "Punch a Warden 10 Times");
+        add("quest.goal.rgrfreddy.jumpscare_players_goal.description", "Jumpscare 3 Players");
+        add("quest.goal.rgrfreddy.stay_near_hunter_goal.description", "Stay Near Hunters for 120 Seconds");
+        add("quest.goal.rgrfreddy.tame_wolf_goal.description", "Tame 3 Wolves");
+        add("quest.goal.rgrfreddy.trade_emeralds_goal.description", "Trade 50 Emeralds to Villagers");
+
 
         // Quest Display Descriptions
-        add("quest.goal.rgrmechawarden.sound_of_music_advancement_goal", "Earn the Advancement \"Sound of Music\"");
-        add("quest.goal.rgrmechawarden.voluntary_exile_advancement_goal", "Earn the Advancement \"Voluntary Exile\"");
-        add("quest.goal.rgrmechawarden.kill_bat_bow_goal", "Kill Bats with a Bow");
-        add("quest.goal.rgrmechawarden.break_block_mecha_mines_goal", "Break Blocks with Sculky Mecha Mines");
-        add("quest.goal.rgrmechawarden.kill_players_wrist_rockets_goal", "Kill Warden Hunters with your Wrist Rockets");
-        add("quest.goal.rgrmechawarden.dolphin_grace_effect_goal", "Gain the Dolphin's Grace Effect");
-        add("quest.goal.rgrmechawarden.trade_with_villager_goal", "Trade with a Villager");
-        add("quest.goal.rgrmechawarden.kill_warden_hunters_goal", "Kill Warden Hunters");
-        add("quest.goal.rgrmechawarden.bring_home_the_beacon_advancement_goal", "Earn the Advancement \"Bring Home the Beacon\"");
-        add("quest.goal.rgrmechawarden.damage_players_mecha_morph_goal", "Deal Damage to Warden Hunters while Mechamorphed");
-        add("quest.goal.rgrmechawarden.zombie_doctor_advancement_goal", "Earn the Advancement \"Zombie Doctor\"");
-        add("quest.goal.rgrmechawarden.mine_spawner_nether_goal", "Mine Spawners while in the Nether");
-        add("quest.goal.rgrmechawarden.kill_players_laser_goal", "Kill Warden Hunters with your Laser");
+        add("quest.goal.rgrfreddy.get_enchanted_golden_item_goal", "Get an Enchanted Golden Item");
+        add("quest.goal.rgrfreddy.get_music_disc_goal", "Get a music disc");
+        add("quest.goal.rgrfreddy.control_player_to_lava_goal", "Control a Player into Lava");
+        add("quest.goal.rgrfreddy.craft_disc_goal", "Craft Music Disc 5");
+        add("quest.goal.rgrfreddy.hit_players_microphone_goal", "Deal Damage to Players With Your Microphone");
+        add("quest.goal.rgrfreddy.give_parrot_cookie_goal", "Give a Parrot a Cookie");
+        add("quest.goal.rgrfreddy.hit_players_goal", "Hit Players");
+        add("quest.goal.rgrfreddy.punch_warden_goal", "Punch a Warden 10 Times");
+        add("quest.goal.rgrfreddy.jumpscare_players_goal", "Jumpscare Players");
+        add("quest.goal.rgrfreddy.stay_near_hunter_goal", "Stay Near Hunters for 120 Seconds");
+        add("quest.goal.rgrfreddy.tame_wolf_goal", "Tame Wolves");
+        add("quest.goal.rgrfreddy.trade_emeralds_goal", "Trade Emeralds to Villagers");
     }
 
     protected void itemLang(RegistryObject<Item> entry) {

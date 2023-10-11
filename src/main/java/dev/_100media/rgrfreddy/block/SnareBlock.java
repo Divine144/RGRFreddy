@@ -57,8 +57,8 @@ public class SnareBlock extends BaseEntityBlock {
                     player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, -1, 0, false, false, false));
                     player.addEffect(new MobEffectInstance(EffectInit.NETTED.get(), -1, 0, false, false, false));
                     level.players().forEach(pl -> {
-                        pl.sendSystemMessage(Component.literal(player.getDisplayName().getString() + " has been trapped. Location: %s %s %s"
-                                .formatted(player.getX(), player.getY(), player.getZ())).withStyle(ChatFormatting.RED));
+                        pl.sendSystemMessage(Component.literal(player.getDisplayName().getString() + " has been trapped. Location: %d %d %d"
+                                .formatted(player.getBlockX(), player.getBlockY(), player.getBlockZ())).withStyle(ChatFormatting.RED));
                     });
                     be.setTrappedPlayerUUID(player.getUUID());
                 }
@@ -122,8 +122,7 @@ public class SnareBlock extends BaseEntityBlock {
                 if (be.getTrappedPlayerUUID() != null) {
                     Player player = serverLevel.getPlayerByUUID(be.getTrappedPlayerUUID());
                     if (player != null) {
-                        var list = FreddyUtils.getEntitiesInRange(blockPos, level, ServerPlayer.class, 20, 20, 20, p -> p != player && p.tickCount % 12 == 0);
-                        list.forEach(pl -> pl.playNotifySound(SoundInit.HEARTBEAT.get(), SoundSource.PLAYERS, 0.65f, 1f));
+                        level.playSound(null, blockPos, SoundInit.HEARTBEAT.get(), SoundSource.PLAYERS, 0.65f, 1f);
                     }
                 }
             }

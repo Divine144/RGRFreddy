@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "rgrfreddy:block/mystic_music_box",
+    "particle": "minecraft:block/oak_log"
+  }
+}

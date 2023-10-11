@@ -64,7 +64,6 @@ public class FreddyHatProjectileEntity extends ThrowableProjectile implements Ge
                     });
                 }
                 player.setItemSlot(EquipmentSlot.HEAD, ItemInit.FREDDY_HAT.get().getDefaultInstance());
-                FreddyHatCameraManager.remove();
                 discard();
             }
         }

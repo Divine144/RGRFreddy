@@ -6,6 +6,7 @@ import dev._100media.rgrfreddy.init.ItemInit;
 import dev._100media.rgrfreddy.init.MorphInit;
 import dev._100media.rgrfreddy.network.NetworkHandler;
 import dev._100media.rgrfreddy.network.clientbound.PlayJumpscarePacket;
+import dev._100media.rgrfreddy.quest.goal.JumpscareHuntersGoal;
 import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -32,7 +33,6 @@ public class JumpscareItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
-
         if (pLevel.isClientSide) {
             return InteractionResultHolder.consume(itemStack);
         }
@@ -55,6 +55,7 @@ public class JumpscareItem extends Item {
                         }
                     }
                     if (shouldJumpscare) {
+                        FreddyUtils.addToGenericQuestGoal(player, JumpscareHuntersGoal.class);
                         targeted.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, duration, 0, false, false, false));
                         NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> targeted), new PlayJumpscarePacket(getEvolutionStage(player)));
                     }

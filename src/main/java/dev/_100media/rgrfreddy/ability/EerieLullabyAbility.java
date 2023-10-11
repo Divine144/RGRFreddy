@@ -18,7 +18,7 @@ public class EerieLullabyAbility extends Ability {
 
     @Override
     public void executePressed(ServerLevel level, ServerPlayer player) {
-        var list = FreddyUtils.getEntitiesInRange(player, Player.class, 10, 10, 10, p -> true);
+        var list = FreddyUtils.getEntitiesInRange(player, Player.class, 10, 10, 10, p -> p != player);
         int fearTicks = getFearTicksForEvo(player);
         list.forEach(p -> {
             FreddyHolderAttacher.getHolder(p).ifPresent(freddyHolder -> {

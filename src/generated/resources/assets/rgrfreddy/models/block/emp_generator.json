@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "rgrfreddy:block/emp_generator",
+    "particle": "minecraft:block/iron_block"
+  }
+}

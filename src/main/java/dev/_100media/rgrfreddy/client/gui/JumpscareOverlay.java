@@ -51,7 +51,7 @@ public class JumpscareOverlay implements IGuiOverlay {
 
     private static ResourceLocation[] initializeEvoOneFrames() {
         List<ResourceLocation> locations = new ArrayList<>();
-        for (int i = 1; i <= 30; i++) {
+        for (int i = 1; i <= 46; i++) {
             ResourceLocation location = new ResourceLocation(RGRFreddy.MODID, "textures/gui/evo_one/%04d.png".formatted(i));
             locations.add(location);
         }

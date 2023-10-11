@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
 import dev._100media.rgrfreddy.cap.GlobalHolderAttacher;
 import dev._100media.rgrfreddy.network.clientbound.*;
+import dev._100media.rgrfreddy.network.serverbound.NotifyServerClickPacket;
 import dev._100media.rgrfreddy.network.serverbound.NotifyServerControlPacket;
 import dev._100media.rgrfreddy.network.serverbound.NotifyServerMousePacket;
 import net.minecraft.resources.ResourceLocation;
@@ -37,6 +38,8 @@ public class NetworkHandler {
                 .add(NotifyClientControlPacket::register)
                 .add(NotifyServerMousePacket::register)
                 .add(NotifyClientMousePacket::register)
+                .add(NotifyServerClickPacket::register)
+                .add(NotifyClientClickPacket::register)
                 .build();
         SimpleEntityCapabilityStatusPacket.registerRetriever(FreddyHolderAttacher.LOCATION, FreddyHolderAttacher::getHolderUnwrap);
         SimpleLevelCapabilityStatusPacket.registerRetriever(GlobalHolderAttacher.EXAMPLE_GLOBAL_LEVEL_CAPABILITY_RL, GlobalHolderAttacher::getGlobalLevelCapabilityUnwrap);

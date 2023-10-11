@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.GeckoLib;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -66,18 +67,13 @@ public class JailDoorBE extends BlockEntity implements GeoBlockEntity {
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event -> {
-            var controller = event.getController();
-            var currentAnimation = controller.getCurrentAnimation();
             if (event.getData(DataTickets.BLOCK_ENTITY) instanceof JailDoorBE be) {
                 BlockState state = be.getBlockState();
                 if (state.hasProperty(DoorBlock.OPEN)) {
-                    if (currentAnimation != null && state.getValue(DoorBlock.OPEN)) {
-                        Animation animation = currentAnimation.animation();
-                        if (animation != null && !animation.name().contains("open")) {
-                            return event.setAndContinue(OPEN);
-                        }
+                    if (state.getValue(DoorBlock.OPEN)) {
+                        return event.setAndContinue(OPEN);
                     }
-                    else if (currentAnimation == null || currentAnimation.animation() == null || !currentAnimation.animation().name().contains("close")) {
+                    else {
                         return event.setAndContinue(CLOSE);
                     }
                 }

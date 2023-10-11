@@ -25,6 +25,11 @@ public class SoundInit {
     public static final RegistryObject<SoundEvent> SMOKE = sound("smoke");
 
     public static final RegistryObject<SoundEvent> LULLABY = sound("lullaby");
+    public static final RegistryObject<SoundEvent> JUMP_ONE = sound("jump1");
+    public static final RegistryObject<SoundEvent> JUMP_TWO = sound("jump2");
+    public static final RegistryObject<SoundEvent> JUMP_THREE = sound("jump3");
+    public static final RegistryObject<SoundEvent> JUMP_FOUR = sound("jump4");
+    public static final RegistryObject<SoundEvent> JUMP_FIVE = sound("jump5");
 
 /*    public static final RegistryObject<SoundEvent> SHOCK_TRAP = sound("shock_trap");
     public static final RegistryObject<SoundEvent> WRIST_ROCKETS = sound("wrist_rockets");

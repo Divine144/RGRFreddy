@@ -2,6 +2,7 @@ package dev._100media.rgrfreddy.mixin;
 
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.entity.FreddyHatProjectileEntity;
+import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
@@ -24,25 +25,9 @@ public class LocalPlayerMixin {
     @Final
     protected Minecraft minecraft;
 
-    @Shadow private boolean lastOnGround;
-
-    @Shadow public Input input;
-
     @Inject(method = "isControlledCamera", at = @At("HEAD"), cancellable = true)
     public void isControlledCamera(CallbackInfoReturnable<Boolean> cir) {
-        LocalPlayer instance = (LocalPlayer) (Object) this;
-        if (this.minecraft.getCameraEntity() instanceof FreddyHatProjectileEntity projectile && projectile.getOwner() == instance) {
-            cir.setReturnValue(true);
-        }
-/*        else if (this.minecraft.getCameraEntity() instanceof RemotePlayer remotePlayer) {
-            var holder = FreddyHolderAttacher.getHolderUnwrap(instance);
-            if (holder != null) {
-                UUID controllerUUID = holder.getControlledPlayer();
-                if (controllerUUID != null && remotePlayer.getUUID().equals(controllerUUID)) {
-                    cir.setReturnValue(true);
-                }
-            }
-        }*/
+
     }
 
     @Redirect(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/Input;tick(ZF)V"))
@@ -50,6 +35,17 @@ public class LocalPlayerMixin {
         LocalPlayer localPlayer = (LocalPlayer) (Object) this;
         var holder = FreddyHolderAttacher.getHolderUnwrap(localPlayer);
         if (holder != null) {
+            if (holder.getControlTicks() <= 0) {
+                if (holder.getControlledPlayer() != null) {
+                    if (ControllingPlayerCameraManager.controlledPlayer == null) {
+
+                    }
+                }
+                if (holder.getControllingPlayer() != null || holder.getControlledPlayer() != null) {
+                    holder.setControllingPlayer(null);
+                    holder.setControlledPlayer(null);
+                }
+            }
             UUID controllingPlayerUUID = holder.getControllingPlayer();
             if (controllingPlayerUUID == null) {
                 instance.tick(pIsSneaking, pSneakingSpeedMultiplier);

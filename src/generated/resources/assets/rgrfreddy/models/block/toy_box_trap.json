@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "rgrfreddy:block/toy_box_trap",
+    "particle": "minecraft:block/stone"
+  }
+}
