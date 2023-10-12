@@ -26,7 +26,6 @@ public class JumpscareOverlay implements IGuiOverlay {
     private static final ResourceLocation[] EVO_4_FRAMES = initializeEvoFourFrames();
     private static final ResourceLocation[] EVO_5_FRAMES = initializeEvoFiveFrames();
     private static final List<ResourceLocation[]> framesList = List.of(EVO_1_FRAMES, EVO_2_FRAMES, EVO_3_FRAMES, EVO_4_FRAMES, EVO_5_FRAMES);
-
     private long startTime = 0;
     private boolean enabled = false;
     private int evolutionStage = 0;

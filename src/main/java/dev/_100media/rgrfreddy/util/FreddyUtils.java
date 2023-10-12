@@ -51,10 +51,7 @@ public class FreddyUtils {
     public static Player getControlledPlayer(Player controllingPlayer) {
         var holder = FreddyHolderAttacher.getHolderUnwrap(controllingPlayer);
         if (holder != null) {
-            UUID controlledPlayerUUID = holder.getControlledPlayer();
-            if (controlledPlayerUUID != null) {
-                return controllingPlayer.level().getPlayerByUUID(controlledPlayerUUID);
-            }
+            return holder.getControlledPlayer();
         }
         return null;
     }
@@ -63,10 +60,7 @@ public class FreddyUtils {
     public static Player getControllingPlayer(Player controlledPlayer) {
         var holder = FreddyHolderAttacher.getHolderUnwrap(controlledPlayer);
         if (holder != null) {
-            UUID controllingPlayerUUID = holder.getControllingPlayer();
-            if (controllingPlayerUUID != null) {
-                return controlledPlayer.level().getPlayerByUUID(controllingPlayerUUID);
-            }
+            return holder.getControllingPlayer();
         }
         return null;
     }

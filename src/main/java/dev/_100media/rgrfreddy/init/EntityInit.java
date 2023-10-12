@@ -4,6 +4,7 @@ import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.rgrfreddy.entity.FreddyHatProjectileEntity;
 import dev._100media.rgrfreddy.entity.PizzaProjectileEntity;
 import dev._100media.rgrfreddy.entity.ToyFreddyEntity;
+import dev._100media.rgrfreddy.item.FreddyHatItem;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,17 +23,18 @@ import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = RGRFreddy.MODID)
 public class EntityInit {
+
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, RGRFreddy.MODID);
     private static final List<AttributesRegister<?>> attributeSuppliers = new ArrayList<>();
 
-    public static final RegistryObject<EntityType<ToyFreddyEntity>> TOY_FREDDY = registerEntity("toy_freddy", () ->
+    public static final RegistryObject<EntityType<ToyFreddyEntity>> TOY_FREDDY = registerEntity("toy_army", () ->
             EntityType.Builder.of(ToyFreddyEntity::new, MobCategory.MISC).sized(0.5F, 0.5F), ToyFreddyEntity::createAttributes);
 
     public static final RegistryObject<EntityType<PizzaProjectileEntity>> PIZZA = registerEntity("pizza", () ->
             EntityType.Builder.of(PizzaProjectileEntity::new, MobCategory.MISC).sized(0.5F, 0.5F));
 
-    public static final RegistryObject<EntityType<FreddyHatProjectileEntity>> FREDDY_HAT = registerEntity("freddy_hat", () ->
-        EntityType.Builder.<FreddyHatProjectileEntity>of(FreddyHatProjectileEntity::new, MobCategory.MISC).sized(0.5F, 0.5F));
+    public static final RegistryObject<EntityType<FreddyHatProjectileEntity>> FREDDY_HAT_PROJECTILE = registerEntity("freddy_hat_projectile", () ->
+            EntityType.Builder.<FreddyHatProjectileEntity>of(FreddyHatProjectileEntity::new, MobCategory.MISC).sized(0.5F, 0.5F));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String name, Supplier<EntityType.Builder<T>> supplier) {
         return ENTITIES.register(name, () -> supplier.get().build(RGRFreddy.MODID + ":" + name));

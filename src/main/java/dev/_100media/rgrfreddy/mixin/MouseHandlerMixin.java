@@ -45,7 +45,8 @@ public abstract class MouseHandlerMixin {
     private void rgrFreddy$wrapTurnPlayer_Turn(LocalPlayer player, double yRot, double xRot, Operation<LocalPlayer> operation) {
         if (ControllingPlayerCameraManager.controlledPlayer == null) {
             operation.call(player, yRot, xRot);
-        } else {
+        }
+        else {
             ControllingPlayerCameraManager.controlledPlayer.turn(yRot, xRot);
             NetworkHandler.INSTANCE.sendToServer(new NotifyServerMousePacket((float) yRot, (float) xRot));
         }

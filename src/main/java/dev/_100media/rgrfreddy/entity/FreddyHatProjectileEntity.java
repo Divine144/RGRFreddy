@@ -33,7 +33,7 @@ public class FreddyHatProjectileEntity extends ThrowableProjectile implements Ge
     }
 
     public FreddyHatProjectileEntity(Level level, Player owner) {
-        super(EntityInit.FREDDY_HAT.get(), level);
+        super(EntityInit.FREDDY_HAT_PROJECTILE.get(), level);
         this.setOwner(owner);
         this.setPos(owner.getX(), owner.getEyeY() - 0.1D, owner.getZ());
     }

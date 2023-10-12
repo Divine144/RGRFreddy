@@ -13,6 +13,4 @@ public abstract class MinecraftMixin {
     @Shadow protected abstract void continueAttack(boolean pLeftClick);
 
     @Shadow @Nullable public LocalPlayer player;
-
-
 }
