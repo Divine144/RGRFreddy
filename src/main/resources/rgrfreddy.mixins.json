@@ -4,15 +4,12 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "${mod_id}.refmap.json",
   "mixins": [
-    "MorphRidingOffsetMixin",
     "ParrotMixin"
   ],
   "client": [
-    "GameRendererMixin",
     "LocalPlayerMixin",
-    "MinecraftAccessor",
-    "MinecraftMixin",
-    "MouseHandlerMixin"
+    "MouseHandlerMixin",
+    "RemotePlayerMixin"
   ],
   "minVersion": "0.8.5"
 }

@@ -7,18 +7,12 @@ import dev._100media.rgrfreddy.init.EffectInit;
 import dev._100media.rgrfreddy.init.MenuInit;
 import dev._100media.rgrfreddy.network.ClientHandler;
 import dev._100media.rgrfreddy.network.NetworkHandler;
-import dev._100media.rgrfreddy.network.serverbound.LeaveControlPacket;
-import dev._100media.rgrfreddy.network.serverbound.NotifyServerClickPacket;
 import dev._100media.rgrfreddy.network.serverbound.NotifyServerControlPacket;
 import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
-import dev._100media.rgrfreddy.util.FreddyUtils;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
-import net.minecraft.server.level.ServerPlayerGameMode;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
@@ -27,8 +21,6 @@ import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.UUID;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ClientForgeEvents {
@@ -42,17 +34,12 @@ public class ClientForgeEvents {
             Player player = ClientHandler.getPlayer();
             if (player instanceof LocalPlayer localPlayer) {
                 var holder = FreddyHolderAttacher.getHolderUnwrap(localPlayer);
-                UUID controlledPlayerUUID = holder.getControlledPlayer();
-                if (holder != null && controlledPlayerUUID != null && holder.getControlTicks() > 0) {
-                    Player controlledPlayer = player.level().getPlayerByUUID(controlledPlayerUUID);
-                    if (controlledPlayer instanceof RemotePlayer controlledLocal) {
-                        if (ControllingPlayerCameraManager.controlledPlayer == null) {
-                            ControllingPlayerCameraManager.add(controlledLocal);
-                            NetworkHandler.INSTANCE.sendToServer(new LeaveControlPacket(false));
-                            return;
-                        }
+                Player controlledPlayer = holder == null ? null : holder.getControlledPlayer();
+                if (controlledPlayer != null && holder.getControlTicks() > 0) {
+                    if (controlledPlayer instanceof RemotePlayer controlledLocal && ControllingPlayerCameraManager.controlledPlayer == null) {
+                        ControllingPlayerCameraManager.add(controlledLocal);
+                        return;
                     }
-                    NetworkHandler.INSTANCE.sendToServer(new LeaveControlPacket(true));
                     ControllingPlayerCameraManager.remove();
                 }
             }
@@ -60,29 +47,14 @@ public class ClientForgeEvents {
     }
 
     @SubscribeEvent
-    public static void keyPressEvent(InputEvent.InteractionKeyMappingTriggered event) {
-        KeyMapping mapping = event.getKeyMapping();
-        if (mapping == Minecraft.getInstance().options.keyAttack) {
-            Player player = ClientHandler.getPlayer();
-            if (player instanceof LocalPlayer localPlayer) {
-                Player controllingPlayer = FreddyUtils.getControllingPlayer(localPlayer);
-                Player controlledPlayer = FreddyUtils.getControlledPlayer(localPlayer);
-                if (controlledPlayer != null) {
-                    if (ControllingPlayerCameraManager.controlledPlayer != null) {
-                        NetworkHandler.INSTANCE.sendToServer(new NotifyServerClickPacket());
-                    }
-                }
-                if (controllingPlayer != null) {
-                }
-            }
-        }
-    }
-
-
-    @SubscribeEvent
     public static void onInputEvent(InputEvent.MouseButton.Pre event) {
         Player player = ClientHandler.getPlayer();
-
+        if (player instanceof LocalPlayer localPlayer) {
+            var holder = FreddyHolderAttacher.getHolderUnwrap(localPlayer);
+            if (holder != null && holder.getControllingPlayer() instanceof RemotePlayer) {
+                event.setCanceled(true);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -102,24 +74,16 @@ public class ClientForgeEvents {
         Input input = event.getInput();
         var holder = FreddyHolderAttacher.getHolderUnwrap(player);
         if (holder != null) {
-            UUID controlledPlayerUUID = holder.getControlledPlayer();
-            UUID controllingPlayerUUID = holder.getControllingPlayer();
-            if (controlledPlayerUUID != null) {
-                Player controlledPlayer = player.level().getPlayerByUUID(controlledPlayerUUID);
-                if (controlledPlayer != null && !FreddyUtils.hasLeftControl(controlledPlayer)) {
-                    NetworkHandler.INSTANCE.sendToServer(new NotifyServerControlPacket(
-                            input.up, input.down, input.left, input.right, input.jumping,
-                            input.shiftKeyDown, input.leftImpulse, input.forwardImpulse
-                    ));
-                }
-            }
-            if (controllingPlayerUUID != null) {
-                Player controllingPlayer = player.level().getPlayerByUUID(controllingPlayerUUID);
-                if (controllingPlayer instanceof RemotePlayer) {
+            Player controlledPlayer = holder.getControlledPlayer();
+            // Player controllingPlayer = holder.getControllingPlayer();
+            if (controlledPlayer instanceof RemotePlayer && ControllingPlayerCameraManager.controlledPlayer == controlledPlayer) {
+                NetworkHandler.INSTANCE.sendToServer(new NotifyServerControlPacket(
+                        input.up, input.down, input.left, input.right, input.jumping,
+                        input.shiftKeyDown, input.leftImpulse, input.forwardImpulse
+                ));
+            }/* else if (controllingPlayer instanceof RemotePlayer) {
 
-                }
-            }
-
+            }*/
         }
         if (player.hasEffect(EffectInit.NETTED.get())) {
             input.up = false;

@@ -16,7 +16,6 @@ import dev._100media.hundredmediamorphs.capability.MorphHolderAttacher;
 import dev._100media.hundredmediaquests.cap.QuestHolderAttacher;
 import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.critereon.PlayerInteractTrigger;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
@@ -26,13 +25,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -45,12 +38,10 @@ import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = RGRFreddy.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -190,14 +181,7 @@ public class CommonForgeEvents {
 
     @SubscribeEvent
     public static void onKill(LivingDeathEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            Player controllingPlayer = FreddyUtils.getControllingPlayer(player);
-            if (controllingPlayer instanceof ServerPlayer controllingServerPlayer) {
-                if (event.getSource().is(DamageTypes.LAVA)) {
-                    FreddyUtils.addToGenericQuestGoal(controllingServerPlayer, ControlPlayerToLavaGoal.class);
-                }
-            }
-        }
+
     }
 
     @SubscribeEvent
@@ -208,16 +192,19 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void onItemPickup(PlayerEvent.ItemPickupEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-
-        }
-    }
-
-    @SubscribeEvent
-    public static void onEffectAdded(MobEffectEvent.Applicable event) {
-        if (event.getEntity() instanceof Player player && player.getItemBySlot(EquipmentSlot.HEAD).is(ItemInit.GUARD_MASK.get())) {
-            MobEffectInstance instance = event.getEffectInstance();
-            if (instance != null && instance.getEffect() == MobEffects.BLINDNESS) {
-                event.setResult(Event.Result.DENY);
+            ItemStack stack = event.getStack();
+            if (stack.getItem() instanceof TieredItem item && item.getTier() == Tiers.GOLD) {
+                if (stack.isEnchanted()) {
+                    FreddyUtils.addToGenericQuestGoal(player, AquireGoldenItemGoal.class);
+                }
+            }
+            else if (stack.getItem() instanceof ArmorItem item && item.getMaterial() == ArmorMaterials.GOLD) {
+                if (stack.isEnchanted()) {
+                    FreddyUtils.addToGenericQuestGoal(player, AquireGoldenItemGoal.class);
+                }
+            }
+            if (stack.is(ItemTags.MUSIC_DISCS)) {
+                FreddyUtils.addToGenericQuestGoal(player, AquireMusicDiscGoal.class);
             }
         }
     }
@@ -263,23 +250,6 @@ public class CommonForgeEvents {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.player instanceof ServerPlayer player && event.phase == TickEvent.Phase.END) {
-            if (player.tickCount % 20 == 0) {
-                if (player.getInventory().contains(ItemTags.MUSIC_DISCS)) {
-                    FreddyUtils.addToGenericQuestGoal(player, AquireMusicDiscGoal.class);
-                }
-                else {
-                    FreddyUtils.addToGenericQuestGoal(player, AquireMusicDiscGoal.class, -1);
-                }
-                Optional<ItemStack> goldStack = player.getInventory().items.stream()
-                        .filter(ItemStack::isEnchanted)
-                        .filter(stack -> stack.getItem() instanceof TieredItem item && item.getTier() == Tiers.GOLD ||
-                                stack.getItem() instanceof ArmorItem item1 && item1.getMaterial() == ArmorMaterials.GOLD)
-                        .findAny();
-                if (goldStack.isPresent()) {
-                    FreddyUtils.addToGenericQuestGoal(player, AquireGoldenItemGoal.class);
-                }
-                else FreddyUtils.addToGenericQuestGoal(player, AquireGoldenItemGoal.class, -1);
-            }
             FreddyHolderAttacher.getHolder(player).ifPresent(cap -> {
                 if (cap.getLastTeleportTicks() > 0) {
                     cap.setLastTeleportTicks(cap.getLastTeleportTicks() - 1);
@@ -291,27 +261,25 @@ public class CommonForgeEvents {
                     cap.decrementControlTicks();
                 }
                 else {
-                    UUID controllingPlayer = cap.getControllingPlayer();
-                    UUID controlledPlayer = cap.getControlledPlayer();
+                    Player controllingPlayer = cap.getControllingPlayer();
+                    Player controlledPlayer = cap.getControlledPlayer();
                     if (controllingPlayer != null) {
-                        Player controller = player.level().getPlayerByUUID(controllingPlayer);
-                        if (controller instanceof ServerPlayer serverPlayer) {
+                        if (controllingPlayer instanceof ServerPlayer serverPlayer) {
                             FreddyHolderAttacher.getHolder(serverPlayer).ifPresent(p -> p.setControlledPlayer(null));
                             NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new StopControllingPlayerPacket());
                         }
                         cap.setControllingPlayer(null);
                     }
                     else if (controlledPlayer != null) {
-                        Player controlled = player.level().getPlayerByUUID(controlledPlayer);
-                        if (controlled instanceof ServerPlayer serverPlayer) {
+                        if (controlledPlayer instanceof ServerPlayer serverPlayer) {
                             FreddyHolderAttacher.getHolder(serverPlayer).ifPresent(p -> p.setControllingPlayer(null));
                         }
+                        ItemStack helmetStack = controlledPlayer.getItemBySlot(EquipmentSlot.HEAD);
+                        if (helmetStack.is(ItemInit.FREDDY_HAT.get()))
+                            controlledPlayer.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                         cap.setControlledPlayer(null);
                         NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new StopControllingPlayerPacket());
                     }
-                }
-                if (cap.getJumpscareBlockTicks() > 0) {
-                    cap.decrementJumpscareBlockTicks();
                 }
                 if (MorphHolderAttacher.getCurrentMorph(player).isPresent()) {
                     var list = FreddyUtils.getEntitiesInRange(player, Player.class, 30, 25, 30, p -> p != player);

@@ -1,13 +1,10 @@
 package dev._100media.rgrfreddy.event;
 
+import dev._100media.hundredmediageckolib.client.animatable.SimpleAnimatable;
 import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
 import dev._100media.rgrfreddy.RGRFreddy;
-import dev._100media.rgrfreddy.client.animatable.FreddyAnimatable;
 import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
 import dev._100media.rgrfreddy.client.renderer.blockentity.DimensionalTrapDoorRenderer;
-import dev._100media.rgrfreddy.client.renderer.blockentity.EMPGeneratorBlockRenderer;
-import dev._100media.rgrfreddy.client.renderer.blockentity.JailDoorBlockRenderer;
-import dev._100media.rgrfreddy.client.renderer.blockentity.SnareBlockRenderer;
 import dev._100media.rgrfreddy.init.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -43,8 +40,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.model.DefaultedBlockGeoModel;
-import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import java.util.Arrays;
@@ -64,32 +59,25 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(BlockInit.DIMENSIONAL_TRAPDOOR_BE.get(), DimensionalTrapDoorRenderer::new);
-        event.registerBlockEntityRenderer(BlockInit.TOY_BOX_TRAP_BE.get(), ctx -> new GeoBlockRenderer<>(
-                new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "toy_box_trap_be"))
-        ));
-
-        event.registerBlockEntityRenderer(BlockInit.MYSTIC_MUSIC_BOX_BE.get(), ctx -> new GeoBlockRenderer<>(
-                new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "mystic_music_box_be"))
-        ));
-
-        event.registerBlockEntityRenderer(BlockInit.SNARE_BE.get(), ctx -> new SnareBlockRenderer<>(
-                new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "snare_be"))
-        ));
-        event.registerBlockEntityRenderer(BlockInit.JAIL_DOOR_BE.get(), ctx -> new JailDoorBlockRenderer<>(
-                new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "jail_door_be"))
-        ));
-
-        event.registerBlockEntityRenderer(BlockInit.EMP_GENERATOR_BE.get(), ctx -> new EMPGeneratorBlockRenderer<>(
-                new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "emp_generator_be"))
-        ).withScale(2));
-        event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "toy_army")).withScale(0.5f));
+        event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
         event.registerEntityRenderer(EntityInit.PIZZA.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
-        event.registerEntityRenderer(EntityInit.FREDDY_HAT_PROJECTILE.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "freddy_hat")));
-        createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "kid_freddy", new FreddyAnimatable(), 1.0f);
-        createSimpleMorphRenderer(MorphInit.TOY_FREDDY.get(), "toy_freddy", new FreddyAnimatable(), 1.0f);
-        createSimpleMorphRenderer(MorphInit.FREDDY_FAZBEAR.get(), "freddy_fazbear", new FreddyAnimatable(), 1.0f);
-        createSimpleMorphRenderer(MorphInit.GOLDEN_FREDDY_FAZBEAR.get(), "golden_freddy_fazbear", new FreddyAnimatable(), 1.0f);
-        createSimpleMorphRenderer(MorphInit.NIGHTMARE_FREDDY_FAZBEAR.get(), "nightmare_freddy_fazbear", new FreddyAnimatable(), 1.0f);
+        event.registerEntityRenderer(EntityInit.FREDDY_HAT.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
+        createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "pizza", new SimpleAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.TOY_FREDDY.get(), "pizza", new SimpleAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.FREDDY_FAZBEAR.get(), "pizza", new SimpleAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.GOLDEN_FREDDY_FAZBEAR.get(), "pizza", new SimpleAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.NIGHTMARE_FREDDY_FAZBEAR.get(), "pizza", new SimpleAnimatable(), 1.0f);
+
+     /*   event.registerEntityRenderer(EntityInit.MISSILE.get(), MissileEntityRenderer::new);*/
+
+/*        createSimpleMorphRenderer(MorphInit.BABY_MECHA.get(), "baby_mecha", new WardenAnimatable()
+                .runAnim(RawAnimation.begin().thenLoop("walk"))
+                .hoverboardAnim(RawAnimation.begin().then("hoverboard spawn", Animation.LoopType.PLAY_ONCE).thenLoop("hoverboard on")), 0.5f);
+        createSimpleMorphRenderer(MorphInit.MECHA_TEEN.get(), "mecha_teen", new WardenAnimatable()
+                .hoverboardAnim(RawAnimation.begin().then("hoverboard on", Animation.LoopType.PLAY_ONCE).thenLoop("hoverboard")), 1.0f);
+        createSimpleMorphRenderer(MorphInit.MECHA_WARDEN.get(), "mecha_warden", new WardenAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.MECHA_KING.get(), "mecha_king", new WardenAnimatable(), 1.0f);
+        createSimpleMorphRenderer(MorphInit.MECHA_SCULK.get(), "mecha_sculk", new WardenAnimatable().sitAnim(RawAnimation.begin().thenLoop("crouch")), 3f);*/
     }
 
     @SubscribeEvent
@@ -98,40 +86,40 @@ public class ClientModEvents {
         MenuScreens.register(MenuInit.SKILL_TREE.get(), (AbstractContainerMenu menu, Inventory inv, Component title) -> new TreeScreen(menu, inv, title,
                 new ResourceLocation(RGRFreddy.MODID, "textures/gui/screen/skill_tree.png"), 23, 23,
                 Arrays.asList(
-                        new Pair<>(SkillInit.EVOLUTION_TREE, new Pair<>(66, 140)),
-                        new Pair<>(SkillInit.COMBAT_TREE, new Pair<>(114, 140)),
-                        new Pair<>(SkillInit.UTILITY_TREE, new Pair<>(163, 140))
+                        new Pair<>(SkillInit.EVOLUTION_TREE, new Pair<>(66, 87)),
+                        new Pair<>(SkillInit.COMBAT_TREE, new Pair<>(114, 87)),
+                        new Pair<>(SkillInit.UTILITY_TREE, new Pair<>(163, 87))
                 ), 256, 256, 256, 174
         ));
         MenuScreens.register(MenuInit.EVOLUTION_TREE.get(), (AbstractContainerMenu menu, Inventory inv, Component title) -> new SkillScreen(menu, inv, title,
                 new ResourceLocation(RGRFreddy.MODID, "textures/gui/screen/evolution.png"), 27, 29,
                 Arrays.asList(
-                        new Pair<>(37, 120),
-                        new Pair<>(78, 120),
-                        new Pair<>(118, 120),
-                        new Pair<>(158, 120),
-                        new Pair<>(200, 120)
-                ), SkillInit.EVOLUTION_TREE.get(), 256, 256, 256, 256
+                        new Pair<>(37, 45),
+                        new Pair<>(75, 45),
+                        new Pair<>(113, 45),
+                        new Pair<>(150, 45),
+                        new Pair<>(188, 45)
+                ), SkillInit.EVOLUTION_TREE.get(), 256, 256, 256, 163
         ));
         MenuScreens.register(MenuInit.COMBAT_TREE.get(), (AbstractContainerMenu menu, Inventory inv, Component title) -> new QuestSkillScreen(menu, inv, title,
                 new ResourceLocation(RGRFreddy.MODID, "textures/gui/screen/combat.png"), 30, 30,
                 Arrays.asList(
-                        new Pair<>(38, 80),
-                        new Pair<>(75, 80),
-                        new Pair<>(111, 80),
-                        new Pair<>(148, 80),
-                        new Pair<>(184, 80)
-                ), SkillInit.COMBAT_TREE.get(), 256, 256, 256, 256
+                        new Pair<>(36, 67),
+                        new Pair<>(74, 67),
+                        new Pair<>(112, 67),
+                        new Pair<>(150, 67),
+                        new Pair<>(188, 67)
+                ), SkillInit.COMBAT_TREE.get(), 256, 256, 256, 161
         ));
         MenuScreens.register(MenuInit.UTILITY_TREE.get(), (AbstractContainerMenu menu, Inventory inv, Component title) -> new SkillScreen(menu, inv, title,
                 new ResourceLocation(RGRFreddy.MODID, "textures/gui/screen/utility.png"), 27, 29,
                 Arrays.asList(
-                        new Pair<>(44, 72),
-                        new Pair<>(77, 72),
-                        new Pair<>(111, 72),
-                        new Pair<>(142, 72),
-                        new Pair<>(174, 72)
-                ), SkillInit.UTILITY_TREE.get(), 256, 256, 256, 256
+                        new Pair<>(37, 57),
+                        new Pair<>(75, 57),
+                        new Pair<>(113, 57),
+                        new Pair<>(150, 57),
+                        new Pair<>(188, 57)
+                ), SkillInit.UTILITY_TREE.get(), 256, 256, 256, 163
         ));
     }
 
@@ -144,7 +132,6 @@ public class ClientModEvents {
         MorphRenderers.registerPlayerMorphRenderer(morph, context -> {
             var renderer = new GeoPlayerRenderer<>(context, new SimpleGeoPlayerModel<>(RGRFreddy.MODID, name) {
                 private final ResourceLocation defaultLocation = new ResourceLocation(RGRFreddy.MODID, "textures/entity/" + name + ".png");
-
                 @Override
                 public ResourceLocation getTextureResource(T animatable1, @Nullable AbstractClientPlayer player) {
                     return defaultLocation;
@@ -162,6 +149,7 @@ public class ClientModEvents {
                         super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
                         poseStack.popPose();
                     }
+
                 }
             };
             return renderer;

@@ -10,6 +10,7 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(modid = RGRFreddy.MODID)
 public class FreddyHolderAttacher extends CapabilityAttacher {
@@ -17,6 +18,7 @@ public class FreddyHolderAttacher extends CapabilityAttacher {
     public static final ResourceLocation LOCATION = new ResourceLocation(RGRFreddy.MODID, "example");
     private static final Class<FreddyHolder> CAPABILITY_CLASS = FreddyHolder.class;
 
+    @Nullable
     @SuppressWarnings("ConstantConditions")
     public static FreddyHolder getHolderUnwrap(Entity entity) {
         return getHolder(entity).orElse(null);

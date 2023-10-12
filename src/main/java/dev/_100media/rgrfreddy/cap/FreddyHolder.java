@@ -10,6 +10,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -70,9 +71,13 @@ public class FreddyHolder extends PlayerCapability {
         this.fearTicks = nbt.getInt("fearTicks");
         if (nbt.hasUUID("controllingPlayer")) {
             this.controllingPlayer = nbt.getUUID("controllingPlayer");
+        } else {
+            this.controllingPlayer = null;
         }
         if (nbt.hasUUID("controlledPlayer")) {
             this.controlledPlayer = nbt.getUUID("controlledPlayer");
+        } else {
+            this.controlledPlayer = null;
         }
         this.controlTicks = nbt.getInt("controlTicks");
         this.jumpscareBlockTicks = nbt.getInt("jump");
@@ -130,8 +135,15 @@ public class FreddyHolder extends PlayerCapability {
         updateTracking();
     }
 
-    public UUID getControllingPlayer() {
-        return controllingPlayer;
+    /**
+     * {@return the player controlling this player, or null if there isn't one}
+     */
+    @Nullable
+    public Player getControllingPlayer() {
+        if (this.controllingPlayer == null)
+            return null;
+
+        return this.player.level().getPlayerByUUID(this.controllingPlayer);
     }
 
     public void setControllingPlayer(UUID controllingPlayer) {
@@ -139,8 +151,15 @@ public class FreddyHolder extends PlayerCapability {
         updateTracking();
     }
 
-    public UUID getControlledPlayer() {
-        return controlledPlayer;
+    /**
+     * {@return the player being controlled by this player, or null if there isn't one}
+     */
+    @Nullable
+    public Player getControlledPlayer() {
+        if (this.controlledPlayer == null)
+            return null;
+
+        return this.player.level().getPlayerByUUID(this.controlledPlayer);
     }
 
     public void setControlledPlayer(UUID controlledPlayer) {
