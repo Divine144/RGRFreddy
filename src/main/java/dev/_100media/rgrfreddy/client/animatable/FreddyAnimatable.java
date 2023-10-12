@@ -45,7 +45,7 @@ public class FreddyAnimatable extends MotionAttackAnimatable {
             else if (player.isShiftKeyDown()) {
                 controller.setAnimation(CROUCH);
             }
-            else if (state.isMoving()) {
+            else if (player.xo != player.getX() || player.zo != player.getZ()) {
                 controller.setAnimation(player.isSprinting() && !player.isCrouching() ? RUN : WALK);
             }
             else {
@@ -57,6 +57,6 @@ public class FreddyAnimatable extends MotionAttackAnimatable {
 
     @Override
     public double getTick(Object entity) {
-        return ((Entity) entity).tickCount + Minecraft.getInstance().getPartialTick();
+        return super.getTick(entity);
     }
 }
