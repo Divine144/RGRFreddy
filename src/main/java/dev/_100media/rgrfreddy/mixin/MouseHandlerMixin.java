@@ -42,11 +42,12 @@ public abstract class MouseHandlerMixin {
     }
 
     @WrapOperation(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
-    private void rgrFreddy$wrapTurnPlayer_Turn(double yRot, double xRot, Operation<LocalPlayer> operation) {
+    private void rgrFreddy$wrapTurnPlayer_Turn(LocalPlayer player, double yRot, double xRot, Operation<LocalPlayer> operation) {
         if (ControllingPlayerCameraManager.controlledPlayer == null) {
-            operation.call(this.minecraft.player, yRot, xRot);
+            operation.call(player, yRot, xRot);
         } else {
-            
+            ControllingPlayerCameraManager.controlledPlayer.turn(yRot, xRot);
+            NetworkHandler.INSTANCE.sendToServer(new NotifyServerMousePacket((float) yRot, (float) xRot));
         }
     }
 }

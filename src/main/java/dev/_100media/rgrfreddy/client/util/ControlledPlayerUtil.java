@@ -5,8 +5,8 @@ import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 
 public class ControlledPlayerUtil {
     public static void customizeAiStep(RemotePlayer controlledPlayer) {
@@ -18,35 +18,49 @@ public class ControlledPlayerUtil {
         if (!(controllingPlayer instanceof LocalPlayer localPlayer))
             return;
 
-        controlledPlayer.xxa = localPlayer.input.leftImpulse;
-        controlledPlayer.zza = localPlayer.input.forwardImpulse;
-        controlledPlayer.setJumping(localPlayer.input.jumping);
+        // controlledPlayer.xxa = localPlayer.input.leftImpulse;
+        // controlledPlayer.zza = localPlayer.input.forwardImpulse;
+        // controlledPlayer.setJumping(localPlayer.input.jumping);
+        //
+        // Vec3 travelVec = new Vec3(controlledPlayer.xxa, controlledPlayer.yya, controlledPlayer.zza);
+        //
+        // controlledPlayer.travel(travelVec);
 
-        Vec3 travelVec = new Vec3(controlledPlayer.xxa, controlledPlayer.yya, controlledPlayer.zza);
+        // controlledPlayer.yBodyRot = controlledPlayer.getYRot();
+        // controlledPlayer.yBodyRotO = controlledPlayer.yBodyRot;
+        controlledPlayer.yHeadRot = controlledPlayer.getYRot();
+        // controlledPlayer.yHeadRotO = controlledPlayer.yHeadRot;
+        // controlledPlayer.setXRot(controllingPlayer.getXRot());
+        // controlledPlayer.xRotO = controllingPlayer.xRotO;
+        // controlledPlayer.setYRot(controllingPlayer.getYRot());
+        // controlledPlayer.yRotO = controllingPlayer.yRotO;
 
-        controlledPlayer.travel(travelVec);
+        RemotePlayerExtension controlledExtension = (RemotePlayerExtension) controlledPlayer;
 
-        controlledPlayer.yBodyRot = controllingPlayer.yBodyRot;
-        controlledPlayer.yBodyRotO = controllingPlayer.yBodyRotO;
-        controlledPlayer.yHeadRot = controllingPlayer.yHeadRot;
-        controlledPlayer.yHeadRotO = controllingPlayer.yHeadRotO;
-        controlledPlayer.setXRot(controllingPlayer.getXRot());
-        controlledPlayer.xRotO = controllingPlayer.xRotO;
-        controlledPlayer.setYRot(controllingPlayer.getYRot());
-        controlledPlayer.yRotO = controllingPlayer.yRotO;
+        // controlledExtension.setLerpSteps(0);
+        controlledExtension.setLerpHeadSteps(0);
+        // controlledExtension.setLerpDeltaMovementSteps(0);
 
-        // this.yBobO = this.yBob;
-        // this.xBobO = this.xBob;
-        // this.xBob += (this.getXRot() - this.xBob) * 0.5F;
-        // this.yBob += (this.getYRot() - this.yBob) * 0.5F;
+        int lerpSteps = controlledExtension.getLerpSteps();
+        if (lerpSteps > 0) {
+            double d0 = controlledPlayer.getX() + (controlledExtension.getLerpX() - controlledPlayer.getX()) / lerpSteps;
+            double d1 = controlledPlayer.getY() + (controlledExtension.getLerpY() - controlledPlayer.getY()) / lerpSteps;
+            double d2 = controlledPlayer.getZ() + (controlledExtension.getLerpZ() - controlledPlayer.getZ()) / lerpSteps;
+            controlledExtension.setLerpSteps(lerpSteps - 1);
+            controlledPlayer.setPos(d0, d1, d2);
+            // controlledPlayer.setYRot(controlledPlayer.getYRot() + (float) Mth.wrapDegrees(controlledPlayer.lerpYRot - (double) controlledPlayer.getYRot()) / (float) controlledPlayer.lerpSteps);
+            // controlledPlayer.setXRot(controlledPlayer.getXRot() + (float) (controlledPlayer.lerpXRot - (double) controlledPlayer.getXRot()) / (float) controlledPlayer.lerpSteps);
+            // this.setRot(this.getYRot(), this.getXRot());
+        }
     }
 
     public static boolean isEffectiveAi(RemotePlayer controlledPlayer) {
-        if (ControllingPlayerCameraManager.controlledPlayer != controlledPlayer)
-            return false;
-
-        Player controllingPlayer = FreddyHolderAttacher.getHolder(controlledPlayer).resolve().map(FreddyHolder::getControllingPlayer).orElse(null);
-
-        return controllingPlayer instanceof LocalPlayer;
+        return false;
+        // if (ControllingPlayerCameraManager.controlledPlayer != controlledPlayer)
+        //     return false;
+        //
+        // Player controllingPlayer = FreddyHolderAttacher.getHolder(controlledPlayer).resolve().map(FreddyHolder::getControllingPlayer).orElse(null);
+        //
+        // return controllingPlayer instanceof LocalPlayer;
     }
 }

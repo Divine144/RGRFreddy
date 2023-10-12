@@ -11,7 +11,7 @@ import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-public record NotifyServerMousePacket(float xRot, float yRot) implements IPacket {
+public record NotifyServerMousePacket(float yRot, float xRot) implements IPacket {
 
     @Override
     public void handle(NetworkEvent.Context context) {
@@ -21,7 +21,7 @@ public record NotifyServerMousePacket(float xRot, float yRot) implements IPacket
                 var holder = FreddyHolderAttacher.getHolderUnwrap(player);
                 if (holder != null && holder.getControlledPlayer() instanceof ServerPlayer controlledServerPlayer) {
                     NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> controlledServerPlayer),
-                            new NotifyClientMousePacket(xRot, yRot));
+                            new NotifyClientMousePacket(yRot, xRot));
                 }
             }
         });
@@ -30,8 +30,8 @@ public record NotifyServerMousePacket(float xRot, float yRot) implements IPacket
 
     @Override
     public void write(FriendlyByteBuf packetBuf) {
-        packetBuf.writeFloat(xRot);
         packetBuf.writeFloat(yRot);
+        packetBuf.writeFloat(xRot);
     }
 
     public static NotifyServerMousePacket read(FriendlyByteBuf buf) {

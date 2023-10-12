@@ -60,10 +60,10 @@ public class ClientHandler {
         }
     }
 
-    public static void syncPlayerMouseControlled(float xRot, float yRot) {
+    public static void syncPlayerMouseControlled(float yRot, float xRot) {
         Player currentPlayer = getPlayer();
         if (currentPlayer instanceof LocalPlayer controlled) {
-           controlled.turn(xRot, yRot);
+           controlled.turn(yRot, xRot);
         }
     }
 }

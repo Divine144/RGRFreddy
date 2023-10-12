@@ -7,20 +7,20 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-public record NotifyClientMousePacket(float xRot, float yRot) implements IPacket {
+public record NotifyClientMousePacket(float yRot, float xRot) implements IPacket {
 
     @Override
     public void handle(NetworkEvent.Context context) {
         context.enqueueWork(() -> {
-            ClientHandler.syncPlayerMouseControlled(xRot, yRot);
+            ClientHandler.syncPlayerMouseControlled(yRot, xRot);
         });
         context.setPacketHandled(true);
     }
 
     @Override
     public void write(FriendlyByteBuf packetBuf) {
-        packetBuf.writeFloat(xRot);
         packetBuf.writeFloat(yRot);
+        packetBuf.writeFloat(xRot);
     }
 
     public static NotifyClientMousePacket read(FriendlyByteBuf buf) {
