@@ -1,40 +1,48 @@
 package dev._100media.rgrfreddy.entity;
 
-import net.minecraft.nbt.CompoundTag;
+import dev._100media.rgrfreddy.init.ItemInit;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class PizzaProjectileEntity extends ThrowableProjectile implements GeoEntity {
+public class PizzaProjectileEntity extends ThrowableItemProjectile {
 
     private static final EntityDataAccessor<Integer> DATA_TARGET = SynchedEntityData.defineId(PizzaProjectileEntity.class, EntityDataSerializers.INT);
-    private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private LivingEntity target;
+    private static final DustParticleOptions YELLOW = new DustParticleOptions(Vec3.fromRGB24(14737920).toVector3f(), 1.2F);
     private LivingEntity owner;
 
-    public PizzaProjectileEntity(EntityType<? extends ThrowableProjectile> pEntityType, Level pLevel) {
+    public PizzaProjectileEntity(EntityType<? extends ThrowableItemProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    @Override
+    protected Item getDefaultItem() {
+        return ItemInit.PIZZA_SLICE.get();
     }
 
     @Override
     public void tick() {
         super.tick();
+        if (this.level() instanceof ServerLevel level) {
+            Vec3 vector3d1 = this.getDeltaMovement();
+            double baseYOffset = 0.15D;
+            level.sendParticles(YELLOW, this.getX() - vector3d1.x, this.getY() - (vector3d1.y + baseYOffset), this.getZ() - vector3d1.z, 1, 0, 0, 0, 0);
+        }
         if (target == null) return;
         Vec3 vec3 = target.position().subtract(position()).normalize().scale(0.5);
         setDeltaMovement(vec3);
@@ -64,28 +72,8 @@ public class PizzaProjectileEntity extends ThrowableProjectile implements GeoEnt
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return geoCache;
-    }
-
-    @Override
     protected void defineSynchedData() {
         entityData.define(DATA_TARGET, -1);
-    }
-
-    @Override
-    protected void addAdditionalSaveData(CompoundTag pCompound) {
-
-    }
-
-    @Override
-    protected void readAdditionalSaveData(CompoundTag pCompound) {
-
     }
 
     @Override

@@ -152,7 +152,7 @@ public class SnareBlock extends BaseEntityBlock {
             if (entity instanceof SnareBE be) {
                 if (be.getTrappedPlayerUUID() != null) {
                     Player player = serverLevel.getPlayerByUUID(be.getTrappedPlayerUUID());
-                    if (player != null) {
+                    if (player != null && serverLevel.getServer().getTickCount() % 12 == 0) {
                         level.playSound(null, blockPos, SoundInit.HEARTBEAT.get(), SoundSource.PLAYERS, 0.65f, 1f);
                     }
                 }

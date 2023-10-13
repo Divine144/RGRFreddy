@@ -26,6 +26,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
@@ -80,7 +81,7 @@ public class ClientModEvents {
                 new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "emp_generator_be"))
         ).withScale(2));
         event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "toy_army")).withScale(0.5f));
-        event.registerEntityRenderer(EntityInit.PIZZA.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "pizza")));
+        event.registerEntityRenderer(EntityInit.PIZZA.get(), ThrownItemRenderer::new);
         event.registerEntityRenderer(EntityInit.FREDDY_HAT_PROJECTILE.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "freddy_hat")));
         createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "kid_freddy", new FreddyAnimatable(), 1.0f);
         createSimpleMorphRenderer(MorphInit.TOY_FREDDY.get(), "toy_freddy", new FreddyAnimatable(), 1.0f);
