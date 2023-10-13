@@ -124,7 +124,7 @@ public class FreddyHolder extends PlayerCapability {
     }
 
     public void decrementFearTicks() {
-        if (--fearTicks == 0) {
+        if (--fearTicks % 20 == 0) {
             updateTracking();
         }
         else if (fearTicks < 0) this.fearTicks = 0;

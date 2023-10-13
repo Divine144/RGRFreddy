@@ -10,6 +10,7 @@ import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
@@ -21,9 +22,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
 import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class ClientHandler {
+    private static List<InputConstants.Key> originalKeys = List.of();
 
     public static Player getPlayer() {
         return Minecraft.getInstance().player;
@@ -48,25 +54,29 @@ public class ClientHandler {
 
     public static void unboundControls() {
         Minecraft mc = Minecraft.getInstance();
-        mc.options.setKey(mc.options.keyJump, InputConstants.UNKNOWN);
-        mc.options.setKey(mc.options.keyUp, InputConstants.UNKNOWN);
-        mc.options.setKey(mc.options.keyDown, InputConstants.UNKNOWN);
-        mc.options.setKey(mc.options.keyLeft, InputConstants.UNKNOWN);
-        mc.options.setKey(mc.options.keyRight, InputConstants.UNKNOWN);
-        mc.options.setKey(mc.options.keyShift, InputConstants.UNKNOWN);
-        mc.options.setKey(mc.options.keySprint, InputConstants.UNKNOWN);
+        originalKeys = getControlKeys().map(KeyMapping::getKey).toList();
+        List<InputConstants.Key> scrambledKeys = new ArrayList<>(originalKeys);
+        Collections.shuffle(scrambledKeys);
+        // Apply scrambled to original
+        List<KeyMapping> keyMappings = getControlKeys().toList();
+        for (int i = 0; i < keyMappings.size(); i++) {
+            keyMappings.get(i).setKey(scrambledKeys.get(i));
+        }
         KeyMapping.resetMapping();
     }
 
+    private static Stream<KeyMapping> getControlKeys() {
+        Options options = Minecraft.getInstance().options;
+        return Stream.of(options.keyJump, options.keyUp, options.keyDown, options.keyLeft, options.keyRight, options.keyShift, options.keySprint, options.keyAttack);
+    }
+
     public static void resetAttack() {
-        Minecraft mc = Minecraft.getInstance();
-        mc.options.keyAttack.setToDefault();
-        mc.options.keyUp.setToDefault();
-        mc.options.keyDown.setToDefault();
-        mc.options.keyLeft.setToDefault();
-        mc.options.keyRight.setToDefault();
-        mc.options.keyJump.setToDefault();
-        mc.options.keyShift.setToDefault();
+        // Apply original to scrambled
+        List<KeyMapping> keyMappings = getControlKeys().toList();
+        for (int i = 0; i < keyMappings.size(); i++) {
+            keyMappings.get(i).setKey(originalKeys.get(i));
+        }
+        originalKeys = List.of();
         KeyMapping.resetMapping();
     }
 

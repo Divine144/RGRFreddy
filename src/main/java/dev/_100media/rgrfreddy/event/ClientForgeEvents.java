@@ -2,6 +2,7 @@ package dev._100media.rgrfreddy.event;
 
 import dev._100media.hundredmediaquests.network.HMQNetworkHandler;
 import dev._100media.hundredmediaquests.network.packet.OpenMainTreePacket;
+import dev._100media.rgrfreddy.cap.FreddyHolder;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.client.util.ControlledPlayerUtil;
 import dev._100media.rgrfreddy.init.EffectInit;
@@ -10,16 +11,21 @@ import dev._100media.rgrfreddy.network.ClientHandler;
 import dev._100media.rgrfreddy.network.NetworkHandler;
 import dev._100media.rgrfreddy.network.serverbound.NotifyServerControlPacket;
 import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -44,6 +50,21 @@ public class ClientForgeEvents {
                     ControllingPlayerCameraManager.remove();
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event) {
+        if (event.getOverlay().id().equals(VanillaGuiOverlay.HOTBAR.id())) {
+            Minecraft mc = Minecraft.getInstance();
+            FreddyHolder holder = FreddyHolderAttacher.getHolderUnwrap(mc.player);
+            if (holder == null)
+                return;
+
+            int x = event.getWindow().getScreenWidth() / 2;
+            int y = event.getWindow().getScreenHeight() - 28;
+            MutableComponent component = Component.translatable("Time Remaining in Fear: %s", holder.getFearTicks() / 20).withStyle(ChatFormatting.RED);
+            event.getGuiGraphics().drawCenteredString(mc.font, component, x, y, 0xFFFFFF);
         }
     }
 

@@ -173,7 +173,7 @@ public class SkillInit {
                     new ItemSkillRequirement(() -> Items.NAUTILUS_SHELL, 1)
             ),
             player -> {
-                player.getInventory().add(new ItemStack(BlockInit.MYSTIC_MUSIC_BOX_BLOCK.get().asItem()));
+                player.getInventory().add(new ItemStack(BlockInit.MYSTIC_MUSIC_BOX_BLOCK.get()));
             },
             player -> {
             }

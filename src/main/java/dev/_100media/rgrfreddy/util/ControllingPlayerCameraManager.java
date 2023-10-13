@@ -33,7 +33,7 @@ public class ControllingPlayerCameraManager {
         if (minecraft.player == null || controlledPlayer == null || event.phase != TickEvent.Phase.START)
             return;
 
-        if (controlledPlayer.isRemoved()) {
+        if (minecraft.player.isDeadOrDying() || minecraft.player.isRemoved() || controlledPlayer.isRemoved()) {
             if (minecraft.getCameraEntity() == controlledPlayer) {
                 minecraft.setCameraEntity(previousCamera.isRemoved() ? minecraft.player : previousCamera);
                 minecraft.options.setCameraType(previousCameraType);

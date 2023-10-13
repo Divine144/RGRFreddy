@@ -26,7 +26,7 @@ public class FreddyHatCameraManager {
         if (minecraft.player == null || projectile == null || event.phase != TickEvent.Phase.START)
             return;
 
-        if (projectile.isRemoved()) {
+        if (minecraft.player.isDeadOrDying() || minecraft.player.isRemoved() || projectile.isRemoved()) {
             remove();
             return;
         }

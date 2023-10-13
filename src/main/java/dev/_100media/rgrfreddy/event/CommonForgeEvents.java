@@ -279,9 +279,6 @@ public class CommonForgeEvents {
                     cap.setLastTeleportTicks(cap.getLastTeleportTicks() - 1);
                 }
                 if (cap.getFearTicks() > 0) {
-                    if (cap.getFearTicks() % 20 == 0) {
-                        player.connection.send(new ClientboundSetTitleTextPacket(Component.literal("%d".formatted(cap.getFearTicks() / 20)).withStyle(ChatFormatting.RED)));
-                    }
                     cap.decrementFearTicks();
                 }
                 if (cap.getControlTicks() > 0) {

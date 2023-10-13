@@ -42,8 +42,9 @@ public class ModTagProvider {
         }
 
         @Override
-        protected void addTags(HolderLookup.Provider pProvider) {
-
+        protected void addTags(HolderLookup.Provider provider) {
+            // TODO Tag for snare block to be broken by pickaxe tag
+            // provider
         }
         public  <T extends Block>void populateTag(TagKey<Block> tag, Supplier<?>... items){
             for (Supplier<?> item : items) {
