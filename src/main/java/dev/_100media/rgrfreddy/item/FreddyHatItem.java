@@ -105,29 +105,7 @@ public class FreddyHatItem extends Item implements GeoItem {
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (this.renderer == null)
-                    this.renderer = new GeoItemRenderer<FreddyHatItem>(new DefaultedItemGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "freddy_hat"))) {
-                        @Override
-                        public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-                            poseStack.pushPose();
-                            switch (transformType) {
-                                case THIRD_PERSON_LEFT_HAND, THIRD_PERSON_RIGHT_HAND -> {
-                                    poseStack.translate(-0.07, -0.2, -0.3);
-                                }
-                            }
-                            super.renderByItem(stack, transformType, poseStack, bufferSource, packedLight, packedOverlay);
-                            poseStack.popPose();
-                        }
-
-                        @Override
-                        protected void renderInGui(ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-                            poseStack.pushPose();
-                            poseStack.mulPose(Axis.YP.rotationDegrees(90));
-                            poseStack.scale(2f, 2f, 2f);
-                            poseStack.translate(0.05, -0.35, -0.26);
-                            super.renderInGui(transformType, poseStack, bufferSource, packedLight, packedOverlay);
-                            poseStack.popPose();
-                        }
-                    };
+                    this.renderer = new GeoItemRenderer<FreddyHatItem>(new DefaultedItemGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "freddy_hat")));
                 return this.renderer;
             }
         });
