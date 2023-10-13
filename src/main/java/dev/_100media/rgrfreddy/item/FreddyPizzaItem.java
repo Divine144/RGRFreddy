@@ -49,13 +49,23 @@ public class FreddyPizzaItem extends Item implements GeoItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
+        ItemStack itemStack = player.getItemInHand(pUsedHand);
         if (pLevel.isClientSide) {
             return InteractionResultHolder.pass(itemStack);
 
         }
-        return ItemUtils.startUsingInstantly(pLevel, pPlayer, pUsedHand);
+        var list = FreddyUtils.getEntitiesInRange(player, LivingEntity.class, 20, 20, 20, p -> p != player);
+        PizzaProjectileEntity missile = new PizzaProjectileEntity(EntityInit.PIZZA.get(), pLevel);
+        missile.setPos(player.position());
+        missile.setOwner(player);
+        missile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.8F, 0);
+        if (!list.isEmpty()) {
+            missile.setTarget(list.get(0));
+        }
+        pLevel.addFreshEntity(missile);
+        player.getCooldowns().addCooldown(this, 20 * 30);
+        return InteractionResultHolder.consume(itemStack);
     }
 
     @Override
@@ -117,8 +127,8 @@ public class FreddyPizzaItem extends Item implements GeoItem {
                         protected void renderInGui(ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
                             poseStack.pushPose();
                             poseStack.mulPose(Axis.YP.rotationDegrees(90));
-                            poseStack.scale(1.2f, 1.2f, 1.2f);
-                            poseStack.translate(0.05, -0.25, -0.1);
+                            poseStack.scale(0.9f,0.9f,0.9f);
+                            poseStack.translate(0.2, -0.25, 0.1);
                             super.renderInGui(transformType, poseStack, bufferSource, packedLight, packedOverlay);
                             poseStack.popPose();
                         }

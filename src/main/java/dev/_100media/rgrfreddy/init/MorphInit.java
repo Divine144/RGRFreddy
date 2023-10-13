@@ -35,9 +35,6 @@ public class MorphInit {
             .maxHealth(30)
             .dimensions(1f, 2f)
             .morphedTo(entity -> {
-                if (entity instanceof ServerPlayer player) {
-                    player.getInventory().add(new ItemStack(ItemInit.JUMPSCARE.get()));
-                }
                 entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 0, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 0, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 0, false, false, false));
@@ -52,9 +49,6 @@ public class MorphInit {
             .maxHealth(50)
             .dimensions(1.5f, 2f)
             .morphedTo(entity -> {
-                if (entity instanceof ServerPlayer player) {
-                    player.getInventory().add(new ItemStack(ItemInit.JUMPSCARE.get()));
-                }
                 entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 1, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 1, false, false, false));
@@ -81,9 +75,6 @@ public class MorphInit {
             .maxHealth(80)
             .dimensions(1.5f, 2f)
             .morphedTo(entity -> {
-                if (entity instanceof ServerPlayer player) {
-                    player.getInventory().add(new ItemStack(ItemInit.JUMPSCARE.get()));
-                }
                 entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 2, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 2, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 2, false, false, false));
@@ -110,9 +101,6 @@ public class MorphInit {
             .maxHealth(120)
             .dimensions(2f, 2f)
             .morphedTo(entity -> {
-                if (entity instanceof ServerPlayer player) {
-                    player.getInventory().add(new ItemStack(ItemInit.JUMPSCARE.get()));
-                }
                 entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 4, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 4, false, false, false));
                 entity.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 3, false, false, false));

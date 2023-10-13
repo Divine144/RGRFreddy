@@ -15,7 +15,7 @@ public class FreddyAnimatable extends MotionAttackAnimatable {
     protected static final RawAnimation FORTNITE_DANCE = RawAnimation.begin().thenLoop("dance");
     protected static final RawAnimation ATTACK = RawAnimation.begin().thenLoop("attack");
     protected static final RawAnimation CROUCH = RawAnimation.begin().thenLoop("crouch");
-    protected static final RawAnimation RUN = RawAnimation.begin().thenLoop("run");
+    public static final RawAnimation RUN = RawAnimation.begin().thenLoop("run");
     protected static final RawAnimation SIT = RawAnimation.begin().thenLoop("sit");
     protected static final RawAnimation WALK = RawAnimation.begin().thenLoop("walk");
     protected static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");

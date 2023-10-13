@@ -1,5 +1,6 @@
 package dev._100media.rgrfreddy.entity;
 
+import dev._100media.rgrfreddy.client.animatable.FreddyAnimatable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -35,7 +36,6 @@ import java.util.UUID;
 public class ToyFreddyEntity extends PathfinderMob implements GeoEntity {
 
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-    private static final RawAnimation MOVEMENT = RawAnimation.begin().thenLoop("Movement");
 
     private static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(ToyFreddyEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 
@@ -51,6 +51,11 @@ public class ToyFreddyEntity extends PathfinderMob implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
+        if (!this.level().isClientSide) {
+            if (!this.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 5, false, false, false));
+            }
+        }
     }
 
     @Override
@@ -133,7 +138,7 @@ public class ToyFreddyEntity extends PathfinderMob implements GeoEntity {
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(new AnimationController<>(this, "controller", 0, event -> {
             if (event.isMoving()) {
-                return event.setAndContinue(MOVEMENT);
+                event.setAndContinue(FreddyAnimatable.RUN);
             }
             return PlayState.STOP;
         }));

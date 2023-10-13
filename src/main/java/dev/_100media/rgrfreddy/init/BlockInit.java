@@ -32,7 +32,7 @@ public class BlockInit {
     public static final RegistryObject<Block> MYSTIC_MUSIC_BOX_BLOCK = registerBlock("mystic_music_box", () -> new MysticMusicBoxBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().noCollission().isValidSpawn((a, b, c, d) -> false)),
             b -> () -> new MusicBoxBlockItem(b.get(), ItemInit.getItemProperties()));
 
-    public static final RegistryObject<Block> SNARE_BLOCK = registerBlock("snare", () -> new SnareBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().noCollission().isValidSpawn((a, b, c, d) -> false)),
+    public static final RegistryObject<Block> SNARE_BLOCK = registerBlock("snare", () -> new SnareBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(50.0F, 1200.0F).noOcclusion().noCollission().isValidSpawn((a, b, c, d) -> false)),
             b -> () -> new SnareBlockItem(b.get(), ItemInit.getItemProperties()));
 
     public static final RegistryObject<Block> DIMENSIONAL_TRAPDOOR_BLOCK = registerBlock("dimensional_door", () -> new DimensionalTrapDoorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(3.0F).noOcclusion().isValidSpawn((a, b, c, d) -> false).ignitedByLava()));

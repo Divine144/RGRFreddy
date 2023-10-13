@@ -67,7 +67,6 @@ public class ClientModEvents {
         event.registerBlockEntityRenderer(BlockInit.TOY_BOX_TRAP_BE.get(), ctx -> new GeoBlockRenderer<>(
                 new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "toy_box_trap_be"))
         ));
-
         event.registerBlockEntityRenderer(BlockInit.MYSTIC_MUSIC_BOX_BE.get(), ctx -> new GeoBlockRenderer<>(
                 new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "mystic_music_box_be"))
         ));

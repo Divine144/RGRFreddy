@@ -123,7 +123,7 @@ public class SkillInit {
                     Place a toy box as a trap on the ground where Freddy is looking. If a hunter gets anywhere within 10
                     blocks of the toy box, they start getting sucked into the toy box.  When a player is sucked fully into the Toy Box,
                     they cannot move and a timer begins playing on their screen counting down from 20. Once it reaches 0,
-                    they will be teleported somewhere.
+                    they will be teleported to the pizzeria.
                     """),
             QuestInit.TOY_BOX_TRAP
     ));
@@ -173,7 +173,7 @@ public class SkillInit {
                     new ItemSkillRequirement(() -> Items.NAUTILUS_SHELL, 1)
             ),
             player -> {
-
+                player.getInventory().add(new ItemStack(BlockInit.MYSTIC_MUSIC_BOX_BLOCK.get().asItem()));
             },
             player -> {
             }

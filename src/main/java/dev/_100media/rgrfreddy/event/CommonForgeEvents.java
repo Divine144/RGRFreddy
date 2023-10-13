@@ -21,6 +21,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
@@ -278,6 +279,9 @@ public class CommonForgeEvents {
                     cap.setLastTeleportTicks(cap.getLastTeleportTicks() - 1);
                 }
                 if (cap.getFearTicks() > 0) {
+                    if (cap.getFearTicks() % 20 == 0) {
+                        player.connection.send(new ClientboundSetTitleTextPacket(Component.literal("%d".formatted(cap.getFearTicks() / 20)).withStyle(ChatFormatting.RED)));
+                    }
                     cap.decrementFearTicks();
                 }
                 if (cap.getControlTicks() > 0) {
@@ -312,7 +316,7 @@ public class CommonForgeEvents {
                     var globalHolder = GlobalHolderAttacher.getGlobalLevelCapabilityUnwrap(player.serverLevel());
                     if (globalHolder != null && globalHolder.isShouldPlayHeartBeat()) {
                         if (player.tickCount % 12 == 0 && !list.isEmpty()) {
-                            player.serverLevel().playSound(null, player.blockPosition(), SoundInit.HEARTBEAT.get(), SoundSource.PLAYERS, 0.65f, 1f);
+                            player.serverLevel().playSound(null, player.blockPosition(), SoundInit.HEARTBEAT.get(), SoundSource.PLAYERS, 2f, 1f);
                         }
                     }
                     if (player.tickCount % 20 == 0) {

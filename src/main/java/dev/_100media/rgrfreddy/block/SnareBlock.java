@@ -74,6 +74,23 @@ public class SnareBlock extends BaseEntityBlock {
     }
 
     @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
+        if (!pLevel.isClientSide) {
+            if (pLevel.getBlockEntity(pPos) instanceof SnareBE be) {
+                if (be.getTrappedPlayerUUID() != null) {
+                    Player player = pLevel.getPlayerByUUID(be.getTrappedPlayerUUID());
+                    if (player != null) {
+                        player.removeEffect(EffectInit.NETTED.get());
+                        player.removeEffect(MobEffects.BLINDNESS);
+                        pLevel.setBlockAndUpdate(pPos, Blocks.AIR.defaultBlockState());
+                    }
+                }
+            }
+        }
+        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
+    }
+
+    @Override
     public void onProjectileHit(Level pLevel, BlockState pState, BlockHitResult pHit, Projectile pProjectile) {
         if (!pLevel.isClientSide && pProjectile instanceof AbstractArrow) {
             if (pLevel.getBlockEntity(pHit.getBlockPos()) instanceof SnareBE be) {

@@ -99,7 +99,7 @@ public class FreddyMicrophoneItem extends Item implements GeoItem {
                             poseStack.pushPose();
                             poseStack.mulPose(Axis.YP.rotationDegrees(90));
                             poseStack.scale(1.2f, 1.2f, 1.2f);
-                            poseStack.translate(0.05, -0.25, -0.1);
+                            poseStack.translate(0.05, -0.40, -0.1);
                             super.renderInGui(transformType, poseStack, bufferSource, packedLight, packedOverlay);
                             poseStack.popPose();
                         }
