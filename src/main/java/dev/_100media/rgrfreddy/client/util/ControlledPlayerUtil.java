@@ -4,6 +4,7 @@ import dev._100media.rgrfreddy.cap.FreddyHolder;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.world.entity.player.Player;
@@ -31,6 +32,7 @@ public class ControlledPlayerUtil {
         // controlledPlayer.yBodyRot = controlledPlayer.getYRot();
         // controlledPlayer.yBodyRotO = controlledPlayer.yBodyRot;
         controlledPlayer.yHeadRot = controlledPlayer.getYRot();
+        controlledPlayer.setJumping(Minecraft.getInstance().player.input.jumping);
         // controlledPlayer.yHeadRotO = controlledPlayer.yHeadRot;
         // controlledPlayer.setXRot(controllingPlayer.getXRot());
         // controlledPlayer.xRotO = controllingPlayer.xRotO;

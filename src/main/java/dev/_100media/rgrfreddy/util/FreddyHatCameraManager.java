@@ -23,25 +23,19 @@ public class FreddyHatCameraManager {
     @SubscribeEvent
     public static void tick(TickEvent.RenderTickEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player == null) {
+        if (minecraft.player == null || projectile == null || event.phase != TickEvent.Phase.START)
             return;
-        }
-        if (projectile != null && projectile.isRemoved()) {
+
+        if (projectile.isRemoved()) {
             remove();
             return;
         }
-        if (projectile != null && previousCamera == null && event.phase == TickEvent.Phase.START) {
+
+        if (previousCamera == null) {
             previousCameraType = minecraft.options.getCameraType();
             minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
             previousCamera = minecraft.getCameraEntity();
             minecraft.setCameraEntity(projectile);
-        }
-        else if (projectile == null && previousCamera != null && event.phase == TickEvent.Phase.END) {
-            if (minecraft.getCameraEntity() == projectile) {
-                minecraft.setCameraEntity(previousCamera);
-                minecraft.options.setCameraType(previousCameraType);
-            }
-            previousCamera = null;
         }
     }
 
@@ -58,9 +52,11 @@ public class FreddyHatCameraManager {
 
     public static void remove() {
         Minecraft minecraft = Minecraft.getInstance();
-        if (projectile == null || minecraft.player == null || minecraft.player != projectile.getOwner()) {
-            return;
+        if (minecraft.getCameraEntity() == projectile) {
+            minecraft.setCameraEntity(previousCamera.isRemoved() ? minecraft.player : previousCamera);
+            minecraft.options.setCameraType(previousCameraType);
         }
+        previousCamera = null;
         projectile = null;
     }
 }

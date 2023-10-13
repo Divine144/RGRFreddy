@@ -74,10 +74,10 @@ public class FreddyHatProjectileEntity extends ThrowableProjectile implements Ge
 
         FreddyHolderAttacher.getHolder(player).ifPresent(p -> {
             p.setControllingPlayer(owner.getUUID());
-            p.setControlTicks(20 * 20);
+            p.setControlTicks(FMLEnvironment.production ? 60 * 20 : 20 * 20);
             FreddyHolderAttacher.getHolder(owner).ifPresent(o -> {
                 o.setControlledPlayer(player.getUUID());
-                o.setControlTicks(20 * 20);
+                o.setControlTicks(FMLEnvironment.production ? 60 * 20 : 20 * 20);
             });
         });
 

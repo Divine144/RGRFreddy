@@ -3,6 +3,8 @@ package dev._100media.rgrfreddy.util;
 import com.mojang.datafixers.util.Pair;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.entity.FreddyHatProjectileEntity;
+import dev._100media.rgrfreddy.network.NetworkHandler;
+import dev._100media.rgrfreddy.network.serverbound.LeaveControlPacket;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -28,25 +30,24 @@ public class ControllingPlayerCameraManager {
     @SubscribeEvent
     public static void tick(TickEvent.RenderTickEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player == null) {
+        if (minecraft.player == null || controlledPlayer == null || event.phase != TickEvent.Phase.START)
             return;
-        }
-        if (controlledPlayer != null && controlledPlayer.isRemoved()) {
+
+        if (controlledPlayer.isRemoved()) {
+            if (minecraft.getCameraEntity() == controlledPlayer) {
+                minecraft.setCameraEntity(previousCamera.isRemoved() ? minecraft.player : previousCamera);
+                minecraft.options.setCameraType(previousCameraType);
+            }
+            previousCamera = null;
             remove();
             return;
         }
-        if (controlledPlayer != null && previousCamera == null && event.phase == TickEvent.Phase.START) {
+
+        if (previousCamera == null) {
             previousCameraType = minecraft.options.getCameraType();
             minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
             previousCamera = minecraft.getCameraEntity();
-            if (previousCamera instanceof FreddyHatProjectileEntity)
-                previousCamera = minecraft.player;
             minecraft.setCameraEntity(controlledPlayer);
-        }
-        else if (controlledPlayer == null && previousCamera != null && event.phase == TickEvent.Phase.END) {
-            minecraft.setCameraEntity(previousCamera);
-            minecraft.options.setCameraType(previousCameraType);
-            previousCamera = null;
         }
     }
 
@@ -58,6 +59,7 @@ public class ControllingPlayerCameraManager {
             return;
         }
         controlledPlayer = proj;
+        NetworkHandler.INSTANCE.sendToServer(new LeaveControlPacket(false));
         if (previousCameraView == null) {
             previousCameraView = new Pair<>(player.getXRot(), player.getYRot());
         }
@@ -65,9 +67,12 @@ public class ControllingPlayerCameraManager {
 
     public static void remove() {
         Minecraft minecraft = Minecraft.getInstance();
-        if (controlledPlayer == null || minecraft.player == null) {
-            return;
+        if (minecraft.getCameraEntity() == controlledPlayer) {
+            minecraft.setCameraEntity(previousCamera.isRemoved() ? minecraft.player : previousCamera);
+            minecraft.options.setCameraType(previousCameraType);
         }
+        NetworkHandler.INSTANCE.sendToServer(new LeaveControlPacket(true));
+        previousCamera = null;
         controlledPlayer = null;
     }
 }
