@@ -37,8 +37,10 @@ public class FreddyHatCameraManager {
             minecraft.setCameraEntity(projectile);
         }
         else if (projectile == null && previousCamera != null && event.phase == TickEvent.Phase.END) {
-            minecraft.setCameraEntity(previousCamera);
-            minecraft.options.setCameraType(previousCameraType);
+            if (minecraft.getCameraEntity() == projectile) {
+                minecraft.setCameraEntity(previousCamera);
+                minecraft.options.setCameraType(previousCameraType);
+            }
             previousCamera = null;
         }
     }

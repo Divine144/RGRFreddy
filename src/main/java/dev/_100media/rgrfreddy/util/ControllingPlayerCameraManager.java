@@ -39,6 +39,8 @@ public class ControllingPlayerCameraManager {
             previousCameraType = minecraft.options.getCameraType();
             minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
             previousCamera = minecraft.getCameraEntity();
+            if (previousCamera instanceof FreddyHatProjectileEntity)
+                previousCamera = minecraft.player;
             minecraft.setCameraEntity(controlledPlayer);
         }
         else if (controlledPlayer == null && previousCamera != null && event.phase == TickEvent.Phase.END) {

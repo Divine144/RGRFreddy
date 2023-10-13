@@ -12,6 +12,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -69,7 +70,7 @@ public class ClientHandler {
         KeyMapping.resetMapping();
     }
 
-    public static void syncPlayerInputToControlled(boolean up, boolean down, boolean left, boolean right, boolean jump, boolean shift, float leftImpulse, float forwardImpulse) {
+    public static void syncPlayerInputToControlled(boolean up, boolean down, boolean left, boolean right, boolean jump, boolean shift, float leftImpulse, float forwardImpulse, boolean sprint) {
         Player currentPlayer = getPlayer();
         if (currentPlayer instanceof LocalPlayer controlled) {
             Input input = controlled.input;
@@ -81,6 +82,7 @@ public class ClientHandler {
             input.shiftKeyDown = shift;
             input.forwardImpulse = forwardImpulse;
             input.leftImpulse = leftImpulse;
+            controlled.setSprinting(sprint);
         }
     }
 
@@ -96,7 +98,7 @@ public class ClientHandler {
         if (currentPlayer != null) {
             Player controlledPlayer = FreddyUtils.getControlledPlayer(currentPlayer);
             if (controlledPlayer != null) {
-
+                ControllingPlayerCameraManager.add((RemotePlayer) controlledPlayer);
             }
         }
     }

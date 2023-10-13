@@ -4,7 +4,10 @@ import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.init.EntityInit;
 import dev._100media.rgrfreddy.init.ItemInit;
 import dev._100media.rgrfreddy.network.ClientHandler;
+import dev._100media.rgrfreddy.network.NetworkHandler;
+import dev._100media.rgrfreddy.network.clientbound.StartControllingPlayerPacket;
 import dev._100media.rgrfreddy.util.FreddyHatCameraManager;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
@@ -18,6 +21,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.network.PacketDistributor;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -61,7 +65,7 @@ public class FreddyHatProjectileEntity extends ThrowableProjectile implements Ge
     }
 
     private void attachToPlayer(Player player) {
-        if (!(this.getOwner() instanceof Player owner))
+        if (!(this.getOwner() instanceof ServerPlayer owner))
             return;
 
         ItemStack oldHelmetStack = player.getItemBySlot(EquipmentSlot.HEAD);
@@ -70,18 +74,18 @@ public class FreddyHatProjectileEntity extends ThrowableProjectile implements Ge
 
         FreddyHolderAttacher.getHolder(player).ifPresent(p -> {
             p.setControllingPlayer(owner.getUUID());
-            p.setControlTicks(20 * 60);
+            p.setControlTicks(20 * 20);
             FreddyHolderAttacher.getHolder(owner).ifPresent(o -> {
                 o.setControlledPlayer(player.getUUID());
-                o.setControlTicks(20 * 60);
+                o.setControlTicks(20 * 20);
             });
         });
 
         if (FMLEnvironment.production)
             owner.getCooldowns().addCooldown(ItemInit.FREDDY_HAT.get(), 120 * 20);
 
-        // TODO Add helmet model for freddy hat
         player.setItemSlot(EquipmentSlot.HEAD, ItemInit.FREDDY_HAT.get().getDefaultInstance());
+        NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> owner), new StartControllingPlayerPacket());
         this.discard();
     }
 

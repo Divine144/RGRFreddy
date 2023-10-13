@@ -158,6 +158,7 @@ public class JailDoorBlock extends DoorBlock implements EntityBlock {
         return !pLevel.isClientSide ? createTickerHelper(pBlockEntityType, BlockInit.JAIL_DOOR_BE.get(), this::tick) : null;
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> pServerType, BlockEntityType<E> pClientType, BlockEntityTicker<? super E> pTicker) {
         return pClientType == pServerType ? (BlockEntityTicker<A>)pTicker : null;

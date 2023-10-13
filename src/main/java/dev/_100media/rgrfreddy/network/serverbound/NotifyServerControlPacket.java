@@ -14,7 +14,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.UUID;
 
-public record NotifyServerControlPacket(boolean up, boolean down, boolean left, boolean right, boolean jump, boolean shift, float leftImpulse, float forwardImpulse) implements IPacket {
+public record NotifyServerControlPacket(boolean up, boolean down, boolean left, boolean right, boolean jump, boolean shift, float leftImpulse, float forwardImpulse, boolean sprint) implements IPacket {
 
     @Override
     public void handle(NetworkEvent.Context context) {
@@ -24,7 +24,7 @@ public record NotifyServerControlPacket(boolean up, boolean down, boolean left, 
                 var holder = FreddyHolderAttacher.getHolderUnwrap(player);
                 if (holder != null && holder.getControlledPlayer() instanceof ServerPlayer controlledServerPlayer) {
                     NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> controlledServerPlayer),
-                            new NotifyClientControlPacket(up, down, left, right, jump, shift, leftImpulse, forwardImpulse));
+                            new NotifyClientControlPacket(up, down, left, right, jump, shift, leftImpulse, forwardImpulse, sprint));
                 }
             }
         });
@@ -41,10 +41,12 @@ public record NotifyServerControlPacket(boolean up, boolean down, boolean left, 
         packetBuf.writeBoolean(shift);
         packetBuf.writeFloat(leftImpulse);
         packetBuf.writeFloat(forwardImpulse);
+        packetBuf.writeBoolean(sprint);
     }
 
     public static NotifyServerControlPacket read(FriendlyByteBuf buf) {
-        return new NotifyServerControlPacket(buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readFloat(), buf.readFloat());
+        return new NotifyServerControlPacket(buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readFloat(), buf.readFloat(),
+                buf.readBoolean());
     }
 
     public static void register(SimpleChannel channel, int id) {

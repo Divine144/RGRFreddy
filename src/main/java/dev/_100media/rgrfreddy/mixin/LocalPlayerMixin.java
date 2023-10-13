@@ -1,8 +1,14 @@
 package dev._100media.rgrfreddy.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.authlib.GameProfile;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
+import dev._100media.rgrfreddy.client.util.ControlledPlayerUtil;
 import dev._100media.rgrfreddy.entity.FreddyHatProjectileEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
@@ -18,15 +24,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.UUID;
 
 @Mixin(LocalPlayer.class)
-public class LocalPlayerMixin {
-
+public abstract class LocalPlayerMixin extends AbstractClientPlayer {
     @Shadow
     @Final
     protected Minecraft minecraft;
 
-    @Shadow private boolean lastOnGround;
+    @Shadow
+    private boolean lastOnGround;
 
-    @Shadow public Input input;
+    @Shadow
+    public Input input;
+
+    @Shadow protected abstract boolean hasEnoughFoodToStartSprinting();
+
+    private LocalPlayerMixin(ClientLevel pClientLevel, GameProfile pGameProfile) {
+        super(pClientLevel, pGameProfile);
+    }
 
     @Inject(method = "isControlledCamera", at = @At("HEAD"), cancellable = true)
     public void isControlledCamera(CallbackInfoReturnable<Boolean> cir) {
@@ -57,5 +70,28 @@ public class LocalPlayerMixin {
                 instance.tick(pIsSneaking, pSneakingSpeedMultiplier);
             }
         }
+
+        if (super.isSprinting()) {
+            boolean flag7 = !this.input.hasForwardImpulse() || !this.hasEnoughFoodToStartSprinting();
+            boolean flag8 = flag7 || this.horizontalCollision && !this.minorHorizontalCollision || this.isInWater() && !this.isUnderWater()
+                            || (this.isInFluidType((fluidType, height) -> this.canSwimInFluidType(fluidType)) && !this.canStartSwimming());
+            if (this.isSwimming()) {
+                if (!this.onGround() && !this.input.shiftKeyDown && flag7 || !(this.isInWater() || this.isInFluidType((fluidType, height) -> this.canSwimInFluidType(fluidType)))) {
+                    this.setSprinting(false);
+                }
+            } else if (flag8) {
+                this.setSprinting(false);
+            }
+        }
+    }
+
+    @Override
+    public void setSprinting(boolean isSprinting) {
+        ControlledPlayerUtil.wrapSetSprinting((LocalPlayer) (Object) this, isSprinting, super::setSprinting);
+    }
+
+    @Override
+    public boolean isSprinting() {
+        return ControlledPlayerUtil.wrapIsSprinting((LocalPlayer) (Object) this, super.isSprinting());
     }
 }

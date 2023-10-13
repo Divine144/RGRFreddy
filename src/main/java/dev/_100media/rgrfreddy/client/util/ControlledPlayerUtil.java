@@ -3,12 +3,14 @@ package dev._100media.rgrfreddy.client.util;
 import dev._100media.rgrfreddy.cap.FreddyHolder;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
 public class ControlledPlayerUtil {
+    public static boolean isSprinting;
+
     public static void customizeAiStep(RemotePlayer controlledPlayer) {
         if (ControllingPlayerCameraManager.controlledPlayer != controlledPlayer)
             return;
@@ -37,10 +39,6 @@ public class ControlledPlayerUtil {
 
         RemotePlayerExtension controlledExtension = (RemotePlayerExtension) controlledPlayer;
 
-        // controlledExtension.setLerpSteps(0);
-        controlledExtension.setLerpHeadSteps(0);
-        // controlledExtension.setLerpDeltaMovementSteps(0);
-
         int lerpSteps = controlledExtension.getLerpSteps();
         if (lerpSteps > 0) {
             double d0 = controlledPlayer.getX() + (controlledExtension.getLerpX() - controlledPlayer.getX()) / lerpSteps;
@@ -52,6 +50,19 @@ public class ControlledPlayerUtil {
             // controlledPlayer.setXRot(controlledPlayer.getXRot() + (float) (controlledPlayer.lerpXRot - (double) controlledPlayer.getXRot()) / (float) controlledPlayer.lerpSteps);
             // this.setRot(this.getYRot(), this.getXRot());
         }
+
+        controlledExtension.setLerpSteps(0);
+        controlledExtension.setLerpHeadSteps(0);
+        // controlledExtension.setLerpDeltaMovementSteps(0);
+    }
+
+    public static void wrapSetSprinting(LocalPlayer instance, boolean isSprinting, BooleanConsumer operation) {
+        operation.accept(isSprinting);
+
+        if (ControllingPlayerCameraManager.controlledPlayer != null) {
+            // operation.call(ControllingPlayerCameraManager.controlledPlayer, isSprinting);
+            ControlledPlayerUtil.isSprinting = isSprinting;
+        }
     }
 
     public static boolean isEffectiveAi(RemotePlayer controlledPlayer) {
@@ -62,5 +73,12 @@ public class ControlledPlayerUtil {
         // Player controllingPlayer = FreddyHolderAttacher.getHolder(controlledPlayer).resolve().map(FreddyHolder::getControllingPlayer).orElse(null);
         //
         // return controllingPlayer instanceof LocalPlayer;
+    }
+
+    public static boolean wrapIsSprinting(LocalPlayer localPlayer, boolean sprinting) {
+        if (ControllingPlayerCameraManager.controlledPlayer != null)
+            return false;
+
+        return sprinting;
     }
 }

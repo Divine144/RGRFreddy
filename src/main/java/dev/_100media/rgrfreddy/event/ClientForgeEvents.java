@@ -3,6 +3,7 @@ package dev._100media.rgrfreddy.event;
 import dev._100media.hundredmediaquests.network.HMQNetworkHandler;
 import dev._100media.hundredmediaquests.network.packet.OpenMainTreePacket;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
+import dev._100media.rgrfreddy.client.util.ControlledPlayerUtil;
 import dev._100media.rgrfreddy.init.EffectInit;
 import dev._100media.rgrfreddy.init.MenuInit;
 import dev._100media.rgrfreddy.network.ClientHandler;
@@ -79,7 +80,7 @@ public class ClientForgeEvents {
             if (controlledPlayer instanceof RemotePlayer && ControllingPlayerCameraManager.controlledPlayer == controlledPlayer) {
                 NetworkHandler.INSTANCE.sendToServer(new NotifyServerControlPacket(
                         input.up, input.down, input.left, input.right, input.jumping,
-                        input.shiftKeyDown, input.leftImpulse, input.forwardImpulse
+                        input.shiftKeyDown, input.leftImpulse, input.forwardImpulse, ControlledPlayerUtil.isSprinting
                 ));
             }/* else if (controllingPlayer instanceof RemotePlayer) {
 
