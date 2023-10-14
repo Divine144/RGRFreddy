@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -184,11 +185,18 @@ public class FreddyUtils {
         pullEntityToPoint(livingEntity, to, 1);
     }
 
+    private static final Map<UUID, Vec3> oldGravities = new HashMap<>();
+
     public static void pullEntityToPoint(Entity livingEntity, Vec3 to, float strength) {
         Vec3 pullDirection = to.subtract(livingEntity.position());
         double gravity = interpolate(0, GRAVITY_STRENGTH, strength);
         Vec3 pull = pullDirection.normalize().scale(gravity);
-        livingEntity.setDeltaMovement(livingEntity.getDeltaMovement().add(pull));
+        Vec3 oldPull = oldGravities.put(livingEntity.getUUID(), pull);
+        Vec3 deltaMovement = livingEntity.getDeltaMovement();
+        if (oldPull != null && Math.abs(oldPull.x) > Math.abs(deltaMovement.x) && Math.abs(oldPull.y) > Math.abs(deltaMovement.y) && Math.abs(oldPull.z) > Math.abs(deltaMovement.z)) {
+            deltaMovement = deltaMovement.subtract(oldPull);
+        }
+        livingEntity.setDeltaMovement(deltaMovement.add(pull));
         livingEntity.hurtMarked = true;
     }
 
@@ -236,7 +244,7 @@ public class FreddyUtils {
     }
 
     public static float interpolate(float start, float end, float scale) {
-        return ((end - start) * scale) + start;
+        return Mth.lerp(scale, start, end);
     }
 
     public static Direction findHorizontalDirection(BlockPos pos, Vec3 vector) {

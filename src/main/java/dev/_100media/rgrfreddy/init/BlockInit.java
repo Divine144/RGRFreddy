@@ -26,7 +26,7 @@ public class BlockInit {
 
     public static final RegistryObject<HundredMediaBlock> HUNDRED_MEDIA = registerBlock("hundred_media", () -> new HundredMediaBlock(BlockBehaviour.Properties.of().mapColor(DyeColor.RED).noOcclusion().strength(1)));
 
-    public static final RegistryObject<Block> TOY_BOX_TRAP_BLOCK = registerBlock("toy_box_trap", () -> new ToyBoxTrapBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().noCollission().isValidSpawn((a, b, c, d) -> false)),
+    public static final RegistryObject<Block> TOY_BOX_TRAP_BLOCK = registerBlock("toy_box_trap", () -> new ToyBoxTrapBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(-1.0F, 3600000.0F).noOcclusion().noCollission().isValidSpawn((a, b, c, d) -> false)),
             b -> () -> new BoxTrapBlockItem(b.get(), ItemInit.getItemProperties()));
 
     public static final RegistryObject<Block> MYSTIC_MUSIC_BOX_BLOCK = registerBlock("mystic_music_box", () -> new MysticMusicBoxBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().noCollission().isValidSpawn((a, b, c, d) -> false)),

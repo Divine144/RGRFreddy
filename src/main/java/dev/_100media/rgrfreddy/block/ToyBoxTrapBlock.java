@@ -102,6 +102,7 @@ public class ToyBoxTrapBlock extends BaseEntityBlock {
         if (!level.isClientSide) {
             BlockEntity entity = level.getBlockEntity(blockPos);
             if (entity instanceof ToyBoxTrapBE toyBoxTrapBE) {
+                toyBoxTrapBE.setTick(toyBoxTrapBE.getTick() + 1);
                 if (toyBoxTrapBE.getTrappedPlayerUUID() != null) {
                     Player player = level.getPlayerByUUID(toyBoxTrapBE.getTrappedPlayerUUID());
                     if (player instanceof ServerPlayer serverPlayer) {

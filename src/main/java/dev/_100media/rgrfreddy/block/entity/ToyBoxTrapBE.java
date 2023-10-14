@@ -22,7 +22,9 @@ public class ToyBoxTrapBE extends BlockEntity implements GeoBlockEntity {
 
     private final AnimatableInstanceCache instanceCache = GeckoLibUtil.createInstanceCache(this);
     private int timesHit = 0;
+    private int firstTimeHit = -1;
     private int timer = 20 * 20; // 20 second initial timer
+    private int tick;
     private UUID trappedPlayerUUID = null;
 
     public ToyBoxTrapBE(BlockPos pPos, BlockState pBlockState) {
@@ -32,8 +34,6 @@ public class ToyBoxTrapBE extends BlockEntity implements GeoBlockEntity {
     @Override
     protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.putInt("timer", timer);
-        pTag.putInt("timesHit", this.timesHit);
         if (trappedPlayerUUID != null) {
             pTag.putUUID("playerUUID", this.trappedPlayerUUID);
         }
@@ -105,6 +105,13 @@ public class ToyBoxTrapBE extends BlockEntity implements GeoBlockEntity {
     }
 
     public int getTimesHit() {
+        // Reset if outside 20-second timer
+        if (this.firstTimeHit == -1 || this.tick - this.firstTimeHit > 20 * 20) {
+            this.firstTimeHit = -1;
+            this.timesHit = 0;
+            return 0;
+        }
+
         return timesHit;
     }
 
@@ -113,8 +120,23 @@ public class ToyBoxTrapBE extends BlockEntity implements GeoBlockEntity {
     }
 
     public void incrementTimesHit() {
-        if (++timesHit > 3) {
-            timesHit = 3;
+        // Reset if outside 20-second timer
+        if (this.firstTimeHit == -1 || this.tick - this.firstTimeHit > 20 * 20) {
+            this.firstTimeHit = this.tick;
+            this.timesHit = 0;
         }
+
+        if (this.timesHit == 3)
+            return;
+
+        this.timesHit++;
+    }
+
+    public void setTick(int tick) {
+        this.tick = tick;
+    }
+
+    public int getTick() {
+        return this.tick;
     }
 }

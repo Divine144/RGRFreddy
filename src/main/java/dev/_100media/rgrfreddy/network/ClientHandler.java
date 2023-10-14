@@ -71,6 +71,11 @@ public class ClientHandler {
     }
 
     public static void resetAttack() {
+        if (originalKeys.isEmpty()) {
+            // We are not scrambled right now; nothing to do
+            return;
+        }
+
         // Apply original to scrambled
         List<KeyMapping> keyMappings = getControlKeys().toList();
         for (int i = 0; i < keyMappings.size(); i++) {

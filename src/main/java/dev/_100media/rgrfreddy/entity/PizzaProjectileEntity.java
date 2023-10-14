@@ -73,6 +73,7 @@ public class PizzaProjectileEntity extends ThrowableItemProjectile {
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         entityData.define(DATA_TARGET, -1);
     }
 
