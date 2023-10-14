@@ -14,7 +14,7 @@ public class ItemInit {
     public static final RegistryObject<Item> FREDDY_MICROPHONE = ITEMS.register("freddy_microphone", () -> new FreddyMicrophoneItem(getItemProperties().stacksTo(1)));
     public static final RegistryObject<Item> FREDDY_HAT = ITEMS.register("freddy_hat", () -> new FreddyHatItem(getItemProperties().stacksTo(1)));
 
-    public static final RegistryObject<Item> PIZZA_SLICE = ITEMS.register("pizza_slice", () -> new Item(getItemProperties()));
+    public static final RegistryObject<Item> PIZZA_SLICE = ITEMS.register("pizza_slice", () -> new PizzaSliceItem(getItemProperties()));
 
     public static final RegistryObject<Item> TOY_ARMY_ITEM = ITEMS.register("toy_army", () -> new ToyArmyItem(getItemProperties().stacksTo(1)));
 

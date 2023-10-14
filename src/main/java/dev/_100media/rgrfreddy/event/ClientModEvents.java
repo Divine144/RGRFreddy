@@ -1,18 +1,10 @@
 package dev._100media.rgrfreddy.event;
 
-import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
-import dev._100media.rgrfreddy.RGRFreddy;
-import dev._100media.rgrfreddy.client.animatable.FreddyAnimatable;
-import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
-import dev._100media.rgrfreddy.client.renderer.blockentity.DimensionalTrapDoorRenderer;
-import dev._100media.rgrfreddy.client.renderer.blockentity.EMPGeneratorBlockRenderer;
-import dev._100media.rgrfreddy.client.renderer.blockentity.JailDoorBlockRenderer;
-import dev._100media.rgrfreddy.client.renderer.blockentity.SnareBlockRenderer;
-import dev._100media.rgrfreddy.init.*;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import dev._100media.hundredmediageckolib.client.animatable.IHasGeoRenderer;
+import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
 import dev._100media.hundredmediageckolib.client.model.SimpleGeoPlayerModel;
 import dev._100media.hundredmediageckolib.client.renderer.GeoPlayerRenderer;
 import dev._100media.hundredmediamorphs.client.renderer.MorphRenderers;
@@ -20,17 +12,28 @@ import dev._100media.hundredmediamorphs.morph.Morph;
 import dev._100media.hundredmediaquests.client.screen.QuestSkillScreen;
 import dev._100media.hundredmediaquests.client.screen.SkillScreen;
 import dev._100media.hundredmediaquests.client.screen.TreeScreen;
+import dev._100media.rgrfreddy.RGRFreddy;
+import dev._100media.rgrfreddy.client.animatable.FreddyAnimatable;
+import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
+import dev._100media.rgrfreddy.client.renderer.blockentity.DimensionalTrapDoorRenderer;
+import dev._100media.rgrfreddy.client.renderer.blockentity.EMPGeneratorBlockRenderer;
+import dev._100media.rgrfreddy.client.renderer.blockentity.JailDoorBlockRenderer;
+import dev._100media.rgrfreddy.client.renderer.blockentity.SnareBlockRenderer;
+import dev._100media.rgrfreddy.client.renderer.item.PizzaSliceItemRenderer;
+import dev._100media.rgrfreddy.init.BlockInit;
+import dev._100media.rgrfreddy.init.EntityInit;
+import dev._100media.rgrfreddy.init.MenuInit;
+import dev._100media.rgrfreddy.init.MorphInit;
+import dev._100media.rgrfreddy.init.SkillInit;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.api.distmarker.Dist;
@@ -53,7 +56,8 @@ import java.util.Arrays;
 @Mod.EventBusSubscriber(modid = RGRFreddy.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientModEvents {
 
-    public static final KeyMapping SKILL_TREE_KEY = new KeyMapping("key." + RGRFreddy.MODID + ".skill_tree", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, "key.category." + RGRFreddy.MODID);
+    public static final KeyMapping SKILL_TREE_KEY = new KeyMapping("key." + RGRFreddy.MODID + ".skill_tree", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G,
+            "key.category." + RGRFreddy.MODID);
     public static final KeyMapping SWITCH_CONTROL_KEY = new KeyMapping("key." + RGRFreddy.MODID + ".switch_control", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.category." + RGRFreddy.MODID);
 
     @SubscribeEvent
@@ -81,7 +85,7 @@ public class ClientModEvents {
                 new DefaultedBlockGeoModel<>(new ResourceLocation(RGRFreddy.MODID, "emp_generator_be"))
         ).withScale(2));
         event.registerEntityRenderer(EntityInit.TOY_FREDDY.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "toy_army")).withScale(0.5f));
-        event.registerEntityRenderer(EntityInit.PIZZA.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(EntityInit.PIZZA.get(), PizzaSliceItemRenderer::new);
         event.registerEntityRenderer(EntityInit.FREDDY_HAT_PROJECTILE.get(), ctx -> new GeoEntityRenderer<>(ctx, new SimpleGeoEntityModel<>(RGRFreddy.MODID, "freddy_hat")));
         createSimpleMorphRenderer(MorphInit.KID_FREDDY.get(), "kid_freddy", new FreddyAnimatable(), 1.0f);
         createSimpleMorphRenderer(MorphInit.TOY_FREDDY.get(), "toy_freddy", new FreddyAnimatable(), 1.0f);

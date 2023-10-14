@@ -30,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -56,15 +57,18 @@ public class FreddyPizzaItem extends Item implements GeoItem {
 
         }
         var list = FreddyUtils.getEntitiesInRange(player, LivingEntity.class, 20, 20, 20, p -> p != player);
-        PizzaProjectileEntity missile = new PizzaProjectileEntity(EntityInit.PIZZA.get(), pLevel);
-        missile.setPos(player.position());
-        missile.setOwner(player);
-        missile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.8F, 0);
-        if (!list.isEmpty()) {
-            missile.setTarget(list.get(0));
+        for (int i = 0; i < /*5*/ 1; i++) {
+            PizzaProjectileEntity missile = new PizzaProjectileEntity(EntityInit.PIZZA.get(), pLevel);
+            missile.setPos(player.position());
+            missile.setOwner(player);
+            missile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.8F, 0);
+            if (i < list.size()) {
+                missile.setTarget(list.get(i));
+            }
+            pLevel.addFreshEntity(missile);
         }
-        pLevel.addFreshEntity(missile);
-        player.getCooldowns().addCooldown(this, 20 * 30);
+        if (FMLEnvironment.production)
+            player.getCooldowns().addCooldown(this, 20 * 30);
         return InteractionResultHolder.consume(itemStack);
     }
 
@@ -123,20 +127,21 @@ public class FreddyPizzaItem extends Item implements GeoItem {
     }
 
     public void shootFromRotation(Entity entity, Entity pShooter, float pX, float pY, float pZ, float pVelocity, float pInaccuracy) {
-        float f = -Mth.sin(pY * ((float)Math.PI / 180F)) * Mth.cos(pX * ((float)Math.PI / 180F));
-        float f1 = -Mth.sin((pX + pZ) * ((float)Math.PI / 180F));
-        float f2 = Mth.cos(pY * ((float)Math.PI / 180F)) * Mth.cos(pX * ((float)Math.PI / 180F));
+        float f = -Mth.sin(pY * ((float) Math.PI / 180F)) * Mth.cos(pX * ((float) Math.PI / 180F));
+        float f1 = -Mth.sin((pX + pZ) * ((float) Math.PI / 180F));
+        float f2 = Mth.cos(pY * ((float) Math.PI / 180F)) * Mth.cos(pX * ((float) Math.PI / 180F));
         this.shoot(entity, f, f1, f2, pVelocity, pInaccuracy);
         Vec3 vec3 = pShooter.getDeltaMovement();
         entity.setDeltaMovement(entity.getDeltaMovement().add(vec3.x, pShooter.onGround() ? 0.0D : vec3.y, vec3.z));
     }
 
     public void shoot(Entity entity, double pX, double pY, double pZ, float pVelocity, float pInaccuracy) {
-        Vec3 vec3 = (new Vec3(pX, pY, pZ)).normalize().add(entity.level().random.triangle(0.0D, 0.0172275D * (double)pInaccuracy), entity.level().random.triangle(0.0D, 0.0172275D * (double)pInaccuracy), entity.level().random.triangle(0.0D, 0.0172275D * (double)pInaccuracy)).scale((double)pVelocity);
+        Vec3 vec3 = (new Vec3(pX, pY, pZ)).normalize().add(entity.level().random.triangle(0.0D, 0.0172275D * (double) pInaccuracy), entity.level().random.triangle(0.0D,
+                0.0172275D * (double) pInaccuracy), entity.level().random.triangle(0.0D, 0.0172275D * (double) pInaccuracy)).scale((double) pVelocity);
         entity.setDeltaMovement(vec3);
         double d0 = vec3.horizontalDistance();
-        entity.setYRot((float)(Mth.atan2(vec3.x, vec3.z) * (double)(180F / (float)Math.PI)));
-        entity.setXRot((float)(Mth.atan2(vec3.y, d0) * (double)(180F / (float)Math.PI)));
+        entity.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * (double) (180F / (float) Math.PI)));
+        entity.setXRot((float) (Mth.atan2(vec3.y, d0) * (double) (180F / (float) Math.PI)));
         entity.yRotO = entity.getYRot();
         entity.xRotO = entity.getXRot();
     }
