@@ -20,6 +20,9 @@ public class ModSoundProvider extends SoundDefinitionsProvider {
     }
 
     public void addSound(RegistryObject<SoundEvent> entry) {
-        add(entry, SoundDefinition.definition().with(sound(entry.getId())));
+        SoundDefinition.Sound sound = sound(entry.getId());
+        if (entry == SoundInit.LULLABY)
+            sound.stream(); // Lullaby is 1+ minute long, so stream is good to reduce memory usage
+        add(entry, SoundDefinition.definition().with(sound));
     }
 }

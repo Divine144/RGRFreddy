@@ -6,6 +6,9 @@ import com.mojang.authlib.GameProfile;
 import dev._100media.rgrfreddy.cap.FreddyHolderAttacher;
 import dev._100media.rgrfreddy.client.util.ControlledPlayerUtil;
 import dev._100media.rgrfreddy.entity.FreddyHatProjectileEntity;
+import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
+import dev._100media.rgrfreddy.util.FreddyHatCameraManager;
+import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -62,16 +65,20 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
     public void tickInput(Input instance, boolean pIsSneaking, float pSneakingSpeedMultiplier) {
         var holder = FreddyHolderAttacher.getHolderUnwrap((LocalPlayer) (Object) this);
 
-        if (holder != null) {
-            Player controllingPlayer = holder.getControllingPlayer();
+        if (holder == null)
+            return;
 
-            // Only tick the input if the local player is not controlling a player
-            if (controllingPlayer == null) {
-                instance.tick(pIsSneaking, pSneakingSpeedMultiplier);
-            }
+        Player controllingPlayer = holder.getControllingPlayer();
+
+        // Only tick the input if the local player is not being controlled
+        if (controllingPlayer == null || FreddyUtils.hasLeftControl(controllingPlayer)) {
+            instance.tick(pIsSneaking, pSneakingSpeedMultiplier);
         }
 
-        if (super.isSprinting()) {
+        // We need to run this logic with super.isSprinting() so that our sprinting state will be set back to false properly
+        // when controlling another player.
+        Player controlledPlayer = holder.getControlledPlayer();
+        if (controlledPlayer != null && ControllingPlayerCameraManager.controlledPlayer == controlledPlayer && super.isSprinting()) {
             boolean flag7 = !this.input.hasForwardImpulse() || !this.hasEnoughFoodToStartSprinting();
             boolean flag8 = flag7 || this.horizontalCollision && !this.minorHorizontalCollision || this.isInWater() && !this.isUnderWater()
                             || (this.isInFluidType((fluidType, height) -> this.canSwimInFluidType(fluidType)) && !this.canStartSwimming());

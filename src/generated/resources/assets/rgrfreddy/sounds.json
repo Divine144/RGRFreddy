@@ -36,7 +36,10 @@
   },
   "lullaby": {
     "sounds": [
-      "rgrfreddy:lullaby"
+      {
+        "name": "rgrfreddy:lullaby",
+        "stream": true
+      }
     ]
   },
   "microphone": {
