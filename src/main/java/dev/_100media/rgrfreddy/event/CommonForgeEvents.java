@@ -311,28 +311,19 @@ public class CommonForgeEvents {
                 if (cap.getJumpscareBlockTicks() > 0) {
                     cap.decrementJumpscareBlockTicks();
                 }
-                if (MorphHolderAttacher.getCurrentMorph(player).isPresent()) {
+                if (MorphHolderAttacher.getCurrentMorph(player).isPresent() && player.tickCount % 20 == 0) {
                     var list = FreddyUtils.getEntitiesInRange(player, Player.class, 30, 25, 30, p -> p != player);
-                    var globalHolder = GlobalHolderAttacher.getGlobalLevelCapabilityUnwrap(player.serverLevel());
-                    if (globalHolder != null && globalHolder.isShouldPlayHeartBeat()) {
-                        if (player.tickCount % 12 == 0 && !list.isEmpty()) {
-                            player.serverLevel().playSound(null, player.blockPosition(), SoundInit.HEARTBEAT.get(), SoundSource.PLAYERS, 2f, 1f);
-                        }
-                    }
-                    if (player.tickCount % 20 == 0) {
-                        QuestHolderAttacher.checkAllGoals(player, goal -> {
-                            if (goal instanceof StayNearHunterGoal hunterGoal) {
-                                if (list.isEmpty() && !hunterGoal.isGoalMet()) {
-                                    hunterGoal.resetProgress();
-                                }
-                                else {
-                                    hunterGoal.addProgress(1);
-                                }
-                                return true;
+                    QuestHolderAttacher.checkAllGoals(player, goal -> {
+                        if (goal instanceof StayNearHunterGoal hunterGoal) {
+                            if (list.isEmpty() && !hunterGoal.isGoalMet()) {
+                                hunterGoal.resetProgress();
+                            } else {
+                                hunterGoal.addProgress(1);
                             }
-                            return false;
-                        });
-                    }
+                            return true;
+                        }
+                        return false;
+                    });
                 }
             });
 

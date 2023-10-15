@@ -28,10 +28,11 @@ public class MysticMusicBoxBE extends BlockEntity implements GeoBlockEntity {
 
     private static final RawAnimation OPEN = RawAnimation.begin().then("open", Animation.LoopType.PLAY_ONCE).then("open_still", Animation.LoopType.PLAY_ONCE).thenLoop("open_playing");
 
-    private int tickCount = 20 * 20;
+    private int tickCount;
 
-    public MysticMusicBoxBE(BlockPos pPos, BlockState pBlockState) {
-        super(BlockInit.MYSTIC_MUSIC_BOX_BE.get(), pPos, pBlockState);
+    public MysticMusicBoxBE(BlockPos pPos, BlockState blockState) {
+        super(BlockInit.MYSTIC_MUSIC_BOX_BE.get(), pPos, blockState);
+        this.tickCount = blockState.is(BlockInit.MYSTIC_MUSIC_BOX_BLOCK.get()) ? 30 * 20 : 20 * 20;
     }
 
     @Override

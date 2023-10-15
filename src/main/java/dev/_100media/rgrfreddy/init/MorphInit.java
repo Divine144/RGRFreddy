@@ -1,23 +1,29 @@
 package dev._100media.rgrfreddy.init;
 
-import dev._100media.rgrfreddy.RGRFreddy;
 import dev._100media.hundredmediaabilities.capability.MarkerHolderAttacher;
 import dev._100media.hundredmediaabilities.init.HMAMarkerInit;
 import dev._100media.hundredmediamorphs.HundredMediaMorphsMod;
 import dev._100media.hundredmediamorphs.morph.Morph;
+import dev._100media.rgrfreddy.RGRFreddy;
+import dev._100media.rgrfreddy.network.NetworkHandler;
+import dev._100media.rgrfreddy.network.clientbound.StartHeartbeatSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Consumer;
 
 public class MorphInit {
     public static final DeferredRegister<Morph> MORPHS = DeferredRegister.create(new ResourceLocation(HundredMediaMorphsMod.MODID, "morphs"), RGRFreddy.MODID);
 
-    public static final RegistryObject<Morph> KID_FREDDY = MORPHS.register("kid_freddy", () -> new Morph(new Morph.Properties<>()
+    public static final RegistryObject<Morph> KID_FREDDY = MORPHS.register("kid_freddy", () -> new Morph(new FreddyMorphProperties<>()
             .maxHealth(10)
             .dimensions(0.65f, 0.65f)
             .eyeHeight(0.5f)
@@ -31,7 +37,7 @@ public class MorphInit {
             })
     ));
 
-    public static final RegistryObject<Morph> TOY_FREDDY = MORPHS.register("toy_freddy", () -> new Morph(new Morph.Properties<>()
+    public static final RegistryObject<Morph> TOY_FREDDY = MORPHS.register("toy_freddy", () -> new Morph(new FreddyMorphProperties<>()
             .maxHealth(30)
             .dimensions(1f, 2f)
             .morphedTo(entity -> {
@@ -45,7 +51,7 @@ public class MorphInit {
                 entity.removeEffect(MobEffects.JUMP);
             })
     ));
-    public static final RegistryObject<Morph> FREDDY_FAZBEAR = MORPHS.register("freddy_fazbear", () -> new Morph(new Morph.Properties<>()
+    public static final RegistryObject<Morph> FREDDY_FAZBEAR = MORPHS.register("freddy_fazbear", () -> new Morph(new FreddyMorphProperties<>()
             .maxHealth(50)
             .dimensions(1.5f, 2f)
             .morphedTo(entity -> {
@@ -71,7 +77,7 @@ public class MorphInit {
                 }
             })
     ));
-    public static final RegistryObject<Morph> GOLDEN_FREDDY_FAZBEAR = MORPHS.register("golden_freddy_fazbear", () -> new Morph(new Morph.Properties<>()
+    public static final RegistryObject<Morph> GOLDEN_FREDDY_FAZBEAR = MORPHS.register("golden_freddy_fazbear", () -> new Morph(new FreddyMorphProperties<>()
             .maxHealth(80)
             .dimensions(1.5f, 2f)
             .morphedTo(entity -> {
@@ -97,7 +103,7 @@ public class MorphInit {
                 }
             })
     ));
-    public static final RegistryObject<Morph> NIGHTMARE_FREDDY_FAZBEAR = MORPHS.register("nightmare_freddy_fazbear", () -> new Morph(new Morph.Properties<>()
+    public static final RegistryObject<Morph> NIGHTMARE_FREDDY_FAZBEAR = MORPHS.register("nightmare_freddy_fazbear", () -> new Morph(new FreddyMorphProperties<>()
             .maxHealth(120)
             .dimensions(2f, 2f)
             .morphedTo(entity -> {
@@ -125,4 +131,15 @@ public class MorphInit {
                 MarkerHolderAttacher.getMarkerHolder(entity).ifPresent(m -> m.removeMarker(HMAMarkerInit.FLIGHT.get(), true));
             })
     ));
+
+    private static class FreddyMorphProperties<T extends FreddyMorphProperties<T>> extends Morph.Properties<T> {
+        @Override
+        public T morphedTo(Consumer<LivingEntity> morphedToConsumer) {
+            // CommonForgeEvent has a hook on EntityJoinLevelEvent to run this when a morphed player joins the world; so this will work
+            return super.morphedTo(morphedToConsumer.andThen(entity -> {
+                if (entity instanceof ServerPlayer player)
+                    NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new StartHeartbeatSoundPacket());
+            }));
+        }
+    }
 }

@@ -2,10 +2,9 @@ package dev._100media.rgrfreddy.network;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev._100media.rgrfreddy.client.gui.JumpscareOverlay;
+import dev._100media.rgrfreddy.client.sound.HeartbeatSound;
 import dev._100media.rgrfreddy.init.SoundInit;
-import dev._100media.rgrfreddy.mixin.MinecraftAccessor;
 import dev._100media.rgrfreddy.util.ControllingPlayerCameraManager;
-import dev._100media.rgrfreddy.util.FreddyHatCameraManager;
 import dev._100media.rgrfreddy.util.FreddyUtils;
 import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
@@ -17,15 +16,12 @@ import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.EntityHitResult;
-import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 public class ClientHandler {
@@ -53,8 +49,8 @@ public class ClientHandler {
     }
 
     public static void unboundControls() {
-        Minecraft mc = Minecraft.getInstance();
-        originalKeys = getControlKeys().map(KeyMapping::getKey).toList();
+        if (originalKeys.isEmpty())
+            originalKeys = getControlKeys().map(KeyMapping::getKey).toList();
         List<InputConstants.Key> scrambledKeys = new ArrayList<>(originalKeys);
         Collections.shuffle(scrambledKeys);
         // Apply scrambled to original
@@ -104,7 +100,7 @@ public class ClientHandler {
     public static void syncPlayerMouseControlled(float yRot, float xRot) {
         Player currentPlayer = getPlayer();
         if (currentPlayer instanceof LocalPlayer controlled) {
-           controlled.turn(yRot, xRot);
+            controlled.turn(yRot, xRot);
         }
     }
 
@@ -139,5 +135,9 @@ public class ClientHandler {
 
             }
         }
+    }
+
+    public static void startHeartbeatSound() {
+        Minecraft.getInstance().getSoundManager().play(new HeartbeatSound());
     }
 }

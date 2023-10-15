@@ -59,7 +59,7 @@ public class FreddyPizzaItem extends Item implements GeoItem {
         var list = FreddyUtils.getEntitiesInRange(player, LivingEntity.class, 20, 20, 20, p -> p != player);
         for (int i = 0; i < /*5*/ 1; i++) {
             PizzaProjectileEntity missile = new PizzaProjectileEntity(EntityInit.PIZZA.get(), pLevel);
-            missile.setPos(player.position());
+            missile.setPos(player.getEyePosition());
             missile.setOwner(player);
             missile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.8F, 0);
             if (i < list.size()) {
