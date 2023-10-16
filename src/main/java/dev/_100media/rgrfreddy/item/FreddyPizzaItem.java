@@ -67,9 +67,16 @@ public class FreddyPizzaItem extends Item implements GeoItem {
             }
             pLevel.addFreshEntity(missile);
         }
-        if (FMLEnvironment.production)
-            player.getCooldowns().addCooldown(this, 20 * 30);
+
         return InteractionResultHolder.consume(itemStack);
+    }
+
+    @Override
+    public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity livingEntity, int pTimeCharged) {
+        if (/*FMLEnvironment.production && */livingEntity instanceof Player player)
+            player.getCooldowns().addCooldown(this, FMLEnvironment.production ? 30 * 20 : 5 * 20);
+
+        super.releaseUsing(pStack, pLevel, livingEntity, pTimeCharged);
     }
 
     @Override
