@@ -7,17 +7,19 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-public class StartHeartbeatSoundPacket implements IPacket {
+public record StartHeartbeatSoundPacket(int entityId) implements IPacket {
     @Override
     public void handle(NetworkEvent.Context context) {
-        context.enqueueWork(ClientHandler::startHeartbeatSound);
+        context.enqueueWork(() -> ClientHandler.startHeartbeatSound(this.entityId));
     }
 
     @Override
-    public void write(FriendlyByteBuf packetBuf) {}
+    public void write(FriendlyByteBuf packetBuf) {
+        packetBuf.writeVarInt(this.entityId);
+    }
 
     public static StartHeartbeatSoundPacket read(FriendlyByteBuf buf) {
-        return new StartHeartbeatSoundPacket();
+        return new StartHeartbeatSoundPacket(buf.readVarInt());
     }
 
     public static void register(SimpleChannel channel, int id) {

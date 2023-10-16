@@ -12,6 +12,7 @@ import dev._100media.rgrfreddy.init.BlockInit;
 import dev._100media.rgrfreddy.init.ItemInit;
 import dev._100media.rgrfreddy.init.SoundInit;
 import dev._100media.rgrfreddy.network.NetworkHandler;
+import dev._100media.rgrfreddy.network.clientbound.StartHeartbeatSoundPacket;
 import dev._100media.rgrfreddy.network.clientbound.StopControllingPlayerPacket;
 import dev._100media.rgrfreddy.quest.goal.*;
 import dev._100media.rgrfreddy.util.FreddyUtils;
@@ -392,6 +393,16 @@ public class CommonForgeEvents {
                 }
                 return false;
             });
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerStartTracking(PlayerEvent.StartTracking event) {
+        if (!(event.getEntity() instanceof ServerPlayer player))
+            return;
+
+        if (event.getTarget() instanceof ServerPlayer target && MorphHolderAttacher.getCurrentMorphUnwrap(target) != null) {
+            NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new StartHeartbeatSoundPacket(target.getId()));
         }
     }
 }

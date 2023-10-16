@@ -137,7 +137,12 @@ public class ClientHandler {
         }
     }
 
-    public static void startHeartbeatSound() {
-        Minecraft.getInstance().getSoundManager().play(new HeartbeatSound());
+    public static void startHeartbeatSound(int entityId) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null)
+            return;
+
+        if (mc.level.getEntity(entityId) instanceof Player player)
+            mc.getSoundManager().play(new HeartbeatSound(player));
     }
 }

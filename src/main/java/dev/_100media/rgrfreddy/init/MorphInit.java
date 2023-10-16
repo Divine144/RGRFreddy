@@ -138,7 +138,7 @@ public class MorphInit {
             // CommonForgeEvent has a hook on EntityJoinLevelEvent to run this when a morphed player joins the world; so this will work
             return super.morphedTo(morphedToConsumer.andThen(entity -> {
                 if (entity instanceof ServerPlayer player)
-                    NetworkHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new StartHeartbeatSoundPacket());
+                    NetworkHandler.INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new StartHeartbeatSoundPacket(player.getId()));
             }));
         }
     }

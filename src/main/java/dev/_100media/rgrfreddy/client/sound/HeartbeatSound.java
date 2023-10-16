@@ -9,10 +9,12 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 
 public class HeartbeatSound extends AbstractTickableSoundInstance {
+    private final Player player;
     private int tickCount;
 
-    public HeartbeatSound() {
+    public HeartbeatSound(Player player) {
         super(SoundInit.HEARTBEAT.get(), SoundSource.PLAYERS, SoundInstance.createUnseededRandom());
+        this.player = player;
         this.looping = true;
         this.volume = 0.0F;
         this.pitch = 1.0F;
@@ -27,28 +29,28 @@ public class HeartbeatSound extends AbstractTickableSoundInstance {
     @Override
     public void tick() {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null || MorphHolderAttacher.getCurrentMorphUnwrap(mc.player) == null) {
+        if (mc.level == null || this.player == null || (mc.player != this.player && this.player.isRemoved()) || MorphHolderAttacher.getCurrentMorphUnwrap(this.player) == null) {
             this.stop();
             return;
         }
 
         // Not sure why mojang casts it to float and then back to double, but let's follow them!
-        this.x = (float) mc.player.getX();
-        this.y = (float) mc.player.getY();
-        this.z = (float) mc.player.getZ();
+        this.x = (float) this.player.getX();
+        this.y = (float) this.player.getY();
+        this.z = (float) this.player.getZ();
 
-        if (mc.player.isRemoved()) {
-            // Keep sound playing at 0 volume so that it works when the player respawns
+        if (mc.player == this.player && this.player.isRemoved()) {
+            // Keep sound playing at 0 volume so that it works when the local player respawns
             this.volume = 0.0F;
             return;
         }
 
         if (this.tickCount % 20 == 0) {
             int maxDistance = 30;
-            Player nearestPlayer = mc.level.getNearestPlayer(this.x, this.y, this.z, maxDistance, e -> e != mc.player && !e.isSpectator());
+            Player nearestPlayer = mc.level.getNearestPlayer(this.x, this.y, this.z, maxDistance, e -> e != this.player && !e.isSpectator());
             if (nearestPlayer != null) {
                 // Set volume higher if hunter is closer
-                double distance = mc.player.distanceTo(nearestPlayer);
+                double distance = this.player.distanceTo(nearestPlayer);
                 this.volume = (float) (1.0F - Math.min(1.0F, distance / maxDistance));
             } else {
                 // Keep sound running but at 0 volume
