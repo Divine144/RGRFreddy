@@ -75,7 +75,11 @@ public class ClientHandler {
         // Apply original to scrambled
         List<KeyMapping> keyMappings = getControlKeys().toList();
         for (int i = 0; i < keyMappings.size(); i++) {
-            keyMappings.get(i).setKey(originalKeys.get(i));
+            KeyMapping keyMapping = keyMappings.get(i);
+            // Reset key mapping so that scrambled players don't have to press and re-release a key to fix it being held down
+            while (keyMapping.consumeClick()) {}
+            keyMapping.setDown(false);
+            keyMapping.setKey(originalKeys.get(i));
         }
         originalKeys = List.of();
         KeyMapping.resetMapping();
