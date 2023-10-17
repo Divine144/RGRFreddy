@@ -52,31 +52,33 @@ public class FreddyPizzaItem extends Item implements GeoItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
         ItemStack itemStack = player.getItemInHand(pUsedHand);
-        if (pLevel.isClientSide) {
+        player.startUsingItem(pUsedHand);
+        if (pLevel.isClientSide)
             return InteractionResultHolder.pass(itemStack);
 
-        }
-        var list = FreddyUtils.getEntitiesInRange(player, LivingEntity.class, 20, 20, 20, p -> p != player);
-        for (int i = 0; i < /*5*/ 1; i++) {
-            PizzaProjectileEntity missile = new PizzaProjectileEntity(EntityInit.PIZZA.get(), pLevel);
-            missile.setPos(player.getEyePosition());
-            missile.setOwner(player);
-            missile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.8F, 0);
-            if (i < list.size()) {
-                missile.setTarget(list.get(i));
-            }
-            pLevel.addFreshEntity(missile);
-        }
+        addMissile(pLevel, player);
 
         return InteractionResultHolder.consume(itemStack);
     }
 
+    private static void addMissile(Level pLevel, Player player) {
+        var list = FreddyUtils.getEntitiesInRange(player, LivingEntity.class, 20, 20, 20, p -> p != player);
+        PizzaProjectileEntity missile = new PizzaProjectileEntity(EntityInit.PIZZA.get(), pLevel);
+        missile.setPos(player.getEyePosition());
+        missile.setOwner(player);
+        missile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.8F, 0);
+        if (!list.isEmpty()) {
+            missile.setTarget(list.get(0));
+        }
+        pLevel.addFreshEntity(missile);
+    }
+
     @Override
-    public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity livingEntity, int pTimeCharged) {
-        if (/*FMLEnvironment.production && */livingEntity instanceof Player player)
+    public void releaseUsing(ItemStack pStack, Level level, LivingEntity livingEntity, int pTimeCharged) {
+        if (!level.isClientSide && /*FMLEnvironment.production && */livingEntity instanceof Player player)
             player.getCooldowns().addCooldown(this, FMLEnvironment.production ? 30 * 20 : 5 * 20);
 
-        super.releaseUsing(pStack, pLevel, livingEntity, pTimeCharged);
+        super.releaseUsing(pStack, level, livingEntity, pTimeCharged);
     }
 
     @Override
@@ -86,20 +88,8 @@ public class FreddyPizzaItem extends Item implements GeoItem {
 
     @Override
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
-        if (!pLevel.isClientSide) {
-            if (pLivingEntity instanceof ServerPlayer player) {
-                if (pRemainingUseDuration % 5 == 0) {
-                    var list = FreddyUtils.getEntitiesInRange(player, LivingEntity.class, 20, 20, 20, p -> p != player);
-                    PizzaProjectileEntity missile = new PizzaProjectileEntity(EntityInit.PIZZA.get(), pLevel);
-                    missile.setPos(player.position());
-                    missile.setOwner(player);
-                    missile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 0.8F, 0);
-                    if (!list.isEmpty()) {
-                        missile.setTarget(list.get(0));
-                    }
-                    pLevel.addFreshEntity(missile);
-                }
-            }
+        if (!pLevel.isClientSide && pLivingEntity instanceof ServerPlayer player && pRemainingUseDuration % 5 == 0) {
+            addMissile(pLevel, player);
         }
         super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
     }
