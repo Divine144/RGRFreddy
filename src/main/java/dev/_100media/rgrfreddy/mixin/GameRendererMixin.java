@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import java.util.function.Function;
+
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
 
@@ -33,6 +35,7 @@ public class GameRendererMixin {
             var holder = FreddyHolderAttacher.getHolderUnwrap(player);
             if (holder != null && holder.getControlledPlayer() != null && ControllingPlayerCameraManager.controlledPlayer != null) {
                 return GameType.SPECTATOR; // Forces hands to not render
+
             }
         }
         return instance.getPlayerMode();

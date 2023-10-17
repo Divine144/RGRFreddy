@@ -58,6 +58,9 @@ public class PizzaProjectileEntity extends ThrowableItemProjectile {
         if (pResult instanceof EntityHitResult result && result.getEntity() == this.getOwner()) return;
         super.onHit(pResult);
         if (!level().isClientSide) {
+            if (target == null) {
+                level().explode(this, this.getX(), this.getY(), this.getZ(), 4f, Level.ExplosionInteraction.TNT);
+            }
             discard();
         }
     }
