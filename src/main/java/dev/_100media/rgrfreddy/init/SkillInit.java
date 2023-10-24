@@ -75,7 +75,7 @@ public class SkillInit {
             MorphInit.GOLDEN_FREDDY_FAZBEAR
     ));
     public static final RegistryObject<Skill> NIGHTMARE_FREDDY_FAZBEAR = SKILLS.register("nightmare_freddy_fazbear", () -> new MorphSkill(
-            Component.literal("Mecha Skulk"),
+            Component.literal("Nightmare Freddy"),
             Component.literal("%s Hearts, Strength %s, Speed %s, Jump Boost %s, %s, +%s Blocks of Reach, Flight".formatted(60, "V", "V", "IV", "Blindness Immunity", 8)),
             Arrays.asList(
                     new ItemSkillRequirement(() -> Items.ELYTRA, 1),
