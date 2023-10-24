@@ -2,7 +2,9 @@ package dev._100media.rgrfreddy.event;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.math.Axis;
 import dev._100media.hundredmediageckolib.client.animatable.IHasGeoRenderer;
 import dev._100media.hundredmediageckolib.client.model.SimpleGeoEntityModel;
 import dev._100media.hundredmediageckolib.client.model.SimpleGeoPlayerModel;
@@ -26,6 +28,7 @@ import dev._100media.rgrfreddy.init.MenuInit;
 import dev._100media.rgrfreddy.init.MorphInit;
 import dev._100media.rgrfreddy.init.SkillInit;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -33,9 +36,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -46,6 +51,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.DefaultedBlockGeoModel;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
@@ -154,14 +160,46 @@ public class ClientModEvents {
             }, animatable) {
 
                 @Override
+                protected void moveAndRotateMatrixToMatchBone(PoseStack stack, GeoBone bone) {
+                    stack.translate(bone.getPivotX() / 16, bone.getPivotY() / 16, bone.getPivotZ() / 16);
+                    float xRot = bone.getRotX() * (180 / (float) Math.PI);
+                    float yRot = bone.getRotY() * (180 / (float) Math.PI);
+                    float zRot = bone.getRotZ() * (180 / (float) Math.PI);
+                    stack.mulPose(Axis.XP.rotationDegrees(xRot));
+                    stack.mulPose(Axis.YP.rotationDegrees(yRot));
+                    stack.mulPose(Axis.ZP.rotationDegrees(zRot));
+                }
+
+                @Override
+                public void renderRecursively(PoseStack stack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+                    if ("bone2".equals(bone.getName())) {
+                        stack.pushPose();
+                        moveAndRotateMatrixToMatchBone(stack, bone);
+                        stack.translate(0, -0.2, -0.2);
+                        stack.mulPose(Axis.XP.rotationDegrees(90));
+                        stack.mulPose(Axis.ZN.rotationDegrees(180));
+                        Minecraft.getInstance().gameRenderer.itemInHandRenderer.renderItem(getCurrentRenderingEntity(), getCurrentRenderingEntity().getItemInHand(InteractionHand.MAIN_HAND),
+                                ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, false, stack, bufferSource,
+                                packedLight);
+                        stack.popPose();
+                        buffer = bufferSource.getBuffer(currentRenderType);
+                    }
+                    super.renderRecursively(stack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+                }
+
+                @Override
                 public void render(AbstractClientPlayer player, T animatable1, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+                    setCurrentRenderingEntity(player);
                     if (!player.hasEffect(MobEffects.INVISIBILITY)) {
                         poseStack.pushPose();
                         if (player.getVehicle() != null) {
                             poseStack.translate(0, 0.10, 0);
                         }
                         poseStack.scale(scale, scale, scale);
+                        RenderType renderType = getRenderType(animatable1, getTextureLocation(animatable1), bufferSource, partialTick);
+                        this.currentRenderType = renderType;
                         super.render(player, animatable1, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+                        currentRenderType = null;
                         poseStack.popPose();
                     }
                 }

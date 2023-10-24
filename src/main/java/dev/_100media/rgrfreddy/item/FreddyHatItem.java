@@ -70,9 +70,7 @@ public class FreddyHatItem extends Item implements GeoItem {
             pLevel.addFreshEntity(projectile);
         }
         player.awardStat(Stats.ITEM_USED.get(this));
-        if (!player.getAbilities().instabuild) {
-            itemstack.shrink(1);
-        }
+        if (!player.getAbilities().instabuild) {}
         return InteractionResultHolder.sidedSuccess(itemstack, pLevel.isClientSide());
     }
 
